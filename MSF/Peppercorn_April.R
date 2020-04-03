@@ -144,17 +144,21 @@ seg_ID <-  mutate(seg_ID,
 unique(seg_ID$Rates)
 str(seg_ID)
 seg_ID %>% group_by(Rates) %>% tally()
-# change any non numbric values 
-# seg_ID <- seg_ID %>% 
-#   mutate(Rates = case_when(Rates == "Nil" ~ "0",
-#          TRUE ~ Rates ))
-seg_ID$Rates <- as.numeric(seg_ID$Rates)  
+# change values 
+ seg_ID <- seg_ID %>% 
+   mutate(Rates = case_when(Rates == 1 ~ 50,
+                            Rates == 2 ~ 80,
+                            Rates == 3 ~ 140,
+                            Rates == 4 ~ 200,
+                            TRUE ~ Rates ))
+
+ seg_ID$Rates <- as.numeric(seg_ID$Rates)  
 
 ##### Rate need to check this with database and work out which is grower_rate
-Grower_rate = 1
-rate1 = 2
-rate2 = 3
-rate3 = 4
+Grower_rate = 140
+rate1 = 50
+rate2 = 80
+rate3 = 200
 
 
 
@@ -413,8 +417,9 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
        title = "",
-       subtitle = paste0(Paddock_tested_db," (Spatial data has no rates)"),
+       subtitle = paste0(Paddock_tested_db," (GSP is variable)"),
        caption = "")+
+  scale_shape_discrete(labels=c("50", "80", "80+120", "80+60"))+
    annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 4, #Zone 1
            alpha = .2) +
   annotate("text", x = zone1_range, y= 1,label = zone1)+
@@ -530,7 +535,7 @@ zone_av_1_rate3vsGR_res_sig
    labs(x = Fert_legend_name,
         y= "Yield t/ha",
         title = zone1,
-        caption = "Below table reports mean values and significant differences compared to Rate1")+
+        caption = "Below table reports mean values and significant differences compared to GSP")+
    theme(plot.caption = element_text(size=8, face="italic", color="black"))+
    annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
  zone_1
