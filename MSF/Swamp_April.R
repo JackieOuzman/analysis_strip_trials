@@ -814,20 +814,20 @@ zone_av_1_rate3vsGR_res_sig
  #bring in data from the most current database from dropbox
  
  #set up access to dropbox when is is password protected
- token<-drop_auth()
- saveRDS(token, "droptoken.rds")
- 
- token<-readRDS("droptoken.rds")
- drop_acc(dtoken=token)
- database_name_of_path
- 
- #https://www.dropbox.com/home/GRDC_Soil_Plant_Testing_Database
- #download the database file from dropbox and save it to mircolab
- drop_download(path = "NP_database_31032020_SA.xlsx", 
-               local_path = database_name_of_path,
-               dtoken = token,
-               overwrite = TRUE)
- 
+ # token<-drop_auth()
+ # saveRDS(token, "droptoken.rds")
+ # 
+ # token<-readRDS("droptoken.rds")
+ # drop_acc(dtoken=token)
+ # database_name_of_path
+ # 
+ # #https://www.dropbox.com/home/GRDC_Soil_Plant_Testing_Database
+ # #download the database file from dropbox and save it to mircolab
+ # drop_download(path = "NP_database_31032020_SA.xlsx", 
+ #               local_path = database_name_of_path,
+ #               dtoken = token,
+ #               overwrite = TRUE)
+ # 
  #bring in the excel sheet as a r object
  database_name_of_path
  
@@ -959,8 +959,12 @@ collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow
 #               layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
              
 collection
+# ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
+#        width = 21, height = 15, units = "cm", collection)
+
 ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
-       width = 21, height = 15, units = "cm", collection)
+       width = 35, height = 20, units = "cm", collection)
+
 
 
 
