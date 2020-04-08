@@ -979,11 +979,12 @@ collection <- grid.arrange(zone_2, zone_3,zone_1, table2, table1, segments, nrow
 #               layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
              
 collection
+# ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
+#        width = 21, height = 15, units = "cm", collection)
+
+
 ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
-       width = 21, height = 15, units = "cm", collection)
-
-
-
+       width = 35, height = 20, units = "cm", collection)
 
 
 
