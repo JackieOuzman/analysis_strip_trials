@@ -134,16 +134,16 @@ str(seg_ID)
 seg_ID$Rates <- as.numeric(seg_ID$Rates)  
 
 #filter the data and append correct name.
-name_sub <- "1a_west_zone5_6"
+name_sub <- "1b_west_zone5_6"
 seg_ID <- filter(seg_ID,
-                 Rates != 12 & Rates != 15)
+                 Rates != 0 & Rates != 3)
 unique(seg_ID$Rates)
 
 ##### Rate need to check this with database and work out which is grower_rate
 Grower_rate = 6
-rate1 = 0
-rate2 = 3
-rate3 = 9
+rate1 = 9
+rate2 = 12
+rate3 = 15
 
 #### 1 rate
 #list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1"),Rates = c(Grower_rate,rate1 ) )
