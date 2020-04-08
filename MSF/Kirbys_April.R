@@ -570,10 +570,10 @@ zone_av_1_rate3vsGR_res_sig
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
         y= "Yield t/ha",
-        title = zone1,
-        caption = "Below table reports mean values and significant differences compared to Rate1")+
-   theme(plot.caption = element_text(size=8, face="italic", color="black"))+
-   annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
+        title = "No data",
+        caption = "")+
+   theme(plot.caption = element_text(size=8, face="italic", color="black"))#+
+   # annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
  zone_1
  
  ##save the graphs of the zone strip work
@@ -827,8 +827,8 @@ zone_av_1_rate3vsGR_res_sig
    labs(x = Fert_legend_name,
         y= "Yield t/ha",
         title = zone3,
-        caption = "Below table reports mean values and significant differences compared to GSP")
- 
+        caption = "Below table reports mean values and significant differences compared to GSP")+
+ annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
  zone_3
  
  zone_2 <- ggplot( zone_av_3, aes(Rate_as_factor, Yld))+
@@ -1027,8 +1027,10 @@ collection <- grid.arrange(zone_3, zone_2,zone_1, table2, table1, segments, nrow
 #               layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
              
 collection
+# ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
+#        width = 21, height = 15, units = "cm", collection)
 ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
-       width = 21, height = 15, units = "cm", collection)
+       width = 35, height = 20, units = "cm", collection)
 
 
 
