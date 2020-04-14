@@ -135,7 +135,7 @@ seg_ID$Rates <- as.numeric(seg_ID$Rates)
 
 #filter the data and append correct name.
 
-name_sub <- "1a_"
+name_sub <- "1a Rate 0 to 74 and zone 1 to 3"
 seg_ID <- filter(seg_ID,
                  Rates != 95 & Rates != 127)
 unique(seg_ID$Rates)
@@ -158,8 +158,8 @@ list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2",  "rat
 #Define the zones
 unique(seg_ID$Zone)
 zone1 <- "Z1"
-zone2 <- "Z6"
-#zone3 <- "Z3"
+zone2 <- "Z2"
+zone3 <- "Z3"
 
 
 ############################################################################################################################
@@ -401,29 +401,30 @@ zone3_range <- ((zone3_max - zone3_min)/2)+zone3_min
 zone3_range
 
 ##3b. Plot the results
+Paddock_tested_db
 
 segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_factor))+
   geom_line(size=1, alpha=0.4, aes( color = Rate_as_factor ))+
   scale_color_manual(values=c('darkgrey','green', 'blue', 'red'), name  = Fert_legend_name)+
   theme_bw()+
-  ylim(0.0,5)+
+  ylim(0.0,4)+
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
        title = "",
-       subtitle = paste0(Paddock_tested_db, " ", name_sub),
+       subtitle = paste0(Paddock_tested_db, ": ", name_sub),
        caption = "")+
-   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 5, #Zone 1
+   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 4, #Zone 1
            alpha = .2) +
   annotate("text", x = zone1_range, y= 1,label = zone1)+
   
-   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 5, #zone 2
+   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 4, #zone 2
             alpha = .2)+
   annotate("text", x = zone2_range, y= 1,label = zone2)+
   
-  # annotate("rect", xmin =zone3_min , xmax = zone3_max, ymin = 0, ymax = 5, #zone 3
-  #          alpha = .2)+
-  # annotate("text", x = zone3_range, y= 1,label = zone3)+
-annotate("text", x = 1000, y= 5,label = "")
+   annotate("rect", xmin =zone3_min , xmax = zone3_max, ymin = 0, ymax = 4, #zone 3
+            alpha = .2)+
+   annotate("text", x = zone3_range, y= 1,label = zone3)+
+annotate("text", x = 1000, y= 4,label = "")
 
 
 ##3c. Save the results of the segment work
@@ -523,7 +524,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,5)+
+   ylim(0,4)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -531,7 +532,7 @@ zone_av_1_rate3vsGR_res_sig
         title = zone1,
         caption = "Below table reports mean values and significant differences compared to GSR")+
    theme(plot.caption = element_text(size=8, face="italic", color="black"))+
-   annotate("text", x = 2, y= 5, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
+   annotate("text", x = 2, y= 4, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
  zone_1
  
  ##save the graphs of the zone strip work
@@ -651,7 +652,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,5)+
+   ylim(0,4)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -780,7 +781,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,5)+
+   ylim(0,4)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -908,8 +909,8 @@ mean_zone_av_3
  
 #---- user input - how many to zones to join
 
-mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1, mean_zone_av_2))
-#mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1, mean_zone_av_2, mean_zone_av_3))
+#mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1, mean_zone_av_2))
+mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1, mean_zone_av_2, mean_zone_av_3))
 
 mean_zone_av_output
 site_details
@@ -931,8 +932,8 @@ mean_zone_av_1
 mean_zone_av_2
 mean_zone_av_3
 #---- user input - how many to zones to join
-mean_zone_av_p_values <- rbind(mean_zone_av_1,mean_zone_av_2) 
-#mean_zone_av_p_values <- rbind(mean_zone_av_1, mean_zone_av_2, mean_zone_av_3)
+#mean_zone_av_p_values <- rbind(mean_zone_av_1,mean_zone_av_2) 
+mean_zone_av_p_values <- rbind(mean_zone_av_1, mean_zone_av_2, mean_zone_av_3)
   
 mean_zone_av_p_values <- dplyr::select(mean_zone_av_p_values, Rates, Significant,Zone )
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output,
@@ -975,11 +976,11 @@ zone_2
 zone_3
 table1
 paddock
-# collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow = 5,  ncol=3, 
-#                            layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
+ collection <- grid.arrange(zone_3, zone_2,zone_1, table2, table1, segments, nrow = 5,  ncol=3, 
+                            layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
 
- collection <- grid.arrange(zone_1, zone_2, table2, table1, segments, nrow = 5,  ncol=2, 
-               layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
+# collection <- grid.arrange(zone_1, zone_2, table2, table1, segments, nrow = 5,  ncol=2, 
+#               layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
              
 collection
 # ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
