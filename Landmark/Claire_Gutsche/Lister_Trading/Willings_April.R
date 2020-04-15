@@ -975,7 +975,7 @@ paddock
              
 collection
 ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
-       width = 21, height = 15, units = "cm", collection)
+       width = 35, height = 20, units = "cm", collection)
 
 
 
