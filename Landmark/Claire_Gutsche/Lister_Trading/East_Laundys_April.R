@@ -404,12 +404,12 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
   
    annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 5, #zone 2
             alpha = .2)+
-  annotate("text", x = zone2_range, y= 1,label = zone2)#+
+  annotate("text", x = zone2_range, y= 1,label = zone2)+
   
   # annotate("rect", xmin =zone3_min , xmax = zone3_max, ymin = 0, ymax = 3, #zone 3
   #          alpha = .2)+
   # annotate("text", x = zone3_range, y= 1,label = zone3)+
-#annotate("text", x = 1000, y= 3,label = "Some missing data")
+annotate("text", x = 200, y= 0.5,label = "Some missing data")
 
 
 ##3c. Save the results of the segment work
@@ -889,8 +889,8 @@ mean_zone_av_2
 mean_zone_av_3
  
 #---- user input - how many to zones to join
-mean_zone_av_output <- as.data.frame(mean_zone_av_1)
-#mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1, mean_zone_av_2))
+#mean_zone_av_output <- as.data.frame(mean_zone_av_1)
+mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1, mean_zone_av_2))
 #mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1, mean_zone_av_2, mean_zone_av_3))
 
 mean_zone_av_output
@@ -953,12 +953,12 @@ paddock
 #collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow = 5,  ncol=3, 
 #                           layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
 
- collection <- grid.arrange(zone_1, zone_2, table2, table1, segments, nrow = 5,  ncol=2, 
+ collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
                layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
              
 collection
 ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
-       width = 21, height = 15, units = "cm", collection)
+       width = 35, height = 20, units = "cm", collection)
 
 
 
