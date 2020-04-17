@@ -643,8 +643,8 @@ zone_av_1_rate3vsGR_res_sig
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
         y= "Yield t/ha",
-        title = "No data",
-        #title = zone2,
+        #title = "No data",
+        title = zone2,
         caption = "")
    
  zone_2
