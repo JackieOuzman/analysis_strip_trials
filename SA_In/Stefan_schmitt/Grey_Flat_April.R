@@ -164,10 +164,10 @@ zone2 <- "Sand"
 
 ## yield data in t/ha or kg/ha
 head(seg_ID)
-# seg_ID <-  mutate(seg_ID,
-#                   Yld = Yld /1000)
  seg_ID <-  mutate(seg_ID,
-                   Yld = Yld /10)
+                   Yld = Yld /1000)
+# seg_ID <-  mutate(seg_ID,
+#                   Yld = Yld /10)
 
 #############################################################################################################################
 ##2. t test per segment in the strip Via Andrea method####
@@ -390,17 +390,17 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
   geom_line(size=1, alpha=0.4, aes( color = Rate_as_factor ))+
   scale_color_manual(values=c('darkgrey','green', 'blue', 'red'), name  = Fert_legend_name)+
   theme_bw()+
-  ylim(0.0,3)+
+  ylim(0.0,4)+
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
        title = "",
        subtitle = paste0("Farmer: ",Farmer_db, ". ", "Paddocks: ",Paddock_tested_db),
        caption = "")+
-   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 3, #Zone 1
+   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 4, #Zone 1
            alpha = .2) +
   annotate("text", x = zone1_range, y= 1,label = zone1)+
   
-   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 3, #zone 2
+   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 4, #zone 2
             alpha = .2)+
   annotate("text", x = zone2_range, y= 1,label = zone2)#+
   
@@ -506,7 +506,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(2,3)+
+   ylim(0,4)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -514,7 +514,7 @@ zone_av_1_rate3vsGR_res_sig
         title = zone1,
         caption = "Below table reports mean values and significant differences compared to GSR")+
    theme(plot.caption = element_text(size=8, face="italic", color="black"))+
-   annotate("text", x = 2, y= 2, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
+   annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
  zone_1
  
  ##save the graphs of the zone strip work
@@ -635,7 +635,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(2,3)+
+   ylim(0,4)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
