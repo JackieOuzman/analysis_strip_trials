@@ -945,6 +945,13 @@ mean_zone_av_output_display
 #mean_zone_av_output_display[] <- replace(as.matrix(mean_zone_av_output_display), is.na(mean_zone_av_output_display), "")
 
 
+#Change the rates manually 
+
+mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
+                                      Rates = c("0","50 to 59", "100"))
+mean_zone_av_output_display
+
+
 
 TSpecial <- ttheme_minimal(base_size = 8)
 table1 <- tableGrob(site , rows = NULL, theme=TSpecial )
