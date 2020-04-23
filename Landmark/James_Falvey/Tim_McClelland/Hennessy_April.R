@@ -942,7 +942,11 @@ mean_zone_av_output_display <- spread(mean_zone_av_output_display, Zone, Yld)
 mean_zone_av_output_display
 #remove the NA
 #mean_zone_av_output_display[] <- replace(as.matrix(mean_zone_av_output_display), is.na(mean_zone_av_output_display), "")
+#Change the rates manually 
 
+mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
+                                      Rates = c("0","50 to 59", "100"))
+mean_zone_av_output_display
 
 
 TSpecial <- ttheme_minimal(base_size = 8)
