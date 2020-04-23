@@ -868,7 +868,8 @@ zone_av_1_rate3vsGR_res_sig
  
  
  site <- filter(harm_database,
-                Paddock_tested == Paddock_tested_db) %>%  
+                Paddock_tested == "Top_loam") %>%  
+                #Paddock_tested == Paddock_tested_db) %>%  
                 #Paddock_tested == Paddock_tested_db &
                 #  Farmer == Farmer_db) %>% 
    dplyr::select(5, 6: 11)
@@ -942,6 +943,11 @@ mean_zone_av_output_display
 #remove the NA
 #mean_zone_av_output_display[] <- replace(as.matrix(mean_zone_av_output_display), is.na(mean_zone_av_output_display), "")
 
+#Change the rates manually 
+
+mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
+                                      Rates = c("0","50 / 32", "100"))
+mean_zone_av_output_display
 
 
 TSpecial <- ttheme_minimal(base_size = 8)
