@@ -869,8 +869,8 @@ zone_av_1_rate3vsGR_res_sig
  
  
  site <- filter(harm_database,
-                Paddock_tested == "Hennessy_loam") %>% 
-                #Paddock_tested == Paddock_tested_db) %>%  
+                
+                Paddock_tested == Paddock_tested_db) %>%  
                 #Paddock_tested == Paddock_tested_db &
                 #  Farmer == Farmer_db) %>% 
    dplyr::select(5, 6: 11)
