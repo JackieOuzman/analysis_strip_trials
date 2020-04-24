@@ -42,15 +42,15 @@ load.libraries(libs)
 ##1a. Details about the site what it looks like in the database
 
 
-#file://Fssa2-adl/clw-share1/Microlab/value_soil_testing_prj/Yield_data/Landmark/Andrew_McMahen_8/Barney_OCallaghan_2/Hickmont/output/Hickmonts_Yld_SegID_zone.csv
+#file://Fssa2-adl/clw-share1/Microlab/value_soil_testing_prj/Yield_data/Landmark/Andrew_McMahen_8/Barney_OCallaghan_2/Jardines/output/Jardines_Yld_SedID_zones.csv
 
 #As it appears in the database
 Organisation_db	  = "Landmark"
 Contact_db = "Andrew_McMahen_8"
 Farmer_db  =  "Barney_OCallaghan_2"
-Paddock_tested_db  =	"Hickmont"
+Paddock_tested_db  =	"Jardines"
 #Zone_db            = 
-data_file       = "Hickmonts_Yld_SegID_zone.csv"
+data_file       = "Jardines_Yld_SedID_zones.csv"
 
 #As it appears in the file directory I use it for name of files
 site_details <- paste0(Organisation_db,"_",
@@ -163,9 +163,9 @@ zone2 <- "Low"
 
 #seg_ID <- dplyr::filter(seg_ID, !between(seg_ID$SegmentID, 88, 89))
 
-seg_ID <- dplyr::filter(seg_ID, SegmentID != 610)
-seg_ID <- dplyr::filter(seg_ID, SegmentID != 600)
-seg_ID <- dplyr::filter(seg_ID, SegmentID != 630)
+# seg_ID <- dplyr::filter(seg_ID, SegmentID != 610)
+# seg_ID <- dplyr::filter(seg_ID, SegmentID != 600)
+# seg_ID <- dplyr::filter(seg_ID, SegmentID != 630)
 
 ## yield data in t/ha or kg/ha
 head(seg_ID)
@@ -970,7 +970,7 @@ paddock
 #collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow = 5,  ncol=3, 
 #                           layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
 
- collection <- grid.arrange(zone_1, zone_2, table2, table1, segments, nrow = 5,  ncol=2, 
+ collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
                layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
              
 collection
