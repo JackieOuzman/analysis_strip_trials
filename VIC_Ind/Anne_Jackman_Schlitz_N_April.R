@@ -107,8 +107,8 @@ names(seg_ID)
 ##1c. make name consistant
 
 seg_ID <-seg_ID %>% 
-  #rename_at(vars(contains("ate")), ~"Rates") %>% 
-  rename_at(vars(contains("Rates_Urea")), ~"Rates") %>% 
+  rename_at(vars(contains("ate")), ~"Rates") %>% 
+  #rename_at(vars(contains("Rates_Urea")), ~"Rates") %>% 
   rename_at(vars(contains("one")), ~"Zone") %>% 
   #rename_at(vars(contains("ield")), ~"Yld") 
   rename_at(vars(contains("Yld")), ~"Yld") 
@@ -936,7 +936,7 @@ table2 <- tableGrob(mean_zone_av_output_display, rows = NULL, theme=TSpecial)
 #get the name of the paddock...
 
 paddock <- Paddock_tested_db
-
+Farmer_db
 
 library(DT)
 test <- textGrob(paddock)
