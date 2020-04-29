@@ -400,18 +400,18 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
   geom_line(size=1, alpha=0.4, aes( color = Rate_as_factor ))+
   scale_color_manual(values=c('darkgrey','green', 'blue', 'red'), name  = Fert_legend_name)+
   theme_bw()+
-  ylim(0.0,4)+
+  ylim(0.0,5)+
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
        title = "",
        #subtitle = paste0("Farmer: ",Farmer_db, ". ", "Paddocks: ",Paddock_tested_db_1),
        subtitle = Farmer_db,
        caption = "")+
-   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 4, #Zone 1
+   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 5, #Zone 1
            alpha = .2) +
   annotate("text", x = zone1_range, y= 1,label = zone1)+
   
-   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 4, #zone 2
+   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 5, #zone 2
             alpha = .2)+
   annotate("text", x = zone2_range, y= 1,label = zone2)#+
   
@@ -517,7 +517,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,4)+
+   ylim(0,5)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -648,7 +648,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,4)+
+   ylim(0,5)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
