@@ -41,15 +41,15 @@ load.libraries(libs)
 #------------USER INPUTS ------------------#
 ##1a. Details about the site what it looks like in the database
 
-#file://Fssa2-adl/clw-share1/Microlab/value_soil_testing_prj/Yield_data/Landmark/Tom_Cooper_9/A_P_Robertson_1/McPhees/output/McPhees_Yld_SegID_Zones.csv
+
 
 #As it appears in the database
 Organisation_db	  = "Landmark"
-Contact_db = "Tom_Cooper_9"
-Farmer_db  =  "A_P_Robertson_1"
-Paddock_tested_db  =	"McPhees"
+Contact_db = "James_Falvey_2"
+Farmer_db  =  "Frankel_2"
+Paddock_tested_db  =	"Stewarts_3"
 #Zone_db            = 
-data_file       = "McPhees_Yld_SegID_Zones.csv"
+data_file       = "Stewarts3_Yld_SegID_Zone.csv"
 
 #As it appears in the file directory I use it for name of files
 site_details <- paste0(Organisation_db,"_",
@@ -71,7 +71,7 @@ name_of_path <-
 name_of_path
 
 #what are we testing - what fert ws implemented?
-Fert_legend_name <- "N Rates"
+Fert_legend_name <- "P Rates"
 
 #################################################################################################
 #These file loaction won't change from site to site
@@ -135,9 +135,9 @@ str(seg_ID)
 seg_ID$Rates <- as.numeric(seg_ID$Rates)  
 
 ##### Rate need to check this with database and work out which is grower_rate
-Grower_rate = 140
-rate1 = 0
-rate2 = 60
+Grower_rate = 40
+rate1 = 20
+rate2 = 62
 #rate3 = 40
 
 #### 1 rate
@@ -394,17 +394,17 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
   geom_line(size=1, alpha=0.4, aes( color = Rate_as_factor ))+
   scale_color_manual(values=c('darkgrey','green', 'blue', 'red'), name  = Fert_legend_name)+
   theme_bw()+
-  ylim(0.0,5)+
+  ylim(0.0,4)+
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
        title = "",
        subtitle = Paddock_tested_db,
        caption = "")+
-   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 5, #Zone 1
+   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 4, #Zone 1
            alpha = .2) +
   annotate("text", x = zone1_range, y= 1,label = zone1)+
   
-  annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 5, #zone 2
+  annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 4, #zone 2
            alpha = .2)+
   annotate("text", x = zone2_range, y= 1,label = zone2)#+
   
@@ -509,7 +509,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,5)+
+   ylim(0,4)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -638,7 +638,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,5)+
+   ylim(0,4)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -834,10 +834,10 @@ zone_av_1_rate3vsGR_res_sig
  #bring in the excel sheet as a r object
  database_name_of_path
  
-harm_database <- read_excel(paste0(
-                            database_name_of_path,"/", "NP_database_31032020_SA.xlsx"),
-                            sheet = "2019 full data", range = cell_cols("A:O"))
-
+# harm_database <- read_excel(paste0(
+#                             database_name_of_path,"/", "NP_database_31032020_SA.xlsx"),
+#                             sheet = "2019 full data", range = cell_cols("A:O"))
+harm_database  <- read_csv(paste0(database_name_of_path,"/","N&P 2019 data for analysis Vic 16 April2020.csv"))
 
  str(harm_database)
  #fix up some names
@@ -863,8 +863,8 @@ harm_database <- read_excel(paste0(
  
  
  site <- filter(harm_database,
-                #Paddock_tested == Paddock_tested_db) %>% 
-                Paddock_tested == "McPhee's") %>% 
+                Paddock_tested == Paddock_tested_db) %>% 
+                #Paddock_tested == "McPhee's") %>% 
                 #Paddock_tested == Paddock_tested_db &
                 #  Farmer == Farmer_db) %>% 
    dplyr::select(5, 6: 11)
@@ -962,7 +962,7 @@ paddock
 #collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow = 5,  ncol=3, 
 #                           layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
 
- collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
+ collection <- grid.arrange(zone_1, zone_2, table2, table1, segments, nrow = 5,  ncol=2, 
                layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
              
 collection
