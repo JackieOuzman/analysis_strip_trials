@@ -864,7 +864,7 @@ harm_database  <- read_csv(paste0(database_name_of_path,"/","N&P 2019 data for a
  
  site <- filter(harm_database,
                 #Paddock_tested == Paddock_tested_db) %>% 
-                Paddock_tested == "Back_or_Bank") %>% 
+                #Paddock_tested == "Back_or_Bank") %>% 
                 #Paddock_tested == Paddock_tested_db &
                 #  Farmer == Farmer_db) %>% 
    dplyr::select(5, 6: 11)
