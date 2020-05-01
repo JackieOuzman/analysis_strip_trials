@@ -52,7 +52,7 @@ Contact_db = "Matt_Nihill_7"
 Farmer_db  =  "GRG_Weeks_1"
 Paddock_tested_db  =	"Reids_mid"
 #Zone_db            = 
-data_file       = "ReidsMount_Yld_SegID_Zone.csv"
+data_file       = "ReidsMid_Yld_SegID_Zone.csv"
 
 #As it appears in the file directory I use it for name of files
 site_details <- paste0(Organisation_db,"_",
@@ -398,17 +398,17 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
   geom_line(size=1, alpha=0.4, aes( color = Rate_as_factor ))+
   scale_color_manual(values=c('darkgrey','green', 'blue', 'red'), name  = Fert_legend_name)+
   theme_bw()+
-  ylim(0.0,6)+
+  ylim(0.0,8)+
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
        title = "",
        subtitle = Paddock_tested_db,
        caption = "")+
-   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 6, #Zone 1
+   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 8, #Zone 1
            alpha = .2) +
   annotate("text", x = zone1_range, y= 1,label = zone1)+
   
-  annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 6, #zone 2
+  annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 8, #zone 2
            alpha = .2)+
   annotate("text", x = zone2_range, y= 1,label = zone2)#+
   
@@ -513,7 +513,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,6)+
+   ylim(0,8)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -643,7 +643,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,6)+
+   ylim(0,8)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -968,7 +968,7 @@ paddock
 #collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow = 5,  ncol=3, 
 #                           layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
 
- collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
+ collection <- grid.arrange(zone_1, zone_2, table2, table1, segments, nrow = 5,  ncol=2, 
                layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
              
 collection
