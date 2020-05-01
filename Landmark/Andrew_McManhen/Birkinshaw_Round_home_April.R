@@ -137,9 +137,9 @@ str(seg_ID)
 seg_ID$Rates <- as.numeric(seg_ID$Rates)  
 
 ##### Rate need to check this with database and work out which is grower_rate
-Grower_rate = 50
+Grower_rate = 90
 rate1 = 0
-rate2 = 100
+rate2 = 140
 #rate3 = 40
 
 #### 1 rate
@@ -396,21 +396,20 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
   geom_line(size=1, alpha=0.4, aes( color = Rate_as_factor ))+
   scale_color_manual(values=c('darkgrey','green', 'blue', 'red'), name  = Fert_legend_name)+
   theme_bw()+
-  ylim(0.0,8)+
+  ylim(0.0,4)+
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
        title = "",
        subtitle = Paddock_tested_db,
        caption = "")+
-  annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 8, #Zone 1
+  annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 4, #Zone 1
            alpha = .2) +
   annotate("text", x = zone1_range, y= 1,label = zone1)+
-  annotate("rect", xmin = zone2_min, xmax = zone2_max, ymin = 0, ymax = 8, #Zone 2
+  annotate("rect", xmin = zone2_min, xmax = zone2_max, ymin = 0, ymax = 4, #Zone 2
            alpha = .2) +
   annotate("text", x = zone2_range, y= 1,label = zone2)+
-  annotate("text", x = 250, y= 7,label = "Missing some data")
-zone2_min
-zone2_max
+  annotate("text", x = 600, y= 1.5,label = "Missing some data")
+
 ##3c. Save the results of the segment work
 segments #this is the graph
 ggsave(path= graph_path, filename = "t-test_segments.png", device = "png" ,
@@ -506,7 +505,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,8)+
+   ylim(0,4)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -635,7 +634,7 @@ zone_av_1_rate3vsGR_res_sig
    stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                 width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,8)+
+   ylim(0,4)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
