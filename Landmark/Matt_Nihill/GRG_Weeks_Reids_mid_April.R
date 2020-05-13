@@ -139,15 +139,15 @@ str(seg_ID)
 seg_ID$Rates <- as.numeric(seg_ID$Rates)  
 
 ##### Rate need to check this with database and work out which is grower_rate
-Grower_rate = 80
+Grower_rate = 90
 rate1 = 0
-#rate2 = 70
+rate2 = 80
 #rate3 = 40
 
 #### 1 rate
-list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1"),Rates = c(Grower_rate,rate1 ) )
+#list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1"),Rates = c(Grower_rate,rate1 ) )
 #### 2 rate
-#list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2"), Rates = c(Grower_rate,rate1, rate2 ) )
+list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2"), Rates = c(Grower_rate,rate1, rate2 ) )
 #### 3 rate
 #list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2",  "rate3"),Rates = c(Grower_rate,rate1, rate2, rate3 ) )  
 
