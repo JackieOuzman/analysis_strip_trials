@@ -71,7 +71,7 @@ name_of_path <-
 name_of_path
 
 #what are we testing - what fert ws implemented?
-Fert_legend_name <- "P Fertiliser"
+Fert_legend_name <- "Fertiliser rate "
 
 #################################################################################################
 #These file loaction won't change from site to site
