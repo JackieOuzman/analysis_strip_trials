@@ -44,10 +44,10 @@ file_names2 <- list.files(path = path_finished_wk,
 
 print(file_names2)
 
-modify <- read.csv("Landmark_Steve_Richmond_5_Clarke_Bros_1_30_below_house__zones.csv")
+modify <- read.csv("Landmark_Steve_Richmond_5_Clarke_Bros_1_07_Back_Grussing__zones.csv")
 modify <- modify %>% 
-  mutate(Paddock_tested = "30_below_house")
-write_csv(modify,"Landmark_Steve_Richmond_5_Clarke_Bros_1_30_below_house__zones.csv" )
+  mutate(Paddock_tested = "07_Back_Grussing")
+write_csv(modify,"Landmark_Steve_Richmond_5_Clarke_Bros_1_07_Back_Grussing__zones.csv")
 
 
 ###This is for when we have paddock and zone in the data analysis file.
@@ -56,7 +56,7 @@ write_csv(modify,"Landmark_Steve_Richmond_5_Clarke_Bros_1_30_below_house__zones.
 
 file_names2 <-
   c(
-   "Landmark_Steve_Richmond_5_AC_Jacka_2_Heads__zones.csv")#,
+  # "Landmark_Steve_Richmond_5_AC_Jacka_2_Heads__zones.csv")#,
   #   "Landmark_Kris_Dixon_6_Heightons_1_McKenzie__zones.csv",
   #   "Landmark_Kris_Dixon_6_Heightons_1_Bellas__zones.csv")#,
   #   "Landmark_Tom_Cooper_9_A_P_Robertson_1_McPhees__zones.csv",
@@ -64,7 +64,8 @@ file_names2 <-
   #   "Landmark_Tom_Cooper_9_A_P_Robertson_1_Affecks__zones.csv"),
   #   "Landmark_Matt_Nihill_7_GRG_Weeks_1_Reids_mount__zones.csv",
   #   "Landmark_Matt_Nihill_7_GRG_Weeks_1_Reids_mid__zones.csv")#,
-  #   "Landmark_Steve_Richmond_5_Clarke_Bros_1_30_below_house__zones.csv")
+  #   "Landmark_Steve_Richmond_5_Clarke_Bros_1_30_below_house__zones.csv",
+      "Landmark_Steve_Richmond_5_Clarke_Bros_1_07_Back_Grussing__zones.csv")
   # )
 
 
@@ -85,6 +86,8 @@ Landmark_Kris_Dixon_6_Heightons_1 <- data
 Landmark_Tom_Cooper_9_A_P_Robertson_1 <- data
 Landmark_Matt_Nihill_7_GRG_Weeks_1 <- data
 Landmark_Steve_Richmond_5_Clarke_Bros_1 <- data
+#new set that I was missing
+Landmark_Steve_Richmond_5_Clarke_Bros_1_07_Back_Grussing <- data
 
 ### Bring in all that is run into one df
 
@@ -99,9 +102,16 @@ results_15_05_2020 <- rbind(Landmark_Steve_Richmond_5_AC_Jacka_2_Heads,
                             Landmark_Kris_Dixon_6_Heightons_1,
                             Landmark_Tom_Cooper_9_A_P_Robertson_1,
                             Landmark_Matt_Nihill_7_GRG_Weeks_1,
-                            Landmark_Steve_Richmond_5_Clarke_Bros_1
-                            )
+                            Landmark_Steve_Richmond_5_Clarke_Bros_1)
 
 
 write.csv(results_15_05_2020, "Landmark_15_05_2020.csv")
+
+#oops I had some missing data
+results_15_05_2020 <- read.csv("Landmark_15_05_2020.csv")
+results_15_05_2020 <- dplyr::select(results_15_05_2020, - "X.1")
+results_15_05_2020 <- rbind(results_15_05_2020,
+                            Landmark_Steve_Richmond_5_Clarke_Bros_1_07_Back_Grussing) 
+
+str(results_15_05_2020)
 

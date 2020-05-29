@@ -16,7 +16,7 @@
 #install.packages("RGraphics")
 #install.packages("gridExtra")
 #install.packages("rdrop2")
-libs <- c("dplyr", "tidyr", 
+libs <- c("dplyr", "tidyverse", 
           "ggplot2", "readxl",
           "PairedData", "cowplot", "grid", 
           "RGraphics", 
@@ -141,9 +141,9 @@ str(seg_ID)
  seg_ID$Rates <- as.numeric(seg_ID$Rates)  
  seg_ID
 ##### Rate need to check this with database and work out which is grower_rate
-Grower_rate = 50
+Grower_rate = 100
 rate1 = 0
-rate2 = 100
+rate2 = 50
 #rate3 = 40
 
 ##Add some extra product applied notes for the landmark sites
@@ -940,8 +940,25 @@ harm_database <- read_excel(paste0(
  site
  Paddock_tested_db
 
-
-#make a table of the mean yield for zones
+ #make a table of the mean yield for zones
+ mean_zone_av_1
+ mean_zone_av_2
+ mean_zone_av_3
+ 
+ #---- user input - how many to zones to join
+ #mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1))
+ mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1, mean_zone_av_2))
+ #mean_zone_av_output <- as.data.frame( rbind(mean_zone_av_1, mean_zone_av_2, mean_zone_av_3))
+ 
+ mean_zone_av_output
+ site_details
+ write.csv(mean_zone_av_output, paste0(finished_name_of_path,
+                                       "/",
+                                       site_details,
+                                       "_",
+                                       "_zones.csv"))
+ 
+ ### display this on the png results page
  mean_zone_av_1
  mean_zone_av_2
  mean_zone_av_3
@@ -949,78 +966,73 @@ harm_database <- read_excel(paste0(
  #mean_zone_av_p_values <- rbind(mean_zone_av_1) 
  mean_zone_av_p_values <- rbind(mean_zone_av_1,mean_zone_av_2) 
  #mean_zone_av_p_values <- rbind(mean_zone_av_1, mean_zone_av_2, mean_zone_av_3)
- mean_zone_av_p_values 
- mean_zone_av_p_values <- dplyr::select(mean_zone_av_p_values, 
-                                        Rates, 
-                                        Significant,
-                                        Zone, 
-                                        Details)
+ 
+ mean_zone_av_p_values <- dplyr::select(mean_zone_av_p_values, Rates, Significant,Zone )
  mean_zone_av_output_display <- dplyr::select(mean_zone_av_output,
                                               Rates, 
                                               Yld, 
-                                              Zone)
- mean_zone_av_output_display
- mean_zone_av_p_values
+                                              Zone,
+                                              Details)
  
  mean_zone_av_output_display <- left_join(mean_zone_av_output_display, mean_zone_av_p_values, 
                                           by=c("Rates" = "Rates", "Zone" = "Zone" ))
- mean_zone_av_output_display
  mean_zone_av_output_display <-mean_zone_av_output_display %>% 
    mutate(Significant = case_when(Significant == "significant" ~ "*",
                                   TRUE ~ "" ))
- mean_zone_av_output_display
  mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 1))
  mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
                                        Yld = paste0(Yld, Significant))
- 
  mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, -Significant)
  mean_zone_av_output_display
  mean_zone_av_output_display <- spread(mean_zone_av_output_display, Zone, Yld)
- mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
-#remove the NA
-#mean_zone_av_output_display[] <- replace(as.matrix(mean_zone_av_output_display), is.na(mean_zone_av_output_display), "")
-
-
-
-TSpecial <- ttheme_minimal(base_size = 8)
-table1 <- tableGrob(site , rows = NULL, theme=TSpecial )
-table2 <- tableGrob(mean_zone_av_output_display, rows = NULL, theme=TSpecial)
-
-#get the name of the paddock...
-
-paddock <- Paddock_tested_db
-
-
-library(DT)
-test <- textGrob(paddock)
+ #mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
+ mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,2)] #record the clms
+ mean_zone_av_output_display
+ #remove the NA
+ #mean_zone_av_output_display[] <- replace(as.matrix(mean_zone_av_output_display), is.na(mean_zone_av_output_display), "")
+ 
+ 
+ 
+ TSpecial <- ttheme_minimal(base_size = 8)
+ table1 <- tableGrob(site , rows = NULL, theme=TSpecial )
+ table2 <- tableGrob(mean_zone_av_output_display, rows = NULL, theme=TSpecial)
+ 
+ #get the name of the paddock...
+ 
+ paddock <- Paddock_tested_db
+ 
+ 
+ library(DT)
+ test <- textGrob(paddock)
  ####################################################################################################################################
  ## Arrange the outputs onto one page
-segments
-zone_1
-zone_2
-zone_3
-table1
-paddock
-#collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow = 5,  ncol=3, 
-#                           layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
-
-collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
-                           layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)),
-                           bottom = textGrob(
-                             Sys.Date(),
-                             gp = gpar(fontface = 3, fontsize = 9),
-                             hjust = 2,
-                             x = 1
-                           ))
-             
-collection
-ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
-       width = 35, height = 20, units = "cm", collection)
-
-
-
-
-
-
-
-#
+ segments
+ zone_1
+ zone_2
+ zone_3
+ table1
+ paddock
+ #collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow = 5,  ncol=3, 
+ #                           layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
+ 
+ collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
+                            layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)),
+                            bottom = textGrob(
+                              Sys.Date(),
+                              gp = gpar(fontface = 3, fontsize = 9),
+                              hjust = 2,
+                              x = 1
+                            ))
+ 
+ collection
+ ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
+        width = 35, height = 20, units = "cm", collection)
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ #
+ 
