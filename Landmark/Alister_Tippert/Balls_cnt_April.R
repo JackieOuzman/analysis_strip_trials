@@ -440,21 +440,16 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
        y = "Yield t/ha",
        title = "",
        subtitle = Paddock_tested_db,
-       caption = "")+
-  caption = paste(Grower_rate_label, Additional_fert_label,  sep="\n")+
+       caption = paste(Grower_rate_label, Additional_fert_label,  sep="\n"))+
   theme(plot.caption = element_text(hjust = 0))+
-   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 3, #Zone 1
+  annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 3, #Zone 1
            alpha = .2) +
   annotate("text", x = zone1_range, y= 1,label = zone1)+
   
   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 3, #zone 2
            alpha = .2)+
   annotate("text", x = zone2_range, y= 1,label = zone2)+
-  
-  # annotate("rect", xmin =zone3_min , xmax = zone3_max, ymin = 0, ymax = 3, #zone 3
-  #          alpha = .2)+
-  # annotate("text", x = zone3_range, y= 1,label = zone3)+
-annotate("text", x = 600, y= 0.5,label = "Some missing data")
+  annotate("text", x = 600, y= 0.2,label = "Some missing data")
 
 
 ##3c. Save the results of the segment work
@@ -1007,8 +1002,14 @@ paddock
 #collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow = 5,  ncol=3, 
 #                           layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
 
- collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
-               layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
+collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
+                           layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)),
+                           bottom = textGrob(
+                             Sys.Date(),
+                             gp = gpar(fontface = 3, fontsize = 9),
+                             hjust = 2,
+                             x = 1
+                           ))
              
 collection
 ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
