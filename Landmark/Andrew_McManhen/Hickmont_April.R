@@ -43,14 +43,16 @@ load.libraries(libs)
 
 
 #file://Fssa2-adl/clw-share1/Microlab/value_soil_testing_prj/Yield_data/Landmark/Andrew_McMahen_8/Barney_OCallaghan_2/Jardines/output/Jardines_Yld_SedID_zones.csv
+"W:\value_soil_testing_prj\Yield_data\Landmark\Andrew_McMahen_8\                                  Barney_OCallaghan_2\Hickmont\output\Hickmonts_Yld_SegID_zone.csv"
+
 
 #As it appears in the database
 Organisation_db	  = "Landmark"
 Contact_db = "Andrew_McMahen_8"
 Farmer_db  =  "Barney_OCallaghan_2"
-Paddock_tested_db  =	"Jardines"
+Paddock_tested_db  =	"Hickmont"
 #Zone_db            = 
-data_file       = "Jardines_Yld_SedID_zones.csv"
+data_file       = "Hickmonts_Yld_SegID_zone.csv"
 
 #As it appears in the file directory I use it for name of files
 site_details <- paste0(Organisation_db,"_",
@@ -92,7 +94,7 @@ finished_name_of_path <-
 
 graph_path <-
  paste0( file.path(name_of_path), "/", "output")
-
+graph_path
 ###########################################################################################################
 ##Read in the file from the spatial work
 
@@ -119,6 +121,11 @@ head(seg_ID)
 ### Add correction to segmentID so we can read it as meters (this will depend on how it was defined in spatial)
 seg_ID <-  mutate(seg_ID,
                   SegmentID = SegmentID *10)
+
+seg_ID <- filter(seg_ID,
+                 SegmentID != 610,
+                 SegmentID != 600,
+                 SegmentID != 630)
 
 
 #######################################################################################################
@@ -153,9 +160,9 @@ rate1_applied =        unique(rates_applied_by_site$`P Strip 1 rate`)
 rate2_applied =        unique(rates_applied_by_site$`P Strip 2 rate`)
 rate3_applied =        unique(rates_applied_by_site$`P Strip 3 rate`)
 
-rate1_applied =        unique(rates_applied_by_site$`N Strip 1 rate`)
-rate2_applied =        unique(rates_applied_by_site$`N Strip 2 rate`)
-rate3_applied =        unique(rates_applied_by_site$`N strip 3 rate`)
+# rate1_applied =        unique(rates_applied_by_site$`N Strip 1 rate`)
+# rate2_applied =        unique(rates_applied_by_site$`N Strip 2 rate`)
+# rate3_applied =        unique(rates_applied_by_site$`N strip 3 rate`)
 
 Starter_Feriliser = unique(rates_applied_by_site$`Starter Feriliser`)
 Topdress = unique(rates_applied_by_site$`N Topdressed on P strips or N Topdressed on N strips`)
@@ -164,8 +171,8 @@ Topdress = unique(rates_applied_by_site$`N Topdressed on P strips or N Topdresse
 
 long_name <-  data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2"), 
                           Details = c(Grower_rate_applied,
-                                      rate1_applied, 
-                                      rate3_applied ), 
+                                      rate3_applied, 
+                                      rate2_applied ), 
                           Starter_Feriliser = Starter_Feriliser,
                           Topdress = Topdress)
 
@@ -223,7 +230,7 @@ seg_ID_rate3vsGR <- filter(seg_ID, Rates == rate3 | Rates== Grower_rate )
 
 #I want a list of all values in segment ID to uss in the loop
 list <- unique(seg_ID_rate1vsGR$SegmentID)
- 
+list2 <- unique(seg_ID_rate2vsGR$SegmentID)
 ############################################################################################################
 ##2a. Run as a loop for rate 1 vs GR
 head(seg_ID_rate1vsGR)
@@ -272,7 +279,8 @@ seg_ID_rate1vsGR_summary
 #####################################################################################################
 ##2b.Run as a loop for rate 2 vs GR
 Output_rate2vsGR= data.frame() #create empty df for output
-for (i in list){
+test <- seg_ID_rate1vsGR %>% group_by(SegmentID, Rates) %>% tally()
+for (i in list2){
   segment_data = subset(seg_ID_rate2vsGR, SegmentID == i)
   
   # Method 1: The data are saved in two different numeric vectors.
