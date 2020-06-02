@@ -1011,7 +1011,6 @@ collection <- grid.arrange(zone_1, zone_2, table2, table1, segments, nrow = 5,  
                              hjust = 2,
                              x = 1
                            ))
-
              
 collection
 ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
