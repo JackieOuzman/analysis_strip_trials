@@ -16,7 +16,7 @@
 #install.packages("RGraphics")
 #install.packages("gridExtra")
 #install.packages("rdrop2")
-libs <- c("dplyr", "tidyr", 
+libs <- c("dplyr", "tidyverse", 
           "ggplot2", "readxl",
           "PairedData", "cowplot", "grid", 
           "RGraphics", 
@@ -43,7 +43,7 @@ load.libraries(libs)
 
 
 #file://Fssa2-adl/clw-share1/Microlab/value_soil_testing_prj/Yield_data/Landmark/Heath_Griffith_5/Campbell_2/Brennans/output/Brennans_Yield_SegID_Zone.csv
-
+"W:\value_soil_testing_prj\Yield_data\Landmark\Heath_Griffith_5\Campbell_2\Brennans\output\Brennans_Yld_SegID_Zones.csv"
 
 #As it appears in the database
 Organisation_db	  = "Landmark"
@@ -51,7 +51,7 @@ Contact_db = "Heath_Griffith_5"
 Farmer_db  =  "Campbell_2"
 Paddock_tested_db  =	"Brennans"
 #Zone_db            = 
-data_file       = "Brennans_Yield_SegID_Zone.csv"
+data_file       = "Brennans_Yld_SegID_Zones.csv"
 
 #As it appears in the file directory I use it for name of files
 site_details <- paste0(Organisation_db,"_",
@@ -73,7 +73,7 @@ name_of_path <-
 name_of_path
 
 #what are we testing - what fert ws implemented?
-Fert_legend_name <- "P Rates"
+Fert_legend_name <- "Fertliser Rates"
 
 #################################################################################################
 #These file loaction won't change from site to site
@@ -102,11 +102,12 @@ names(seg_ID)
 
 ##1c. make name consistant
 
+seg_ID <-seg_ID %>% dplyr::select(-Rate_Units)
 seg_ID <-seg_ID %>% 
   rename_at(vars(contains("ate")), ~"Rates") %>% 
   rename_at(vars(contains("one")), ~"Zone") %>% 
-  #rename_at(vars(contains("ield")), ~"Yld") 
-  rename_at(vars(contains("ld")), ~"Yld") 
+  rename_at(vars(contains("Yld_Mass_D")), ~"Yld") 
+#rename_at(vars(contains("ld")), ~"Yld") 
        
 
 ### clean the data removing zero values
@@ -142,12 +143,47 @@ rate1 = 25
 rate2 = 100
 #rate3 = 40
 
+##Add some extra product applied notes for the landmark sites
+Rates_applied <- read_excel("W:/value_soil_testing_prj/data_base/Rates_applied2019/Completed Project Information 2019 DB_rat.xlsx")
+
+#just pull out the site I am working on....need to change the \\ to _
+Rates_applied$Location <- str_replace_all(Rates_applied$Location, "\\\\", "_") #note the extra \\ to access the \\ because regular expresion use \\
+rates_applied_by_site <- filter(Rates_applied, Location == site_details)
+
+Grower_rate_applied =  unique(rates_applied_by_site$strip_that_represents_GSP)
+rate1_applied =        unique(rates_applied_by_site$`P Strip 1 rate`)
+rate2_applied =        unique(rates_applied_by_site$`P Strip 2 rate`)
+rate3_applied =        unique(rates_applied_by_site$`P Strip 3 rate`)
+
+# rate1_applied =        unique(rates_applied_by_site$`N Strip 1 rate`)
+# rate2_applied =        unique(rates_applied_by_site$`N Strip 2 rate`)
+# rate3_applied =        unique(rates_applied_by_site$`N strip 3 rate`)
+
+Starter_Feriliser = unique(rates_applied_by_site$`Starter Feriliser`)
+Topdress = unique(rates_applied_by_site$`N Topdressed on P strips or N Topdressed on N strips`)
+
+
+
+long_name <-  data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2"), 
+                          Details = c(Grower_rate_applied,
+                                      rate1_applied, 
+                                      rate3_applied ), 
+                          Starter_Feriliser = Starter_Feriliser,
+                          Topdress = Topdress)
+long_name
 #### 1 rate
 #list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1"),Rates = c(Grower_rate,rate1 ) )
 #### 2 rate
 list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2"), Rates = c(Grower_rate,rate1, rate2 ) )
 #### 3 rate
 #list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2",  "rate3"),Rates = c(Grower_rate,rate1, rate2, rate3 ) )  
+
+# ---- user input chcek that the rates match and adjust 
+Rates_labels <- left_join(list_rates,long_name )
+print(Rates_labels)
+Grower_rate_label <- paste0("Grower rate = ", Grower_rate, " (", Grower_rate_applied, ")")
+Additional_fert_label <- paste0("Starter application = ", Starter_Feriliser, 
+                                " : Topdress = ", Topdress)
 
 ##### Zones need to check this with 
 
@@ -360,7 +396,10 @@ rm(list = ls()[!(
     "site_details",
     "zone1",
     "zone2",
-    "zone3"
+    "zone3",
+    "Rates_labels",
+    "Grower_rate_label",
+    "Additional_fert_label"
   )
 )])
 
@@ -414,20 +453,20 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
        title = "",
-       #subtitle = paste0(Paddock_tested_db, ". Note: GSP is between 50 and 32, labelled as 50.32"),
-       subtitle = paste0(Paddock_tested_db ),
-       caption = "")+
-   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 6, #Zone 1
+       subtitle = Paddock_tested_db,
+       caption = paste(Grower_rate_label, Additional_fert_label,  sep="\n"))+
+  theme(plot.caption = element_text(hjust = 0))+
+  annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 6, #Zone 1
            alpha = .2) +
   annotate("text", x = zone1_range, y= 1,label = zone1)+
   
   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 6, #zone 2
            alpha = .2)+
   annotate("text", x = zone2_range, y= 1,label = zone2)#+
-  
-  # annotate("rect", xmin =zone3_min , xmax = zone3_max, ymin = 0, ymax = 3, #zone 3
-  #          alpha = .2)+
-  # annotate("text", x = zone3_range, y= 1,label = zone3)+
+
+# annotate("rect", xmin =zone3_min , xmax = zone3_max, ymin = 0, ymax = 3, #zone 3
+#          alpha = .2)+
+# annotate("text", x = zone3_range, y= 1,label = zone3)+
 #annotate("text", x = 1000, y= 3,label = "Some missing data")
 
 
@@ -437,7 +476,7 @@ ggsave(path= graph_path, filename = "t-test_segments.png", device = "png" ,
        width = 20, height = 10, units = "cm")
 
 
-seg_ID_t_test_summary <- left_join(seg_ID_t_test_summary,list_rates)
+seg_ID_t_test_summary <- left_join(seg_ID_t_test_summary,Rates_labels)
 
 write.csv(seg_ID_t_test_summary, paste0(graph_path,"/t_test_segments.csv"))
 
@@ -545,7 +584,7 @@ zone_av_1_rate3vsGR_res_sig
  zone_av_1
  mean_zone_av_1 <-  group_by(zone_av_1, Rates) %>% 
    summarise(mean(Yld))
- mean_zone_av_1 <- left_join(mean_zone_av_1,list_rates)
+ mean_zone_av_1 <- left_join(mean_zone_av_1,Rates_labels)
  mean_zone_av_1
  #----------- user inputs-------#
  #how many to join?
@@ -566,7 +605,7 @@ zone_av_1_rate3vsGR_res_sig
                           Paddock_tested = Paddock_tested_db)
  names(mean_zone_av_1)[2] <- "Yld"
  str(mean_zone_av_1)
- zone_av_1 <- left_join(zone_av_1,list_rates)
+ zone_av_1 <- left_join(zone_av_1,Rates_labels)
  write.csv(zone_av_1, paste0(graph_path,"/t_testzone_zone1_av.csv"))
  
  
@@ -580,7 +619,7 @@ zone_av_1_rate3vsGR_res_sig
    group_by(SegmentID, Rates ) %>% 
    summarise_all(mean)
  zone_av_2$Rate_as_factor  <- as.factor(zone_av_2$Rates) 
- zone_av_2 <- left_join(zone_av_2,list_rates)
+ zone_av_2 <- left_join(zone_av_2,Rates_labels)
  zone_av_2
  
  #subset the zone 2 data
@@ -673,7 +712,7 @@ zone_av_1_rate3vsGR_res_sig
  zone_av_2
  mean_zone_av_2 <-  group_by(zone_av_2, Rates) %>% 
    summarise(mean(Yld))
- mean_zone_av_2 <- left_join(mean_zone_av_2,list_rates)
+ mean_zone_av_2 <- left_join(mean_zone_av_2,Rates_labels)
  
  #----------- user inputs-------#
  #how many to join?
@@ -710,7 +749,7 @@ zone_av_1_rate3vsGR_res_sig
    group_by(SegmentID, Rates ) %>% 
    summarise_all(mean)
  zone_av_3$Rate_as_factor  <- as.factor(zone_av_3$Rates) 
- zone_av_3 <- left_join(zone_av_3,list_rates)
+ zone_av_3 <- left_join(zone_av_3,Rates_labels)
  zone_av_3
  
  #subset the zone 2 data
@@ -803,7 +842,7 @@ zone_av_1_rate3vsGR_res_sig
  zone_av_3
  mean_zone_av_3 <-  group_by(zone_av_3, Rates) %>% 
    summarise(mean(Yld))
- mean_zone_av_3 <- left_join(mean_zone_av_3,list_rates)
+ mean_zone_av_3 <- left_join(mean_zone_av_3,Rates_labels)
  
  #----------- user inputs-------#
  #how many to join?
@@ -942,7 +981,7 @@ mean_zone_av_p_values <- dplyr::select(mean_zone_av_p_values, Rates, Significant
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output,
                                    Rates, 
                                    Yld, 
-                                   Zone)
+                                   Zone, Details)
 
 mean_zone_av_output_display <- left_join(mean_zone_av_output_display, mean_zone_av_p_values, by=c("Rates" = "Rates", "Zone" = "Zone" ))
 mean_zone_av_output_display <-mean_zone_av_output_display %>% 
@@ -954,6 +993,7 @@ mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, -Significant)
 mean_zone_av_output_display
 mean_zone_av_output_display <- spread(mean_zone_av_output_display, Zone, Yld)
+mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
 mean_zone_av_output_display
 #remove the NA
 #mean_zone_av_output_display[] <- replace(as.matrix(mean_zone_av_output_display), is.na(mean_zone_av_output_display), "")
@@ -979,11 +1019,15 @@ zone_2
 zone_3
 table1
 paddock
-#collection <- grid.arrange(zone_1, zone_2,zone_3, table2, table1, segments, nrow = 5,  ncol=3, 
-#                           layout_matrix = cbind(c(1,1,4,6,6),c(2,2,5,6,6), c(3,3,5,6,6)))
 
- collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
-               layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)))
+collection <- grid.arrange(zone_1, zone_2, table2, table1, segments, nrow = 5,  ncol=2, 
+                           layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)),
+                           bottom = textGrob(
+                             Sys.Date(),
+                             gp = gpar(fontface = 3, fontsize = 9),
+                             hjust = 2,
+                             x = 1
+                           ))
              
 collection
 ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
