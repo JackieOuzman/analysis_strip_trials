@@ -1005,7 +1005,7 @@ zone_3
 table1
 paddock
 
-collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  ncol=2, 
+collection <- grid.arrange(zone_1, zone_2, table2, table1, segments, nrow = 5,  ncol=2, 
                            layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)),
                            bottom = textGrob(
                              Sys.Date(),
@@ -1013,6 +1013,7 @@ collection <- grid.arrange(zone_2, zone_1, table2, table1, segments, nrow = 5,  
                              hjust = 2,
                              x = 1
                            ))
+
 
 collection
 ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
