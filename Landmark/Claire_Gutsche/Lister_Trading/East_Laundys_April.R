@@ -92,7 +92,7 @@ finished_name_of_path <-
 
 graph_path <-
  paste0( file.path(name_of_path), "/", "output")
-
+graph_path
 ###########################################################################################################
 ##Read in the file from the spatial work
 
@@ -582,8 +582,8 @@ zone_av_1_rate3vsGR_res_sig
                           Zone = zone1,
                           Organisation =Organisation_db,
                           Contact = Contact_db,
-                          Farmer = Farmer_db)
- #, Paddock_tested = Paddock_tested_db)
+                          Farmer = Farmer_db,
+                          Paddock_tested = Paddock_tested_db)
  names(mean_zone_av_1)[2] <- "Yld"
  
  zone_av_1 <- left_join(zone_av_1,Rates_labels)
@@ -708,7 +708,8 @@ zone_av_1_rate3vsGR_res_sig
                           Zone = zone2,
                           Organisation =Organisation_db,
                           Contact = Contact_db,
-                          Farmer = Farmer_db)
+                          Farmer = Farmer_db,
+                          Paddock_tested = Paddock_tested_db)
 
  mean_zone_av_2
  
