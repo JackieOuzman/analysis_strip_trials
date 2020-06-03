@@ -154,9 +154,9 @@ rate1_applied =        unique(rates_applied_by_site$`P Strip 1 rate`)
 rate2_applied =        unique(rates_applied_by_site$`P Strip 2 rate`)
 rate3_applied =        unique(rates_applied_by_site$`P Strip 3 rate`)
 
-rate1_applied =        unique(rates_applied_by_site$`N Strip 1 rate`)
-rate2_applied =        unique(rates_applied_by_site$`N Strip 2 rate`)
-rate3_applied =        unique(rates_applied_by_site$`N strip 3 rate`)
+#rate1_applied =        unique(rates_applied_by_site$`N Strip 1 rate`)
+#rate2_applied =        unique(rates_applied_by_site$`N Strip 2 rate`)
+#rate3_applied =        unique(rates_applied_by_site$`N strip 3 rate`)
 
 Starter_Feriliser = unique(rates_applied_by_site$`Starter Feriliser`)
 Topdress = unique(rates_applied_by_site$`N Topdressed on P strips or N Topdressed on N strips`)
@@ -165,10 +165,10 @@ Topdress = unique(rates_applied_by_site$`N Topdressed on P strips or N Topdresse
 
 long_name <-  data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2"), 
                           Details = c(Grower_rate_applied,
-                                      rate1_applied, 
-                                      rate3_applied ), 
+                                      rate3_applied, 
+                                      rate2_applied ), 
                           Starter_Feriliser = Starter_Feriliser,
-                          Topdress = Topdress)
+                          Topdress = "Nil")
 
 
 #### 1 rate
@@ -455,7 +455,7 @@ segments <- ggplot(seg_ID_t_test_summary, aes(SegmentID , Yld, group = Rate_as_f
 # annotate("rect", xmin =zone3_min , xmax = zone3_max, ymin = 0, ymax = 3, #zone 3
 #          alpha = .2)+
 # annotate("text", x = zone3_range, y= 1,label = zone3)+
-annotate("text", x = 1000, y= 3,label = "Some missing data")
+annotate("text", x = 1000, y= 1,label = "Missing data")
 
 
 ##3c. Save the results of the segment work
@@ -683,7 +683,7 @@ zone_av_1_rate3vsGR_res_sig
    #stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
    #             width = .75, linetype = "dashed")+
    theme_bw()+
-   ylim(0,4)+
+   ylim(0,5)+
    theme(axis.text=element_text(size=8),
          axis.title=element_text(size=10))+
    labs(x = Fert_legend_name,
@@ -968,7 +968,7 @@ mean_zone_av_p_values <- dplyr::select(mean_zone_av_p_values, Rates, Significant
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output,
                                    Rates, 
                                    Yld, 
-                                   Zone, Deatils)
+                                   Zone, Details)
 
 mean_zone_av_output_display <- left_join(mean_zone_av_output_display, mean_zone_av_p_values, by=c("Rates" = "Rates", "Zone" = "Zone" ))
 mean_zone_av_output_display <-mean_zone_av_output_display %>% 
@@ -981,6 +981,7 @@ mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, -Signi
 mean_zone_av_output_display
 mean_zone_av_output_display <- spread(mean_zone_av_output_display, Zone, Yld)
 mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
+mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,2)] #record the clms
 mean_zone_av_output_display
 #remove the NA
 #mean_zone_av_output_display[] <- replace(as.matrix(mean_zone_av_output_display), is.na(mean_zone_av_output_display), "")
