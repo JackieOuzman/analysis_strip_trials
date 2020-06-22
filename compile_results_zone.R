@@ -123,5 +123,105 @@ write.csv(Non_Landmark, paste0(path_finished_wk,
                        Sys.Date(),
                        "_For_TM.csv"))
 
+#############################################################################################################################
+
+### access file that has paddock code and chcek that these are correct.
+getwd()
+Non_and_Landmark_2020_06_04_paddock_code_only <- read_csv("complied/Landmark_and_non_Landmark2020-06-04_For_TM_paddock_code_only.csv")
 
 
+Non_and_Landmark_2020_06_04_paddock_code_only <- mutate(Non_and_Landmark_2020_06_04_paddock_code_only,
+                                                       temp_ID = paste0(str_sub(Non_and_Landmark_2020_06_04_paddock_code_only$Contact,1,),
+                                                                        "_",
+                                                                        str_sub(Non_and_Landmark_2020_06_04_paddock_code_only$Farmer,1,),
+                                                                        "_",
+                                                                        str_sub(Non_and_Landmark_2020_06_04_paddock_code_only$Paddock_tested,1,),
+                                                                        "_",
+                                                                        str_sub(Non_and_Landmark_2020_06_04_paddock_code_only$Zone,1,)
+                                                       ))
+
+#Append to results and check
+Non_landmark_results <- read_csv("W:/value_soil_testing_prj/Yield_data/finished/complied/Non_Landmark2020-06-04_For_TM.csv")
+Non_landmark_results <- mutate(Non_landmark_results,
+                           temp_ID = paste0(str_sub(Non_landmark_results$Contact,1,),
+                                            "_",
+                                            str_sub(Non_landmark_results$Farmer,1,),
+                                            "_",
+                                            str_sub(Non_landmark_results$Paddock_tested,1,),
+                                            "_",
+                                            str_sub(Non_landmark_results$Zone,1,)
+                           ))
+
+
+str(Non_and_Landmark_2020_06_04_paddock_code_only)
+str(Non_landmark_results)
+
+# Non_landmark_results_temp <- dplyr::select(Non_landmark_results,
+#                                         "Organisation_T" =Organisation,
+#                                         "Zone_T" = Zone,
+#                                         "Contact_T" =Contact,
+#                                         "Farmer_T" = Farmer, 
+#                                         "Paddock_tested_T" = Paddock_tested  ,
+#                                         temp_ID)
+#  
+#  str(Non_and_Landmark_2020_06_04_paddock_code_only)
+#  str(Non_landmark_results_temp)
+#  Non_landmark_results <- left_join(Non_landmark_results_temp, Non_and_Landmark_2020_06_04_paddock_code_only)
+# 
+#  write.csv(Non_landmark_results, paste0(path_finished_wk,
+#                         "complied",
+#                         "/",
+#                         "Non_landmark_results_check",
+#                         Sys.Date(),
+#                         "_For_JO.csv"))
+
+
+#all looks good now I can do this for non landmark results
+str(Non_and_Landmark_2020_06_04_paddock_code_only)
+str(Non_landmark_results)
+Non_landmark_results <- left_join(Non_landmark_results, Non_and_Landmark_2020_06_04_paddock_code_only)
+
+
+str(Non_landmark_results)
+
+Non_landmark_results <- dplyr::select(Non_landmark_results, -X1, -X, -temp_ID )
+
+### add in the soil test results
+NP_database_31032020_SA <- read_excel("C:/Users/ouz001/Dropbox/GRDC_Soil_Plant_Testing_Database/NP_database_31032020_SA.xlsx")
+#str(NP_database_31032020_SA)
+NP_database_31032020_SA<-
+  dplyr::select(NP_database_31032020_SA,
+                "Paddock_code" =  `Paddock code`, Colwell,
+                DGT,
+                PBI ,
+                `Total N`,
+                `Colwell rec rate`,
+                `DGT rec rate`    
+  )
+#remove the row that is missing..
+NP_database_31032020_SA <-filter(NP_database_31032020_SA, Paddock_code != "NA")  
+
+## join to non landmark results
+
+str(NP_database_31032020_SA)
+str(Non_landmark_results)
+Non_landmark_results_soil_and_pair <- left_join(Non_landmark_results, NP_database_31032020_SA, by= c('Paddock code' = "Paddock_code"))
+
+#order the clms
+
+str(Non_landmark_results_soil_and_pair)
+Non_landmark_results_soil_and_pair <- Non_landmark_results_soil_and_pair %>%
+  dplyr::select('Paddock code', Organisation, 
+                Contact,
+                Farmer,
+                Paddock_tested,
+                Zone,
+                everything())
+
+
+write.csv(Non_landmark_results_soil_and_pair, paste0(path_finished_wk,
+                                                 "complied",
+                                                 "/",
+                                                 "Non_Landmark_with_soil",
+                                                 Sys.Date(),
+                                                 "_For_TM.csv"))
