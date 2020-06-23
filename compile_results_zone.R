@@ -141,7 +141,7 @@ Non_and_Landmark_2020_06_04_paddock_code_only <- mutate(Non_and_Landmark_2020_06
                                                        ))
 
 #Append to results and check
-Non_landmark_results <- read_csv("W:/value_soil_testing_prj/Yield_data/finished/complied/Non_Landmark2020-06-04_For_TM.csv")
+Non_landmark_results <- read_csv("W:/value_soil_testing_prj/Yield_data/finished/complied/Non_Landmark2020-06-23_For_TM.csv")
 Non_landmark_results <- mutate(Non_landmark_results,
                            temp_ID = paste0(str_sub(Non_landmark_results$Contact,1,),
                                             "_",
@@ -219,9 +219,49 @@ Non_landmark_results_soil_and_pair <- Non_landmark_results_soil_and_pair %>%
                 everything())
 
 
-write.csv(Non_landmark_results_soil_and_pair, paste0(path_finished_wk,
-                                                 "complied",
-                                                 "/",
-                                                 "Non_Landmark_with_soil",
-                                                 Sys.Date(),
-                                                 "_For_TM.csv"))
+
+############################################################
+## Add in info about the fertiliser applied
+
+str(Non_landmark_results_soil_and_pair)
+#Non_landmark_results_soil_and_pair <- dplyr::select(Non_landmark_results_soil_and_pair, -Details, -Starter_Feriliser, -Topdress )
+Non_landmark_results_soil_and_pair <- dplyr::select(Non_landmark_results_soil_and_pair, -Details, -Starter_Feriliser, -Topdress )
+# unique(Non_landmark_results_soil_and_pair$rate_name)
+# unique(Non_landmark_rates_applied$rate_name)
+
+########adjust the clm rate_name to only keep Growers_rate
+
+Non_landmark_results_soil_and_pair$rate_name <- recode(Non_landmark_results_soil_and_pair$rate_name, Grower_rate = "Grower_rate", .default = NA_character_)
+
+#bring in the file with the rates 
+Non_landmark_rates_applied <- read_excel("complied/Non_landmark_rates_applied.xlsx")
+# unique(Non_landmark_results_soil_and_pair$rate_name)
+# unique(Non_landmark_rates_applied$rate_name)
+str(Non_landmark_results_soil_and_pair)
+str(Non_landmark_rates_applied)
+#remove some clms to stop the duplication
+Non_landmark_rates_applied <- Non_landmark_rates_applied %>% 
+  dplyr::select("Paddock code", Details, Starter_Feriliser, Topdress , Rates, rate_name, comments, Trial)
+
+
+#join by paddock code, rate and rate name (only keeping Grower_rate)
+
+Non_landmark_results_soil_and_pair_rates <- left_join(Non_landmark_results_soil_and_pair, 
+                                                      Non_landmark_rates_applied, by= c("Paddock code", "Rates", "rate_name"))
+str(Non_landmark_results_soil_and_pair_rates)
+
+
+write.csv(
+  Non_landmark_results_soil_and_pair_rates,
+  paste0(
+    path_finished_wk,
+    "complied",
+    "/",
+    "Non_landmark_results_soil_and_pair_rates",
+    Sys.Date(),
+    "_For_TM.csv"
+  )
+)
+
+
+
