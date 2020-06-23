@@ -212,6 +212,17 @@ landmark_results_soil_and_pair <- landmark_results_soil_and_pair %>%
          everything())
 
 
+### Tim paddocks are missing data on what was applied this will need to be checked
+
+Rates_applied_Tim <- read_excel("W:/value_soil_testing_prj/data_base/Rates_applied2019/Completed Project Information 2019 DB_rat.xlsx", 
+                            sheet ="Added_by_Jaxs" )
+
+
+
+str(Rates_applied_Tim)
+
+
+
 write.csv(landmark_results_soil_and_pair, paste0(path_finished_wk,
                        "complied",
                        "/",
