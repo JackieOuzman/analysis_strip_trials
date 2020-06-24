@@ -163,13 +163,15 @@ rate3 = 110
 
 
 long_name <-  data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2", "rate3"), 
-                          Details = c("55",
-                                      "0", 
-                                      "27",
-                                      " 110"), 
-                          Starter_Feriliser = "NA",
-                          Topdress = "NA")
+                          Details = c("MESZ 55 + Urea 50 (kg Fert)",
+                                      "MESZ 0 + Urea 50 (kg Fert)", 
+                                      "MESZ 27 + Urea 50 (kg Fert)",
+                                      "MESZ 110 + Urea 50 (kg Fert)"), 
+                          Starter_Feriliser = "TBC",
+                          Topdress = "Urea 70 Kg Fert")
 
+Starter_Feriliser <- "TBC"
+Topdress <-  "Urea 70 Kg Fert"
 
 #### 1 rate
 #list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1"),Rates = c(Grower_rate,rate1 ) )
@@ -181,9 +183,9 @@ list_rates <- data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2",  "rat
 # ---- user input chcek that the rates match and adjust 
 Rates_labels <- left_join(list_rates,long_name )
 print(Rates_labels)
-Grower_rate_label <- paste0("Grower rate = ", "55", " (", "55", ")")
-Additional_fert_label <- paste0("Starter application = ", "NA", 
-                                " : Topdress = ", "NA")
+Grower_rate_label <- paste0("Grower rate = ", "55", " (", "MESZ 55 + Urea 50 (kg Fert)", ")")
+Additional_fert_label <- paste0("Starter application = ", Starter_Feriliser, 
+                                " : Topdress = ", Topdress)
 
 
 ##### Zones need to check this with 
