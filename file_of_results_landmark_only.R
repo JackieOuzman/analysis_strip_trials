@@ -1,7 +1,7 @@
 #Collating zone analsyis results
 
 #1. install the lib that I will be using for this work
-library(stringr)
+
 libs <- c("dplyr", "tidyverse", "stringr",
           "ggplot2", "readxl",
           "PairedData", "cowplot", "grid", 
@@ -220,7 +220,28 @@ Rates_applied_Tim <- read_excel("W:/value_soil_testing_prj/data_base/Rates_appli
 
 
 str(Rates_applied_Tim)
+str(landmark_results_soil_and_pair)
+unique(landmark_results_soil_and_pair$Farmer)
 
+landmark_results_soil_and_pair$rate_name <- recode(landmark_results_soil_and_pair$rate_name, Grower_rate = "Grower_rate", .default = NA_character_)
+
+
+# remove Tim paddocks from final data set and make a new temp tim results
+No_Tim_landmark_results_soil_and_pair <- filter(landmark_results_soil_and_pair,Farmer != "Tim_McClelland_4")
+Tim_only_landmark_results_soil_and_pair  <- filter(landmark_results_soil_and_pair,Farmer == "Tim_McClelland_4")
+
+Tim_only_landmark_results_soil_and_pair <- dplyr::select(Tim_only_landmark_results_soil_and_pair,
+                                                         -Details , -Starter_Feriliser, -Topdress)
+#add in the details of what was applied
+test <- left_join(Tim_only_landmark_results_soil_and_pair,Rates_applied_Tim )
+#Tim_only_landmark_results_soil_and_pair <- left_join(Tim_only_landmark_results_soil_and_pair,Rates_applied_Tim )
+
+### add it back into the No_Tim_landmark_results_soil_and_pair data
+
+landmark_results_soil_and_pair <- bind_rows(test, No_Tim_landmark_results_soil_and_pair)
+
+
+### not finished!!! I have got problem with Backsheehan
 
 
 write.csv(landmark_results_soil_and_pair, paste0(path_finished_wk,

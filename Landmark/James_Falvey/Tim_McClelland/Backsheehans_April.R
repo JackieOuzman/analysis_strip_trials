@@ -164,7 +164,7 @@ Topdress = unique(rates_applied_by_site$`N Topdressed on P strips or N Topdresse
 
 long_name <-  data.frame( rate_name = c("Grower_rate" , "rate1",  "rate2"), 
                           Details = c(Grower_rate_applied,
-                                      rate1_applied, 
+                                      rate2_applied, 
                                       rate3_applied ), 
                           Starter_Feriliser = Starter_Feriliser,
                           Topdress = Topdress)
@@ -488,7 +488,7 @@ ggsave(path= graph_path, filename = "t-test_segments.png", device = "png" ,
        width = 20, height = 10, units = "cm")
 
 
-seg_ID_t_test_summary <- left_join(seg_ID_t_test_summary,list_rates)
+seg_ID_t_test_summary <- left_join(seg_ID_t_test_summary,Rates_labels)
 
 write.csv(seg_ID_t_test_summary, paste0(graph_path,"/t_test_segments.csv"))
 
@@ -596,7 +596,7 @@ zone_av_1_rate3vsGR_res_sig
  zone_av_1
  mean_zone_av_1 <-  group_by(zone_av_1, Rates) %>% 
    summarise(mean(Yld))
- mean_zone_av_1 <- left_join(mean_zone_av_1,list_rates)
+ mean_zone_av_1 <- left_join(mean_zone_av_1,Rates_labels)
  mean_zone_av_1
  #----------- user inputs-------#
  #how many to join?
@@ -617,7 +617,7 @@ zone_av_1_rate3vsGR_res_sig
                           Paddock_tested = Paddock_tested_db)
  names(mean_zone_av_1)[2] <- "Yld"
  str(mean_zone_av_1)
- zone_av_1 <- left_join(zone_av_1,list_rates)
+ zone_av_1 <- left_join(zone_av_1,Rates_labels)
  write.csv(zone_av_1, paste0(graph_path,"/t_testzone_zone1_av.csv"))
  
  
@@ -631,7 +631,7 @@ zone_av_1_rate3vsGR_res_sig
    group_by(SegmentID, Rates ) %>% 
    summarise_all(mean)
  zone_av_2$Rate_as_factor  <- as.factor(zone_av_2$Rates) 
- zone_av_2 <- left_join(zone_av_2,list_rates)
+ zone_av_2 <- left_join(zone_av_2,Rate_l)
  zone_av_2
  
  #subset the zone 2 data
@@ -724,7 +724,7 @@ zone_av_1_rate3vsGR_res_sig
  zone_av_2
  mean_zone_av_2 <-  group_by(zone_av_2, Rates) %>% 
    summarise(mean(Yld))
- mean_zone_av_2 <- left_join(mean_zone_av_2,list_rates)
+ mean_zone_av_2 <- left_join(mean_zone_av_2,Rates_labels)
  
  #----------- user inputs-------#
  #how many to join?
@@ -761,7 +761,7 @@ zone_av_1_rate3vsGR_res_sig
    group_by(SegmentID, Rates ) %>% 
    summarise_all(mean)
  zone_av_3$Rate_as_factor  <- as.factor(zone_av_3$Rates) 
- zone_av_3 <- left_join(zone_av_3,list_rates)
+ zone_av_3 <- left_join(zone_av_3,Rates_labels)
  zone_av_3
  
  #subset the zone 2 data
@@ -854,7 +854,7 @@ zone_av_1_rate3vsGR_res_sig
  zone_av_3
  mean_zone_av_3 <-  group_by(zone_av_3, Rates) %>% 
    summarise(mean(Yld))
- mean_zone_av_3 <- left_join(mean_zone_av_3,list_rates)
+ mean_zone_av_3 <- left_join(mean_zone_av_3,Rates_labels)
  
  #----------- user inputs-------#
  #how many to join?
@@ -988,7 +988,8 @@ mean_zone_av_3
 #mean_zone_av_p_values <- rbind(mean_zone_av_1) 
 mean_zone_av_p_values <- rbind(mean_zone_av_1,mean_zone_av_2) 
 #mean_zone_av_p_values <- rbind(mean_zone_av_1, mean_zone_av_2, mean_zone_av_3)
-  
+mean_zone_av_p_values
+mean_zone_av_output
 mean_zone_av_p_values <- dplyr::select(mean_zone_av_p_values, Rates, Significant,Zone )
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output,
                                    Rates, 
