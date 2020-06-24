@@ -122,7 +122,8 @@ write.csv(data, paste0(path_finished_wk,
 ### add in the paddock id and results from the database
 
 ### access file that has paddock code and chcek that these are correct.
-Landmark_2020_06_04_For_TM_paddock_code_only <- read_csv("complied/Landmark_2020-06-04_For_TM_paddock_code_only.csv")
+
+Landmark_2020_06_04_For_TM_paddock_code_only <- read_csv("complied/Landmark_and_non_Landmark2020-06-04_For_TM_paddock_code_only.csv")
 Landmark_2020_06_04_For_TM_paddock_code_only <- mutate(Landmark_2020_06_04_For_TM_paddock_code_only,
                            temp_ID = paste0(str_sub(Landmark_2020_06_04_For_TM_paddock_code_only$Contact,1,),
                                             "_",
@@ -134,7 +135,7 @@ Landmark_2020_06_04_For_TM_paddock_code_only <- mutate(Landmark_2020_06_04_For_T
                            ))
 
 #Append to results and check
-landmark_results <- read_csv("W:/value_soil_testing_prj/Yield_data/finished/complied/Landmark_2020-06-04_For_TM.csv")
+landmark_results <- read_csv("W:/value_soil_testing_prj/Yield_data/finished/complied/Landmark_2020-06-24_For_TM.csv")
 landmark_results <- mutate(landmark_results,
                            temp_ID = paste0(str_sub(landmark_results$Contact,1,),
                                             "_",
@@ -180,7 +181,12 @@ str(landmark_results)
 landmark_results <- dplyr::select(landmark_results, -X1, -X, -temp_ID )
 
 ### add in the soil test results
-NP_database_31032020_SA <- read_excel("C:/Users/ouz001/Dropbox/GRDC_Soil_Plant_Testing_Database/NP_database_31032020_SA.xlsx")
+#NP_database_31032020_SA <- read_excel("C:/Users/ouz001/Dropbox/GRDC_Soil_Plant_Testing_Database/NP_database_31032020_SA.xlsx")
+
+NP_database_31032020_SA <- read_excel(paste0("W:/value_soil_testing_prj/data_base/", 
+                                 "NP_database_31032020_SA.xlsx"))
+
+
 #str(NP_database_31032020_SA)
 NP_database_31032020_SA<-
   dplyr::select(NP_database_31032020_SA,
@@ -213,35 +219,6 @@ landmark_results_soil_and_pair <- landmark_results_soil_and_pair %>%
 
 
 ### Tim paddocks are missing data on what was applied this will need to be checked
-
-Rates_applied_Tim <- read_excel("W:/value_soil_testing_prj/data_base/Rates_applied2019/Completed Project Information 2019 DB_rat.xlsx", 
-                            sheet ="Added_by_Jaxs" )
-
-
-
-str(Rates_applied_Tim)
-str(landmark_results_soil_and_pair)
-unique(landmark_results_soil_and_pair$Farmer)
-
-landmark_results_soil_and_pair$rate_name <- recode(landmark_results_soil_and_pair$rate_name, Grower_rate = "Grower_rate", .default = NA_character_)
-
-
-# remove Tim paddocks from final data set and make a new temp tim results
-No_Tim_landmark_results_soil_and_pair <- filter(landmark_results_soil_and_pair,Farmer != "Tim_McClelland_4")
-Tim_only_landmark_results_soil_and_pair  <- filter(landmark_results_soil_and_pair,Farmer == "Tim_McClelland_4")
-
-Tim_only_landmark_results_soil_and_pair <- dplyr::select(Tim_only_landmark_results_soil_and_pair,
-                                                         -Details , -Starter_Feriliser, -Topdress)
-#add in the details of what was applied
-test <- left_join(Tim_only_landmark_results_soil_and_pair,Rates_applied_Tim )
-#Tim_only_landmark_results_soil_and_pair <- left_join(Tim_only_landmark_results_soil_and_pair,Rates_applied_Tim )
-
-### add it back into the No_Tim_landmark_results_soil_and_pair data
-
-landmark_results_soil_and_pair <- bind_rows(test, No_Tim_landmark_results_soil_and_pair)
-
-
-### not finished!!! I have got problem with Backsheehan
 
 
 write.csv(landmark_results_soil_and_pair, paste0(path_finished_wk,
