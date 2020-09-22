@@ -40,13 +40,14 @@ setwd(path_finished_wk)
  my_list_MSF <- grep(my_list_non_landmark_files,
                         pattern = "MSF", value = T)
  
- 
+ my_list_Agrivision <- grep(my_list_non_landmark_files,
+                     pattern = "Agrivision", value = T)
  
  my_list_non_landmark_files
  my_list_Vic_Ind
  my_list_SA_Ind
  my_list_MSF
- 
+ my_list_Agrivision
  
  
  
@@ -79,6 +80,13 @@ SA_Ind <-
                  function(x) 
                    read.csv(paste(path_finished_wk, x, sep=''), 
                             stringsAsFactors = FALSE)))
+Agrivision <- 
+  do.call("rbind", 
+          lapply(my_list_Agrivision, #this is a list of files
+                 function(x) 
+                   read.csv(paste(path_finished_wk, x, sep=''), 
+                            stringsAsFactors = FALSE)))
+
 
 names(Vic_Ind) #paddock should be Paddock_tested
 names(SA_Ind) #paddock should be Paddock_tested
@@ -112,7 +120,7 @@ names(MSF)
 
 
 
-Non_Landmark <- rbind(Vic_Ind, SA_Ind, MSF)
+Non_Landmark <- rbind(Vic_Ind, SA_Ind, MSF, Agrivision)
 
 
 
@@ -141,7 +149,7 @@ Non_and_Landmark_2020_06_04_paddock_code_only <- mutate(Non_and_Landmark_2020_06
                                                        ))
 
 #Append to results and check
-Non_landmark_results <- read_csv("W:/value_soil_testing_prj/Yield_data/finished/complied/Non_Landmark2020-06-23_For_TM.csv")
+Non_landmark_results <- read_csv("W:/value_soil_testing_prj/Yield_data/finished/complied/Non_Landmark2020-06-25_For_TM.csv")
 Non_landmark_results <- mutate(Non_landmark_results,
                            temp_ID = paste0(str_sub(Non_landmark_results$Contact,1,),
                                             "_",
@@ -187,7 +195,10 @@ str(Non_landmark_results)
 Non_landmark_results <- dplyr::select(Non_landmark_results, -X1, -X, -temp_ID )
 
 ### add in the soil test results
-NP_database_31032020_SA <- read_excel("C:/Users/ouz001/Dropbox/GRDC_Soil_Plant_Testing_Database/NP_database_31032020_SA.xlsx")
+#NP_database_31032020_SA <- read_excel("C:/Users/ouz001/Dropbox/GRDC_Soil_Plant_Testing_Database/NP_database_31032020_SA.xlsx")
+NP_database_31032020_SA <- read_excel("W:/value_soil_testing_prj/data_base/NP_database_31032020_SA.xlsx")
+
+
 #str(NP_database_31032020_SA)
 NP_database_31032020_SA<-
   dplyr::select(NP_database_31032020_SA,
