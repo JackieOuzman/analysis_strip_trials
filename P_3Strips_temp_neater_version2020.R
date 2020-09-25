@@ -1,7 +1,29 @@
-library(tidyverse)
-library(dplyr)
-library(ggplot2)
-library(readr)
+### load in the libraries
+
+#install.packages("PairedData")
+#install.packages("RGraphics")
+#install.packages("gridExtra")
+#install.packages("rdrop2")
+libs <- c("dplyr", "tidyverse", 
+          "ggplot2", "readxl",
+          "PairedData", "cowplot", "grid", 
+          "RGraphics", 
+          "gridExtra", "rdrop2", "readr")
+
+install.libraries <- function(lib=NULL){
+  new <- lib[!(lib %in% installed.packages()[, "Package"])]
+  if (length(new)){   
+    install.packages(new, dependencies = TRUE)
+  }
+} 
+
+load.libraries <- function(lib=NULL){
+  sapply(libs, require, character.only = TRUE)
+}
+
+install.libraries(libs)
+load.libraries(libs)
+#########################################################
 ###########################################################################################
 #std
 
@@ -47,7 +69,8 @@ strips <- read_csv(paste0(baseDir, "/",input_file))
 return(strips)}
 
 #call function
-function_1_import_data(input_file)
+assign("strips", function_1_import_data(input_file))
+
 ################################################################################################################
 
 #tidy up data frame
@@ -257,359 +280,111 @@ assign(("plot_whole_strip"), function_strip_plot(for_plotting))
 
 plot_whole_strip
 
+##############################################################################################################
+# make a table for the report
+##############################################################################################################
+# table 1 soil testing results
 
 
+DB_file_name <- "N&P 2019 data for analysis Vic 16 April2020.csv"
+# paddock ID 318130 and 318131
+paddock_ID_1 <- "318130"
+paddock_ID_2 <- "318131"
+
+function_tabel_soil_testing <- function(DB_file_name, paddock_ID_1, paddock_ID_2){
+paddock_ID <- c(paddock_ID_1, paddock_ID_2)
+harm_database  <- read_csv(paste0("W:/value_soil_testing_prj/data_base/",DB_file_name))
+
+#fix up some names
+harm_database<-
+  dplyr::select(harm_database,
+                "Paddock_code" =  `Paddock code`,     
+                Contact, Farmer,
+                "Paddock_tested" = `Paddock tested`,
+                Zone ,
+                Colwell,
+                DGT,
+                PBI ,
+                `Total N`,
+                `Colwell rec rate`,
+                `DGT rec rate`)
+#remove the row that is missing..
+harm_database <-filter(harm_database, Paddock_code != "NA")
 
 
-############################################################################
-#this is calling the function (make sure the function in an object first)
-value_whole_strip(input_file, x, y, z)
-############################################################################
+#extract the paddock I want 
+site <- filter(harm_database,
+               Paddock_code == paddock_ID) %>% 
+   dplyr::select(5, 6: 11)
+
+#remove the text
+site <-site %>% 
+  mutate(`Colwell rec rate` = replace(`Colwell rec rate`,
+                                      `Colwell rec rate` == 'Replacement', 
+                                      "9999"),
+         `DGT rec rate` = replace(`DGT rec rate`,
+                                  `DGT rec rate` == 'Replacement', 
+                                  "9999"))
+
+site$`Colwell rec rate` <- as.numeric(site$`Colwell rec rate`)
+site$`DGT rec rate` <- as.numeric(site$`DGT rec rate`)
+site <- site %>% mutate_if(is.numeric, ~round(., 0))
+site$`Colwell rec rate` <- as.character(site$`Colwell rec rate`)
+site$`DGT rec rate` <- as.character(site$`DGT rec rate`)
+
+#put the replacement back in
+site <- site %>% mutate_if(is.character,~replace(.,.== "9999", 'Replacement'))
+site
+return(site)
+}
+assign(("site"), function_tabel_soil_testing(DB_file_name, paddock_ID_1, paddock_ID_2))
 
 
-#this could be a function...
-value_whole_strip <- function(input_file, x,y,z, strips){
-site <- stringr:: str_split(input_file, "_", simplify = TRUE)
-site <- site[1,1]
+##############################################################################################################
+# table 2 yield  results
+#this is adding aclm that should be in the import file but is empty now
+all_results <- all_results %>% mutate(Details = NA)
 
-strips <- strips %>% 
-  mutate(
-    Rate_name = case_when(
-      Rate == x ~ "low_rate",
-      Rate == y ~ "middle_rate",
-      Rate == z ~ "high_rate"
-    ))
+function_tabel_yield <- function(all_results){
+mean_zone_av_output_display <-all_results %>% 
+  mutate(Significant = case_when(Significant == "significant" ~ "*",
+                                 TRUE ~ "" ))
+mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 1))
+mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
+                                      Yld = paste0(yield, Significant))
+mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, zone, Details, Yld)
+mean_zone_av_output_display <- spread(mean_zone_av_output_display, zone, Yld)
+mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
 
-## std with averaging of each seg
-step1_strips <- group_by(strips, SegmentID, Rate_name) %>% 
-  summarise(Yld_Mass_Av = mean(YldMassDry ))
-
-unique(step1_strip_std$Rate_name)
-#turn this into a wide data - because I am at a loss how to do this with tidy data
-str(step1_strip)
-strips_wide <- step1_strips %>% 
-  pivot_wider(names_from = Rate_name , values_from = Yld_Mass_Av)
-strips_wide <- as.data.frame(strips_wide)
-
-strips_wide <- strips_wide %>% 
-                          mutate(
-                          low_vs_middle = case_when(
-                            low_rate <   middle_rate ~ "yld_increase",
-                            TRUE           ~ "yld_decrease"
-                          ))
-
-
-strips_std_wide <- strips_std_wide %>% 
-  mutate(
-    middle_vs_high = case_when(
-      middle_rate  <  high_rate ~ "yld_increase",
-      TRUE           ~ "yld_decrease"
-    ))
-
-strips_std_wide <- strips_std_wide %>% 
-  mutate(
-    low_vs_high = case_when(
-      low_rate <  high_rate ~ "yld_increase",
-      TRUE           ~ "yld_decrease"
-    ))
-
-strips_std_wide <- as.data.frame(strips_std_wide)
-str(strips_std_wide)
-
-
-low_vs_middle_tally <-  strips_std_wide %>% group_by(low_vs_middle) %>%   summarise(n = n()) %>%  mutate(percent = (freq = n / sum(n)))    %>%  mutate(comaprsion = "low_vs_middle") %>% rename(yld_response = low_vs_middle )
-middle_vs_high_tally <- strips_std_wide %>% group_by(middle_vs_high) %>%  summarise(n = n()) %>%  mutate(percent = (freq = n / sum(n)))    %>%  mutate(comaprsion = "middle_vs_high") %>% rename(yld_response = middle_vs_high )
-low_vs_high_tally <-    strips_std_wide %>% group_by( low_vs_high)  %>%   summarise(n = n()) %>%  mutate(percent = (freq = n / sum(n)))    %>%  mutate(comaprsion = "low_vs_high") %>% rename(yld_response = low_vs_high )
-
-
-names(low_vs_middle_tally)
-names(middle_vs_high_tally)
-names(low_vs_high_tally)
-
-strips_count_segments <- bind_rows(low_vs_middle_tally,
-                                     middle_vs_high_tally,
-                                     low_vs_high_tally)  
-########################################################################
-### how does it behave with zone data
-str(strips_std)
-unique(strips_std$Zone)
-## std with averaging of each seg
-
-step1_strips_zone_std <- group_by(strips_std, SegmentID, Rate, Zone) %>% 
-  summarise(Yld_Mass_Av = mean(YldMassDry))
-
-strips_zone_std_ave <- group_by(step1_strips_zone_std, Rate, Zone ) %>% 
-  summarise(Yld_Mass_Av = mean(Yld_Mass_Av)) %>% 
-  mutate(site= paste0(site, "_yld_std"),
-         raw_or_av = 'average_all'
-         )
-
-strips_zone_std_ave <- filter(strips_zone_std_ave, !is.na(Zone))
-strips_zone_std_ave <- ungroup(strips_zone_std_ave)
-
-#########################################################################
-### how does it behave with all the strip data
-str(strips_std)
-## std with averaging of each seg
-
-step1_strips_all_std <- group_by(strips_std, SegmentID, Rate) %>% 
-  summarise(Yld_Mass_Av = mean(YldMassDry, na.rm = TRUE))
-print(step1_strips_all_std)
-strips_all_std_ave <- group_by(step1_strips_all_std, Rate ) %>% 
-  summarise(Yld_Mass_Av = mean(Yld_Mass_Av,na.rm = TRUE)) %>% 
-  mutate(site= paste0(site, "_yld_std"),
-         raw_or_av = 'average_all', 
-         Zone = "entire_strip")
-print(strips_all_std_ave)
-
-#then order the df by rate and add a new clm for comparsion
-strips_all_std_ave <- arrange(strips_all_std_ave, Rate) %>% 
-  mutate(comaprsion = c("low_vs_high", "low_vs_middle", "middle_vs_high"))
-
-#######################################################################
-#join the entrie strip and zone togther
-str(strips_zone_std_ave)
-str(strips_all_std_ave)
-print(strips_all_std_ave)
-strips_all_std_ave <- bind_rows(strips_all_std_ave, strips_zone_std_ave)
-
-
-
-## add in the strip count info
-strips_count_segments <- filter(strips_count_segments,
-                                yld_response == "yld_increase")
-strip_whole <- full_join(strips_all_std_ave, strips_count_segments, by = "comaprsion")
-
-str(strips_all_std_ave)
-str(strips_count_segments)
-
-#rm(list=setdiff(ls(), c("strips_all_std_ave", "strips_count_segments", "strip_whole", "outputDir", "site")))
-
-
-strip_whole <- strip_whole %>% 
-  mutate(
-    Rate_name = case_when(
-      Rate == x ~ "low_rate",
-      Rate == y ~ "middle_rate",
-      Rate == z ~ "high_rate"
-    ))
-
-write.csv(strip_whole,
-          paste0(outputDir, "/",site, "_strip_whole.csv"))
-
-return(strip_whole)
+return(mean_zone_av_output_display)
 }
 
+assign(("tabel_yield"), function_tabel_yield(all_results))
 
-########################################################################################################################
-## can I bring in all the processed files and make one big one?
-
-
-
-baseDir2 <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "dig_deeper", "whole_strip", "P", "3Rates", "output")
-baseDir2
-list.files(baseDir2, full.names = FALSE)
-
-# Get file list
-file_list <- list.files(baseDir2, full.names = TRUE)
-
-# Read all csv files in the folder and create a list of dataframes
-ldf <- lapply(file_list , read.csv)
-
-# Combine each dataframe in the list into a single dataframe
-df.final <- do.call("rbind", ldf)
-
-baseDir3 <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "dig_deeper", "whole_strip", "P", "3Rates", "output_merge")
-write.csv(df.final,
-          paste0(baseDir3, "/", "landmark_3P_rates_strip_whole.csv"))
+TSpecial <- ttheme_minimal(base_size = 8)
+table1 <- tableGrob(site , rows = NULL, theme=TSpecial )
+table2 <- tableGrob(tabel_yield, rows = NULL, theme=TSpecial)
 
 
-### let chcek out what I have done...
+plot_whole_strip
+plot_zone1
+plot_zone2
 
-str(df.final)
-unique(df.final$Rate_name)
+table1
+paddock
+
+collection <- grid.arrange(plot_zone1, plot_zone2, table2, table1, plot_whole_strip, nrow = 5,  ncol=2, 
+                           layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)),
+                           bottom = textGrob(
+                             Sys.Date(),
+                             gp = gpar(fontface = 3, fontsize = 9),
+                             hjust = 2,
+                             x = 1
+                           ))
+
+collection
 
 
-df.final$Rate_name <- factor(df.final$Rate_name, levels = c("low_rate", "middle_rate", "high_rate"))
-
-
-
-  ggplot(df.final, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-  #geom_line(aes(linetype = Zone)) +
-  geom_line(aes(colour = Zone)) +
-  #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-  #scale_color_manual(values = c("red", "black", "black")) +
-  theme_bw() +
-  theme(legend.position = "top") +
-  labs(title = "3 Rates P strips",
-       
-       x = "Rate" , y = "Yield")+
-  facet_wrap(.~site)
-  
-#######################  
-  filter(df.final , Rate_name != "middle_rate") %>%
-   ggplot( aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-    #geom_line(aes(linetype = Zone)) +
-    geom_line(aes(colour = Zone)) +
-    #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-    #scale_color_manual(values = c("red", "black", "black")) +
-    theme_bw() +
-    theme(legend.position = "top") +
-    labs(title = "3 Rates P strips",
-         
-         x = "Rate" , y = "Yield")+
-    facet_wrap(.~site)
-  
-################################################################################  
-list_Of_sites <- as.data.frame(unique(df.final$site))
-  
-  Tim_paddocks <- filter(df.final , site == "Backsheehans_yld_std"|
-                         site == "Clover_yld_std"|
-                           site == "Top_yld_std"|
-                           site == "Hennessy_yld_std")
-  
-  #filter(Tim_paddocks , Rate_name != "middle_rate") %>%
-    #ggplot( aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-    ggplot(Tim_paddocks, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-    #geom_line(aes(linetype = Zone)) +
-    geom_line(aes(colour = Zone)) +
-    #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-    #scale_color_manual(values = c("red", "black", "black")) +
-    theme_bw() +
-    theme(legend.position = "top") +
-    labs(title = "3 Rates P strips",
-         
-         x = "Rate" , y = "Yield")+
-    facet_wrap(.~site)
-
-    
-    Alister_Tippert <- filter(df.final , site == "BallsCentre2_yld_std"|
-                            site == "BallsSilo1_yld_std"|
-                            site == "Jash5_yld_std")
-    #filter(Alister_Tippert , Rate_name != "middle_rate") %>%
-    #ggplot( aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-    ggplot(Alister_Tippert, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-      #geom_line(aes(linetype = Zone)) +
-      geom_line(aes(colour = Zone)) +
-      #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-      #scale_color_manual(values = c("red", "black", "black")) +
-      theme_bw() +
-      theme(legend.position = "top") +
-      labs(title = "3 Rates P strips",
-           
-           x = "Rate" , y = "Yield")+
-      facet_wrap(.~site)
-    
-    Andrew_McMahen <- filter(df.final , site == "Hickmonts_yld_std"|
-                                site == "Jardines_yld_std"|
-                                #site == "NOC2_yld_std"|
-                                site == "RoundHome_yld_std"|
-                                site == "Rail_yld_std")
-    #filter(Andrew_McMahen , Rate_name != "middle_rate") %>%
-    #ggplot( aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-    ggplot(Andrew_McMahen, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-      #geom_line(aes(linetype = Zone)) +
-      geom_line(aes(colour = Zone)) +
-      #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-      #scale_color_manual(values = c("red", "black", "black")) +
-      theme_bw() +
-      theme(legend.position = "top") +
-      labs(title = "3 Rates P strips",
-           
-           x = "Rate" , y = "Yield")+
-      facet_wrap(.~site)
-    
-##########################################################################################  
-    Chris_Dunn <- filter(df.final , site == "Brookland2_yld_std"|
-                               site == "Cail_yld_std") 
-    ggplot(Chris_Dunn, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-      #geom_line(aes(linetype = Zone)) +
-      geom_line(aes(colour = Zone)) +
-      #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-      #scale_color_manual(values = c("red", "black", "black")) +
-      theme_bw() +
-      theme(legend.position = "top") +
-      labs(title = "3 Rates P strips",
-           
-           x = "Rate" , y = "Yield")+
-      facet_wrap(.~site)
-########################################################################################    
-    Claire_Gutsche <- filter(df.final , site == "Bevs_yld_std"
-                             ) 
-    ggplot(Claire_Gutsche, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-      #geom_line(aes(linetype = Zone)) +
-      geom_line(aes(colour = Zone)) +
-      #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-      #scale_color_manual(values = c("red", "black", "black")) +
-      theme_bw() +
-      theme(legend.position = "top") +
-      labs(title = "3 Rates P strips",
-           
-           x = "Rate" , y = "Yield")+
-      facet_wrap(.~site)
-        
-########################################################################################    
-    Heath_Verco <- filter(df.final , site == "Brennans_yld_std"
-    ) 
-    ggplot(Heath_Verco, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-      #geom_line(aes(linetype = Zone)) +
-      geom_line(aes(colour = Zone)) +
-      #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-      #scale_color_manual(values = c("red", "black", "black")) +
-      theme_bw() +
-      theme(legend.position = "top") +
-      labs(title = "3 Rates P strips",
-           
-           x = "Rate" , y = "Yield")+
-      facet_wrap(.~site)
-########################################################################################    
-    James_Falvey <- filter(df.final , site == "School_yld_std"|
-                             site == "Front1_yld_std"|
-                             site == "Front3_yld_std"|
-                             site == "Stewarts3_yld_std"
-                             
-    ) 
-    ggplot(James_Falvey, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-      #geom_line(aes(linetype = Zone)) +
-      geom_line(aes(colour = Zone)) +
-      #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-      #scale_color_manual(values = c("red", "black", "black")) +
-      theme_bw() +
-      theme(legend.position = "top") +
-      labs(title = "3 Rates P strips",
-           
-           x = "Rate" , y = "Yield")+
-      facet_wrap(.~site)
-    
-########################################################################################    
-    kris_dixon <- filter(df.final , site == "Bella_yld_std"|
-                         site == "McKenzie_yld_std"
-    ) 
-    ggplot(kris_dixon, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-      #geom_line(aes(linetype = Zone)) +
-      geom_line(aes(colour = Zone)) +
-      #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-      #scale_color_manual(values = c("red", "black", "black")) +
-      theme_bw() +
-      theme(legend.position = "top") +
-      labs(title = "3 Rates P strips",
-           
-           x = "Rate" , y = "Yield")+
-      facet_wrap(.~site)
-########################################################################################    
-    steve_richmond <- filter(df.final , site == "Heads_yld_std"|
-                               site == "Home06_yld_std"
-                             
-    ) 
-    ggplot(steve_richmond, aes(x = Rate_name, y = Yld_Mass_Av, group = Zone, colour = Zone ))+
-      #geom_line(aes(linetype = Zone)) +
-      geom_line(aes(colour = Zone)) +
-      #scale_linetype_manual(values = c("solid", "longdash", "solid")) +
-      #scale_color_manual(values = c("red", "black", "black")) +
-      theme_bw() +
-      theme(legend.position = "top") +
-      labs(title = "3 Rates P strips",
-           
-           x = "Rate" , y = "Yield")+
-      facet_wrap(.~site)  
-    
+#collection
+# ggsave(path= graph_path, filename = paste0(paddock, "_collection.png"), device = "png", 
+#        width = 35, height = 20, units = "cm", collection)
