@@ -1,9 +1,6 @@
 ### load in the libraries
 
-#install.packages("PairedData")
-#install.packages("RGraphics")
-#install.packages("gridExtra")
-#install.packages("rdrop2")
+
 libs <- c("dplyr", "tidyverse", 
           "ggplot2", "readxl",
           "PairedData", "cowplot", "grid", 
@@ -29,6 +26,8 @@ load.libraries(libs)
 
 #group the reuslts into P and N and then into number of strips
 #tidy this code up so I can have functions for analysis
+# perhaps have a file that list the site and location of data along with paddock ID as well as a date when analysis was run
+
 
 baseDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "dig_deeper", "whole_strip", "P", "3Rates")
 outputDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "dig_deeper", "whole_strip", "P", "3Rates", "output")
@@ -36,60 +35,74 @@ baseDir
 list.files(baseDir, full.names = FALSE)
 
 
-#input_file <- "Backsheehans_Yld_SegID_Zones.csv" # perhaps use this as a loop from the file.path
-#input_file <- "BallsCentre2_Yld_SegID_Zone.csv" 
-#input_file <- "BallsSilo1_Yld_SegID_Zones.csv"
-#input_file <-"Bella_Yld_SegID_Zone.csv"
-#input_file <-"Bevs_Yld_SegID_zone.csv"
-#input_file <-"Brennans_Yld_SegID_Zones.csv"
-#input_file <-"Brookland2_Yld_SegID_zone.csv"
-
-#input_file <-"Cail_Yld_SegID_zone.csv"         
-#input_file <-"Clover_Yld_SegID_Zone.csv" 
-#input_file <-"Front1_Yld_SegID_Zone.csv"  
-#input_file <-"Front3_Yld_SegID_Zone.csv" 
-#input_file <-"Heads_Yld_SegID_Zone.csv"
-#input_file <-"Hennessy_Yld_SegID_Zone.csv"  
-#input_file <-"Hickmonts_Yld_SegID_zone.csv"    
-#input_file <-"Home06_Yld_SegID_Zone.csv" 
-#input_file <-"Jardines_Yld_SedID_zones.csv" 
-#input_file <-"Jash5_Yld_SegID_Zone.csv"        
-#input_file <-"McKenzie_Yld_SegID_Zone.csv" 
-#input_file <-"Mervyns_Yld_SegID.csv"       # No zone can't run the function
 
 input_file <-"Rail_Yld_SegID_Zone.csv"
-#input_file <-"RoundHome_Yld_SegID_Zone.csv"
-#input_file <-"School_Yld_SegID_Zone.csv"       
-#input_file <-"Stewarts3_Yld_SegID_Zone.csv"
-#input_file <-"Top_Yld_SegID_Zone.csv"          
 
+paddock_ID_1 <- "318130"
+paddock_ID_2 <- "318131"
+  
+  
 ################################################################################################################
 function_1_import_data <- function(input_file){
 strips <- read_csv(paste0(baseDir, "/",input_file))
+strips <- mutate(strips,
+                 paddock_name = paste0(input_file)) 
+strips <- mutate(strips,
+                 paddock_name = str_extract(strips$paddock_name, "[^_]+"))
+
 return(strips)}
 
-#call function
+
 assign("strips", function_1_import_data(input_file))
+
 
 ################################################################################################################
 
 #tidy up data frame
 #make clms standard and remove the NA vlues in rate clm - having trouble with this as function because of the errors if the clm name doesnt exist
-strips <- rename(strips,Rate = Rates )
-strips <- rename(strips,YldMassDry = Yld_Mass_D )
-strips <- rename(strips,Zone = zone )
-strips <- rename(strips,Zone = zones )
-strips <- filter(strips, !is.na(Rate))
-strips$Rate <- as.double(strips$Rate )
-### clean the data removing zero values
-strips <- filter(strips,
-                 DistOnLine != 0)
-strips <- filter(strips,
-                 YldMassDry != 0)
-### Add correction to segmentID so we can read it as meters (this will depend on how it was defined in spatial)
-strips <-  mutate(strips,
-                  SegmentID = SegmentID *10)
 
+function_2_tidy_clm <- function(strips) {
+  strips <- if (c("Rates") %in% names(strips) == TRUE) {
+    rename(strips, Rate = Rates)
+  } else {
+    rename(strips, Rate = Rate)
+  }
+  strips <- if (c("Yld_Mass_D") %in% names(strips) == TRUE) {
+    rename(strips, YldMassDry = Yld_Mass_D)
+  } else {
+    rename(strips, YldMassDry = YldMassDry)
+  }
+  strips <- if (c("zone") %in% names(strips) == TRUE) {
+    rename(strips, Zone = zone)
+  } else {
+    rename(strips, Zone = Zone)
+  }
+  strips <- if (c("zones") %in% names(strips) == TRUE) {
+     rename(strips, Zone = zones)
+   } else {
+     rename(strips, Zone = Zone)
+   }
+  strips <- filter(strips,!is.na(Rate))
+  strips$Rate <- as.double(strips$Rate)
+  strips$YldMassDry <- as.double(strips$YldMassDry)
+  strips$DistOnLine <- as.double(strips$DistOnLine)
+   
+   ### clean the data removing zero values
+  strips <- filter(strips,
+                  DistOnLine != 0)
+  strips <- filter(strips,
+                  YldMassDry != 0)
+   ### Add correction to segmentID so we can read it as meters (this will depend on how it was defined in spatial)
+  strips <-  mutate(strips,
+                   SegmentID = SegmentID * 10)
+  
+  return(strips)
+  }
+
+
+assign("strips", function_2_tidy_clm(strips))
+
+ 
 
 ##################################################################################################################
 ## details of what was applied and the GR
@@ -122,8 +135,11 @@ Zone_labels <-
 
 # join this to the strips data
 strips <- left_join(strips, Zone_labels, by= "Zone")
-unique(strips$rate_name)
-names(strips)
+
+
+strips <- strips %>% 
+  mutate(zone_name2 = ifelse(is.na(zone_name), NA , paste0(strips$zone_name, "_", strips$Zone)  ))
+
 
 ###############################################################################################################
 #Prep the data making a sub selection of df for each zone and run the paired t test
@@ -137,7 +153,7 @@ zone_x_rateXvsGR <- filter(strips,
 
 #average the yld per segment and rate
 zone_x_rateXvsGR_av <- group_by(zone_x_rateXvsGR, SegmentID, Rate, Zone, rate_name, zone_name ) %>% 
-  summarise_all(mean)
+  summarise_all(mean, na.rm= TRUE)
 #ensure that the dataset is duplictaed
 list_SegmentID_values <- zone_x_rateXvsGR_av$SegmentID[duplicated(zone_x_rateXvsGR_av$SegmentID)] #this returns a list of values I want to keep
 zone_x_rateXvsGR_av <- zone_x_rateXvsGR_av %>% filter(SegmentID %in% list_SegmentID_values)
@@ -199,17 +215,27 @@ assign(("all_results"), function_all_results(zone_1rate_1,
                                             zone_1rate_2,
                                             zone_2rate_1,
                                             zone_2rate_2))
-
+rm(zone_1rate_1,
+   zone_1rate_2,
+   zone_2rate_1,
+   zone_2rate_2,)
 ##################################################################################################################
 ### Plotting the results
 ## step 1 complie the results avearge of segment per zone
 for_plotting <- filter(strips, !is.na(zone_name)) %>% 
-        group_by(Rate, Zone, rate_name, zone_name, SegmentID, ) %>% 
+        group_by(Rate, Zone, rate_name, zone_name, zone_name2, paddock_name,SegmentID, ) %>% 
         summarise_all(mean)
 
 function_zone_plots <- function(for_plotting, zone_x){
 
 for_plotting$rate_as_factor <- as.factor(for_plotting$Rate)
+label_zone <- filter(for_plotting, zone_name == paste0("zone", zone_x)) 
+label_zone<-   unique(label_zone$zone_name2)
+label_zone <- str_split(label_zone, "_", simplify = TRUE)
+label_zone <- label_zone[1,2]
+
+max_yld <- max(for_plotting$YldMassDry, na.rm = TRUE)
+
 zone_plot <- filter(for_plotting, zone_name == paste0("zone", zone_x)) %>% 
   ggplot( aes(rate_as_factor, YldMassDry))+
   geom_boxplot(alpha=0.1)+
@@ -217,63 +243,74 @@ zone_plot <- filter(for_plotting, zone_name == paste0("zone", zone_x)) %>%
   stat_summary(fun = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..),
                width = .75, linetype = "dashed")+
   theme_bw()+
-  ylim(0,6)+
+  ylim(0,max_yld)+
   theme(axis.text=element_text(size=8),
         axis.title=element_text(size=10))+
   labs(x = "Fertiliser Rates",
        y= "Yield t/ha",
-       title = paste0("zone ", zone_x),
+       title = paste0( label_zone),
        caption = "Below table reports mean values and significant differences compared to GSR")+
   theme(plot.caption = element_text(size=8, face="italic", color="black"))+
   annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
 
 return(zone_plot)
 }
+names(for_plotting)
+
 
 assign(("plot_zone1"), function_zone_plots(for_plotting, 1))
 assign(("plot_zone2"), function_zone_plots(for_plotting, 2))
 plot_zone1
 plot_zone2
 
-
+############################################################################################################
 function_strip_plot <- function(for_plotting){
 
 for_plotting$rate_as_factor <- as.factor(for_plotting$Rate)  
+
 zone1_min <- filter(for_plotting, zone_name == "zone1") %>% summarise(min_zone = min(SegmentID))
-zone1_min <- zone1_min[[5]]
+zone1_min <- zone1_min[[7]]
 zone1_min <- zone1_min[[1]]
 zone1_max <- filter(for_plotting, zone_name == "zone1") %>% summarise(max_zone = max(SegmentID))
-zone1_max <- zone1_max[[5]]  
+zone1_max <- zone1_max[[7]]  
 zone1_max <- zone1_max[[1]]
 zone2_min <- filter(for_plotting, zone_name == "zone2") %>% summarise(min_zone = min(SegmentID))
-zone2_min <- zone2_min[[5]]
+zone2_min <- zone2_min[[7]]
 zone2_min <- zone2_min[[1]]
 zone2_max <- filter(for_plotting, zone_name == "zone2") %>% summarise(max_zone = max(SegmentID))
-zone2_max <- zone2_max[[5]] 
+zone2_max <- zone2_max[[7]] 
 zone2_max <- zone2_max[[1]] 
+
 zone1_range <- ((zone1_max - zone1_min)/2)+zone1_min
 zone2_range <- ((zone2_max - zone2_min)/2)+zone2_min
 zone1_range
 zone2_range
 
+max_yld <- max(for_plotting$YldMassDry, na.rm = TRUE)
+min_yld <- min(for_plotting$YldMassDry, na.rm = TRUE)
+
+label_paddock<-   unique(for_plotting$paddock_name)
+label_paddock <- str_split(label_paddock, "_", simplify = TRUE)
+label_paddock <- label_paddock[1,1]
+
 whole_strip <- ggplot(for_plotting, aes(SegmentID , YldMassDry, group = rate_as_factor))+
   geom_line(size=1, alpha=0.4, aes( color = rate_as_factor ))+
   scale_color_manual(values=c('darkgrey','green', 'blue', 'red'), name  = "Fertiliser Rates")+
   theme_bw()+
-  ylim(0.0,6)+
+  ylim(0,max_yld)+ #this needs to be a max and min of all the 
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
        title = "",
-       subtitle = "Paddock_to_be_nomiated",
+       subtitle = paste0(label_paddock),
        caption = paste("Grower_rate_label", "Additional_fert_label",  sep="\n"))+
   theme(plot.caption = element_text(hjust = 0))+
-  annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = 6, #Zone 1
+  annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = max_yld, #Zone 1
            alpha = .2)  +
-  annotate("text", x = zone1_range, y= 1,label = "zone1")+
+  annotate("text", x = zone1_range, y= 0,label = "zone1")+
   
-  annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = 6, #zone 2
+  annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = max_yld, #zone 2
            alpha = .2)+
-  annotate("text", x = zone2_range, y= 1,label = "zone2")#+
+  annotate("text", x = zone2_range, y= 0,label = "zone2")#+
 
 return(whole_strip)}
 assign(("plot_whole_strip"), function_strip_plot(for_plotting))
@@ -345,21 +382,22 @@ assign(("site"), function_tabel_soil_testing(DB_file_name, paddock_ID_1, paddock
 #this is adding aclm that should be in the import file but is empty now
 all_results <- all_results %>% mutate(Details = NA)
 
-function_tabel_yield <- function(all_results){
+function_tabel_yield <- function(all_results, Zone_labels){
+  all_results <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
 mean_zone_av_output_display <-all_results %>% 
   mutate(Significant = case_when(Significant == "significant" ~ "*",
                                  TRUE ~ "" ))
 mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 1))
 mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
                                       Yld = paste0(yield, Significant))
-mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, zone, Details, Yld)
-mean_zone_av_output_display <- spread(mean_zone_av_output_display, zone, Yld)
+mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, Zone, Details, Yld)
+mean_zone_av_output_display <- spread(mean_zone_av_output_display, Zone, Yld)
 mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
 
 return(mean_zone_av_output_display)
 }
 
-assign(("tabel_yield"), function_tabel_yield(all_results))
+assign(("tabel_yield"), function_tabel_yield(all_results, Zone_labels))
 
 TSpecial <- ttheme_minimal(base_size = 8)
 table1 <- tableGrob(site , rows = NULL, theme=TSpecial )
