@@ -4,37 +4,36 @@ library(tidyverse)
 library(readr)
 library(lubridate)
 library(DT)
-library(sp)
+#library(sp)
 
 
-library(rgdal)
-library(sf)
+#library(rgdal)
+#library(sf)
 
 #install.packages("plotKML")
-library(plotKML)
-library(knitr)
-library(png)
+#library(plotKML)
+#library(knitr)
+#library(png)
 
 library(readxl)
-library(raster)
+#library(raster)
 
 #####################################################################################################
 ##############  what was the total amount of N or P applied per strip?  ############################
 ####################################################################################################
-test <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid.csv")
+fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid.csv")
 
 
 ## start small with an example just extracting a few rows
+# fert_app <- fert_app %>%
+#   dplyr::filter(Paddock_ID == 31336 |
+#                   Paddock_ID == 51611 |
+#                   Paddock_ID == 31223 |
+#                   Paddock_ID == 33111)
 
-
-test <- test %>%
-  dplyr::filter(Paddock_ID == 31336 |
-                  Paddock_ID == 51611 |
-                  Paddock_ID == 31223 |
-                  Paddock_ID == 33111)
-test <- test %>% 
+fert_app <- fert_app %>% 
   dplyr::select(Paddock_ID:Strip_Type, ID_Rate_GSP_type)
-str(test)
+#str(fert_app)
 
 
 
@@ -45,12 +44,12 @@ str(test)
 ### using the Strip_Rate split at the "and" "&" "+" - note my example dataset doesnt have & so chcek that it works
 
 ## how do I deal with other sep - looks like its working need to have \\ to say a literal + not a regex +
-test <- test %>%
+fert_app <- fert_app %>%
   separate(Strip_Rate, c("rate_product_fert1", "rate_product_fert2", "rate_product_fert3"), sep = "(\\+ | and | \\&)", remove=FALSE)
 
 
 # tidy up cols and remove the brackets
-test <- test %>%
+fert_app <- fert_app %>%
   dplyr::mutate(rate_product_fert1 = str_replace(rate_product_fert1, "\\(", ""),
                 rate_product_fert1 = str_replace(rate_product_fert1, "\\)", ""),
                 rate_product_fert2 = str_replace(rate_product_fert2, "\\(", ""),
@@ -62,17 +61,17 @@ test <- test %>%
 #### rate_product_fert1 fet2 and fert3
 
 ## now split the rate_product1 into two clm rate_fert1 and product_fert1
-test <- test %>%
+fert_app <- fert_app %>%
   separate(rate_product_fert1, c("product_fert1", "rate_fert1"), sep = "\\@", remove=FALSE) %>% 
   separate(rate_product_fert2, c("product_fert2", "rate_fert2"), sep = "\\@", remove=FALSE) %>%
   separate(rate_product_fert3, c("product_fert3", "rate_fert3"), sep = "\\@", remove=FALSE)
 ## remove the units
 
-test$rate_fert1 <- casefold(test$rate_fert1, upper=FALSE)
-test$rate_fert2 <- casefold(test$rate_fert2, upper=FALSE)
-test$rate_fert3 <- casefold(test$rate_fert3, upper=FALSE)
+fert_app$product_fert1 <- casefold(fert_app$product_fert1, upper=FALSE)
+fert_app$product_fert2 <- casefold(fert_app$product_fert2, upper=FALSE)
+fert_app$product_fert3 <- casefold(fert_app$product_fert3, upper=FALSE)
 
-test <- test %>%
+fert_app <- fert_app %>%
   dplyr::mutate(rate_fert1 = str_replace(rate_fert1, "kg/ha", ""),
                 rate_fert1 = str_replace(rate_fert1, "l/ha", ""),
                 rate_fert2 = str_replace(rate_fert2, "kg/ha", ""),
@@ -83,14 +82,14 @@ test <- test %>%
 
 
 #make the rate numeric
-test$rate_fert1 <- as.numeric(test$rate_fert1)
-test$rate_fert2 <- as.numeric(test$rate_fert2)
-test$rate_fert3 <- as.numeric(test$rate_fert3)
+fert_app$rate_fert1 <- as.numeric(fert_app$rate_fert1)
+fert_app$rate_fert2 <- as.numeric(fert_app$rate_fert2)
+fert_app$rate_fert3 <- as.numeric(fert_app$rate_fert3)
 
 
 ## now tidy the clm up - remove the ones I don't want.
 
-test <- test %>% 
+fert_app <- fert_app %>% 
   dplyr::select(-rate_product_fert1,
                 -rate_product_fert2,
                 -rate_product_fert3)
@@ -103,13 +102,13 @@ test <- test %>%
 ### using the Strip_Rate split at the "and" "&" "+" - note my example dataset doesnt have & so chcek that it works
 
 ## how do I deal with other sep - looks like its working need to have \\ to say a literal + not a regex +
-str(test)
-test <- test %>%
+str(fert_app)
+fert_app <- fert_app %>%
   separate(Start_Fert, c("S_rate_product_fert1", "S_rate_product_fert2", "S_rate_product_fert3"), sep = "(\\+ | and | \\&)", remove=FALSE)
 
 
 # tidy up cols and remove the brackets
-test <- test %>%
+fert_app <- fert_app %>%
   dplyr::mutate(S_rate_product_fert1 = str_replace(S_rate_product_fert1, "\\(", ""),
                 S_rate_product_fert1 = str_replace(S_rate_product_fert1, "\\)", ""),
                 S_rate_product_fert2 = str_replace(S_rate_product_fert2, "\\(", ""),
@@ -121,16 +120,16 @@ test <- test %>%
 #### rate_product_fert1 fet2 and fert3
 
 ## now split the rate_product1 into two clm rate_fert1 and product_fert1
-test <- test %>%
+fert_app <- fert_app %>%
   separate(S_rate_product_fert1, c("S_product_fert1", "S_rate_fert1"), sep = "\\@", remove=FALSE) %>% 
   separate(S_rate_product_fert2, c("S_product_fert2", "S_rate_fert2"), sep = "\\@", remove=FALSE) %>%
   separate(S_rate_product_fert3, c("S_product_fert3", "S_rate_fert3"), sep = "\\@", remove=FALSE)
 ## remove the units
-test$S_rate_fert1 <- casefold(test$S_rate_fert1, upper=FALSE)
-test$S_rate_fert2 <- casefold(test$S_rate_fert2, upper=FALSE)
-test$vrate_fert3 <- casefold(test$S_rate_fert3, upper=FALSE)
+fert_app$S_product_fert1 <- casefold(fert_app$S_product_fert1, upper=FALSE)
+fert_app$S_product_fert2 <- casefold(fert_app$S_product_fert2, upper=FALSE)
+fert_app$S_product_fert3 <- casefold(fert_app$S_product_fert3, upper=FALSE)
 
-test <- test %>%
+fert_app <- fert_app %>%
   dplyr::mutate(S_rate_fert1 = str_replace(S_rate_fert1, "kg/ha", ""),
                 S_rate_fert1 = str_replace(S_rate_fert1, "l/ha", ""),
                 S_rate_fert2 = str_replace(S_rate_fert2, "kg/ha", ""),
@@ -141,14 +140,14 @@ test <- test %>%
 
 
 #make the rate numeric
-test$S_rate_fert1 <- as.numeric(test$S_rate_fert1)
-test$S_rate_fert2 <- as.numeric(test$S_rate_fert2)
-test$S_rate_fert3 <- as.numeric(test$S_rate_fert3)
+fert_app$S_rate_fert1 <- as.numeric(fert_app$S_rate_fert1)
+fert_app$S_rate_fert2 <- as.numeric(fert_app$S_rate_fert2)
+fert_app$S_rate_fert3 <- as.numeric(fert_app$S_rate_fert3)
 
 
 ## now tidy the clm up - remove the ones I don't want.
 
-test <- test %>% 
+fert_app <- fert_app %>% 
   dplyr::select(-S_rate_product_fert1,
                 -S_rate_product_fert2,
                 -S_rate_product_fert3)
@@ -160,13 +159,13 @@ test <- test %>%
 ### using the Strip_Rate split at the "and" "&" "+" - note my example dataset doesnt have & so chcek that it works
 
 ## how do I deal with other sep - looks like its working need to have \\ to say a literal + not a regex +
-str(test)
-test <- test %>%
+str(fert_app)
+fert_app <- fert_app %>%
   separate(Top_Dress, c("TD_rate_product_fert1", "TD_rate_product_fert2", "TD_rate_product_fert3"), sep = "(\\+ | and | \\&)", remove=FALSE)
 
 
 # tidy up cols and remove the brackets
-test <- test %>%
+fert_app <- fert_app %>%
   dplyr::mutate(TD_rate_product_fert1 = str_replace(TD_rate_product_fert1, "\\(", ""),
                 TD_rate_product_fert1 = str_replace(TD_rate_product_fert1, "\\)", ""),
                 TD_rate_product_fert2 = str_replace(TD_rate_product_fert2, "\\(", ""),
@@ -178,16 +177,16 @@ test <- test %>%
 #### rate_product_fert1 fet2 and fert3
 
 ## now split the rate_product1 into two clm rate_fert1 and product_fert1
-test <- test %>%
+fert_app <- fert_app %>%
   separate(TD_rate_product_fert1, c("TD_product_fert1", "TD_rate_fert1"), sep = "\\@", remove=FALSE) %>% 
   separate(TD_rate_product_fert2, c("TD_product_fert2", "TD_rate_fert2"), sep = "\\@", remove=FALSE) %>%
   separate(TD_rate_product_fert3, c("TD_product_fert3", "TD_rate_fert3"), sep = "\\@", remove=FALSE)
 ## remove the units
-test$TD_rate_fert1 <- casefold(test$TD_rate_fert1, upper=FALSE)
-test$TD_rate_fert2 <- casefold(test$TD_rate_fert2, upper=FALSE)
-test$TDrate_fert3 <- casefold(test$TD_rate_fert3, upper=FALSE)
+fert_app$TD_product_fert1 <- casefold(fert_app$TD_product_fert1, upper=FALSE)
+fert_app$TD_product_fert2 <- casefold(fert_app$TD_product_fert2, upper=FALSE)
+fert_app$TD_product_fert3 <- casefold(fert_app$TD_product_fert3, upper=FALSE)
 
-test <- test %>%
+fert_app <- fert_app %>%
   dplyr::mutate(TD_rate_fert1 = str_replace(TD_rate_fert1, "kg/ha", ""),
                 TD_rate_fert1 = str_replace(TD_rate_fert1, "l/ha", ""),
                 TD_rate_fert2 = str_replace(TD_rate_fert2, "kg/ha", ""),
@@ -198,36 +197,44 @@ test <- test %>%
 
 
 #make the rate numeric
-test$TD_rate_fert1 <- as.numeric(test$TD_rate_fert1)
-test$TD_rate_fert2 <- as.numeric(test$TD_rate_fert2)
-test$TD_rate_fert3 <- as.numeric(test$TD_rate_fert3)
+fert_app$TD_rate_fert1 <- as.numeric(fert_app$TD_rate_fert1)
+fert_app$TD_rate_fert2 <- as.numeric(fert_app$TD_rate_fert2)
+fert_app$TD_rate_fert3 <- as.numeric(fert_app$TD_rate_fert3)
 
 
 ## now tidy the clm up - remove the ones I don't want.
 
-test <- test %>% 
+fert_app <- fert_app %>% 
   dplyr::select(-TD_rate_product_fert1,
                 -TD_rate_product_fert2,
                 -TD_rate_product_fert3)
 
-
+## remove the white spaces (this will make some names a bit odd looking)
+fert_app <- fert_app %>%
+  mutate(product_fert1  = str_trim(product_fert1, side = c("both", "left", "right")),
+         product_fert2  = str_trim(product_fert2, side = c("both", "left", "right")),
+         product_fert3  = str_trim(product_fert3, side = c("both", "left", "right")),
+         
+         S_product_fert1  = str_trim(S_product_fert1, side = c("both", "left", "right")),
+         S_product_fert2  = str_trim(S_product_fert2, side = c("both", "left", "right")),
+         S_product_fert3  = str_trim(S_product_fert3, side = c("both", "left", "right")),
+         
+         TD_product_fert1  = str_trim(TD_product_fert1, side = c("both", "left", "right")),
+         TD_product_fert2  = str_trim(TD_product_fert2, side = c("both", "left", "right")),
+         TD_product_fert3  = str_trim(TD_product_fert3, side = c("both", "left", "right")),
+         
+  )
+####################################################################################################
 ### note I am having trouble with more text and no @ signs which will be fixed by Christina and moving forward?
 
+####################################################################################################
+###### Assign cost to each product
+##### split the df into N and P trials
+####################################################################################################
+############   N      ##############################################################################
 
-# Next step is to assign cost to each product
-
-
-
-
-#### N
-testN <- test %>% filter(Strip_Type == "N Strip")
-str(testN)
-
-testN$product_fert1 <- casefold(testN$product_fert1, upper=FALSE)
-testN$product_fert2 <- casefold(testN$product_fert2, upper=FALSE)
-testN$product_fert3 <- casefold(v$product_fert3, upper=FALSE)
-
-testN <- testN %>%
+### content of N per product for trial
+fert_app <- fert_app %>%
   mutate(
     content_N_fert1 = 
       case_when(
@@ -238,52 +245,539 @@ testN <- testN %>%
         product_fert1 == "ssp" ~ 0.0, 
         product_fert1 == "granulock" ~ 0.1, 
         product_fert1 == "granulock Z" ~ 0.1, 
-        product_fert1 == "map zn" ~ 0.1, 
-        product_fert1 == "zincguard d2" ~ 0.164,
+        product_fert1 == "mapzn" ~ 0.1, 
+        product_fert1 == "zincguardd2" ~ 0.164,
         product_fert1 == "SOA" ~ 0.21, 
         product_fert1 == "mesz" ~ 0.12, 
         product_fert1 == "acremax" ~ 0.26, 
         product_fert1 == "27:12:00" ~ 0.27, 
         product_fert1 == "24:16:00" ~ 0.24,
-        product_fert1 == "prime zn" ~ 0.14,
+        product_fert1 == "primezn" ~ 0.14,
         TRUE ~ 0))
-testN <- testN %>%
+fert_app <- fert_app %>%
   mutate(
     content_N_fert2 = 
       case_when(
-        product_fert2 == "MAP" ~ 0.1,
-        product_fert2 == "Prime DSZ" ~ 0.16,
-        product_fert2 == "DAP" ~ 0.18,
-        product_fert2 == "Urea" ~ 0.46, 
-        product_fert2 == "SSP" ~ 0.0, 
-        product_fert2 == "Granulock" ~ 0.1, 
-        product_fert2 == "Granulock Z" ~ 0.1, 
-        product_fert2 == "MAP Zn" ~ 0.1, 
-        product_fert2 == "zincguard d2" ~ 0.164,
+        product_fert2 == "map" ~ 0.1,
+        product_fert2 == "prime dsz" ~ 0.16,
+        product_fert2 == "dap" ~ 0.18,
+        product_fert2 == "urea" ~ 0.46, 
+        product_fert2 == "ssp" ~ 0.0, 
+        product_fert2 == "granulock" ~ 0.1, 
+        product_fert2 == "granulock Z" ~ 0.1, 
+        product_fert2 == "mapzn" ~ 0.1, 
+        product_fert2 == "zincguardd2" ~ 0.164,
         product_fert2 == "SOA" ~ 0.21, 
-        product_fert2 == "MESZ" ~ 0.12, 
-        product_fert2 == "AcreMax" ~ 0.26, 
+        product_fert2 == "mesz" ~ 0.12, 
+        product_fert2 == "acremax" ~ 0.26, 
         product_fert2 == "27:12:00" ~ 0.27, 
         product_fert2 == "24:16:00" ~ 0.24,
-        product_fert2 == "Prime Zn" ~ 0.14,
+        product_fert2 == "primezn" ~ 0.14,
         TRUE ~ 0))
-testN <- testN %>%
+fert_app <- fert_app %>%
   mutate(
     content_N_fert3 = 
       case_when(
-        product_fert3 == "MAP" ~ 0.1,
-        product_fert3 == "Prime DSZ" ~ 0.16,
-        product_fert3 == "DAP" ~ 0.18,
-        product_fert3 == "Urea" ~ 0.46, 
-        product_fert3 == "SSP" ~ 0.0, 
-        product_fert3 == "Granulock" ~ 0.1, 
-        product_fert3 == "Granulock Z" ~ 0.1, 
-        product_fert3 == "MAP Zn" ~ 0.1, 
-        product_fert3 == "zincguard d2" ~ 0.164,
+        product_fert3 == "map" ~ 0.1,
+        product_fert3 == "prime dsz" ~ 0.16,
+        product_fert3 == "dap" ~ 0.18,
+        product_fert3 == "urea" ~ 0.46, 
+        product_fert3 == "ssp" ~ 0.0, 
+        product_fert3 == "granulock" ~ 0.1, 
+        product_fert3 == "granulock Z" ~ 0.1, 
+        product_fert3 == "mapzn" ~ 0.1, 
+        product_fert3 == "zincguardd2" ~ 0.164,
         product_fert3 == "SOA" ~ 0.21, 
-        product_fert3 == "MESZ" ~ 0.12, 
-        product_fert3 == "AcreMax" ~ 0.26, 
+        product_fert3 == "mesz" ~ 0.12, 
+        product_fert3 == "acremax" ~ 0.26, 
         product_fert3 == "27:12:00" ~ 0.27, 
         product_fert3 == "24:16:00" ~ 0.24,
-        product_fert3 == "Prime Zn" ~ 0.14,
+        product_fert3 == "primezn" ~ 0.14,
         TRUE ~ 0))
+#rate * content for trial
+
+str(fert_app)
+fert_app <- fert_app %>% 
+  mutate(content_N_fert_rate1 = (content_N_fert1 * rate_fert1),
+         content_N_fert_rate2 = (content_N_fert2 * rate_fert2),
+         content_N_fert_rate3 = (content_N_fert3 * rate_fert3))
+
+fert_app$content_N_fert_rate1[is.na(fert_app$content_N_fert_rate1)] <- 0 
+fert_app$content_N_fert_rate2[is.na(fert_app$content_N_fert_rate2)] <- 0 
+fert_app$content_N_fert_rate3[is.na(fert_app$content_N_fert_rate3)] <- 0 
+
+fert_app <- fert_app %>%
+  mutate(
+    sum_N_content = content_N_fert_rate1 + 
+                        content_N_fert_rate2 + 
+                        content_N_fert_rate3)
+
+
+
+### content of N per product for starter
+
+str(fert_app)
+fert_app <- fert_app %>%
+  mutate(
+    S_content_N_fert1 = 
+      case_when(
+        S_product_fert1 == "map" ~ 0.1,
+        S_product_fert1 == "prime dsz" ~ 0.16,
+        S_product_fert1 == "dap" ~ 0.18,
+        S_product_fert1 == "urea" ~ 0.46, 
+        S_product_fert1 == "ssp" ~ 0.0, 
+        S_product_fert1 == "granulock" ~ 0.1, 
+        S_product_fert1 == "granulock Z" ~ 0.1, 
+        S_product_fert1 == "mapzn" ~ 0.1, 
+        S_product_fert1 == "zincguardd2" ~ 0.164,
+        S_product_fert1 == "SOA" ~ 0.21, 
+        S_product_fert1 == "mesz" ~ 0.12, 
+        S_product_fert1 == "acremax" ~ 0.26, 
+        S_product_fert1 == "27:12:00" ~ 0.27, 
+        S_product_fert1 == "24:16:00" ~ 0.24,
+        S_product_fert1 == "primezn" ~ 0.14,
+        TRUE ~ 0))
+fert_app <- fert_app %>%
+  mutate(
+    S_content_N_fert2 = 
+      case_when(
+        S_product_fert2 == "map" ~ 0.1,
+        S_product_fert2 == "prime dsz" ~ 0.16,
+        S_product_fert2 == "dap" ~ 0.18,
+        S_product_fert2 == "urea" ~ 0.46, 
+        S_product_fert2 == "ssp" ~ 0.0, 
+        S_product_fert2 == "granulock" ~ 0.1, 
+        S_product_fert2 == "granulock Z" ~ 0.1, 
+        S_product_fert2 == "mapzn" ~ 0.1, 
+        S_product_fert2 == "zincguardd2" ~ 0.164,
+        S_product_fert2 == "SOA" ~ 0.21, 
+        S_product_fert2 == "mesz" ~ 0.12, 
+        S_product_fert2 == "acremax" ~ 0.26, 
+        S_product_fert2 == "27:12:00" ~ 0.27, 
+        S_product_fert2 == "24:16:00" ~ 0.24,
+        S_product_fert2 == "primezn" ~ 0.14,
+        TRUE ~ 0))
+fert_app <- fert_app %>%
+  mutate(
+    S_content_N_fert3 = 
+      case_when(
+        S_product_fert3 == "map" ~ 0.1,
+        S_product_fert3 == "prime dsz" ~ 0.16,
+        S_product_fert3 == "dap" ~ 0.18,
+        S_product_fert3 == "urea" ~ 0.46, 
+        S_product_fert3 == "ssp" ~ 0.0, 
+        S_product_fert3 == "granulock" ~ 0.1, 
+        S_product_fert3 == "granulock Z" ~ 0.1, 
+        S_product_fert3 == "mapzn" ~ 0.1, 
+        S_product_fert3 == "zincguardd2" ~ 0.164,
+        S_product_fert3 == "SOA" ~ 0.21, 
+        S_product_fert3 == "mesz" ~ 0.12, 
+        S_product_fert3 == "acremax" ~ 0.26, 
+        S_product_fert3 == "27:12:00" ~ 0.27, 
+        S_product_fert3 == "24:16:00" ~ 0.24,
+        S_product_fert3 == "primezn" ~ 0.14,
+        TRUE ~ 0))
+#rate * content for trial
+
+str(fert_app)
+fert_app <- fert_app %>% 
+  mutate(S_content_N_fert_rate1 = (S_content_N_fert1 * S_rate_fert1),
+         S_content_N_fert_rate2 = (S_content_N_fert2 * S_rate_fert2),
+         S_content_N_fert_rate3 = (S_content_N_fert3 * S_rate_fert3))
+
+fert_app$S_content_N_fert_rate1[is.na(fert_app$S_content_N_fert_rate1)] <- 0 
+fert_app$S_content_N_fert_rate2[is.na(fert_app$S_content_N_fert_rate2)] <- 0 
+fert_app$S_content_N_fert_rate3[is.na(fert_app$S_content_N_fert_rate3)] <- 0 
+
+fert_app <- fert_app %>%
+  mutate(
+    S_sum_N_content = S_content_N_fert_rate1 + 
+      S_content_N_fert_rate2 + 
+      S_content_N_fert_rate3)
+
+
+
+### content of N per product for topdress
+
+str(fert_app)
+fert_app <- fert_app %>%
+  mutate(
+    TD_content_N_fert1 = 
+      case_when(
+        TD_product_fert1 == "map" ~ 0.1,
+        TD_product_fert1 == "prime dsz" ~ 0.16,
+        TD_product_fert1 == "dap" ~ 0.18,
+        TD_product_fert1 == "urea" ~ 0.46, 
+        TD_product_fert1 == "ssp" ~ 0.0, 
+        TD_product_fert1 == "granulock" ~ 0.1, 
+        TD_product_fert1 == "granulock Z" ~ 0.1, 
+        TD_product_fert1 == "mapzn" ~ 0.1, 
+        TD_product_fert1 == "zincguardd2" ~ 0.164,
+        TD_product_fert1 == "SOA" ~ 0.21, 
+        TD_product_fert1 == "mesz" ~ 0.12, 
+        TD_product_fert1 == "acremax" ~ 0.26, 
+        TD_product_fert1 == "27:12:00" ~ 0.27, 
+        TD_product_fert1 == "24:16:00" ~ 0.24,
+        TD_product_fert1 == "primezn" ~ 0.14,
+        TRUE ~ 0))
+
+fert_app <- fert_app %>%
+  mutate(
+    TD_content_N_fert2 = 
+      case_when(
+        TD_product_fert2 == "map" ~ 0.1,
+        TD_product_fert2 == "prime dsz" ~ 0.16,
+        TD_product_fert2 == "dap" ~ 0.18,
+        TD_product_fert2 == "urea" ~ 0.46, 
+        TD_product_fert2 == "ssp" ~ 0.0, 
+        TD_product_fert2 == "granulock" ~ 0.1, 
+        TD_product_fert2 == "granulock Z" ~ 0.1, 
+        TD_product_fert2 == "mapzn" ~ 0.1, 
+        TD_product_fert2 == "zincguardd2" ~ 0.164,
+        TD_product_fert2 == "SOA" ~ 0.21, 
+        TD_product_fert2 == "mesz" ~ 0.12, 
+        TD_product_fert2 == "acremax" ~ 0.26, 
+        TD_product_fert2 == "27:12:00" ~ 0.27, 
+        TD_product_fert2 == "24:16:00" ~ 0.24,
+        TD_product_fert2 == "primezn" ~ 0.14,
+        TRUE ~ 0))
+fert_app <- fert_app %>%
+  mutate(
+    TD_content_N_fert3 = 
+      case_when(
+        TD_product_fert3 == "map" ~ 0.1,
+        TD_product_fert3 == "prime dsz" ~ 0.16,
+        TD_product_fert3 == "dap" ~ 0.18,
+        TD_product_fert3 == "urea" ~ 0.46, 
+        TD_product_fert3 == "ssp" ~ 0.0, 
+        TD_product_fert3 == "granulock" ~ 0.1, 
+        TD_product_fert3 == "granulock Z" ~ 0.1, 
+        TD_product_fert3 == "mapzn" ~ 0.1, 
+        TD_product_fert3 == "zincguardd2" ~ 0.164,
+        TD_product_fert3 == "SOA" ~ 0.21, 
+        TD_product_fert3 == "mesz" ~ 0.12, 
+        TD_product_fert3 == "acremax" ~ 0.26, 
+        TD_product_fert3 == "27:12:00" ~ 0.27, 
+        TD_product_fert3 == "24:16:00" ~ 0.24,
+        TD_product_fert3 == "primezn" ~ 0.14,
+        TRUE ~ 0))
+#rate * content for trial
+
+str(fert_app)
+fert_app <- fert_app %>% 
+  mutate(TD_content_N_fert_rate1 = (TD_content_N_fert1 * S_rate_fert1),
+         TD_content_N_fert_rate2 = (TD_content_N_fert2 * S_rate_fert2),
+         TD_content_N_fert_rate3 = (TD_content_N_fert3 * S_rate_fert3))
+
+fert_app$TD_content_N_fert_rate1[is.na(fert_app$TD_content_N_fert_rate1)] <- 0 
+fert_app$TD_content_N_fert_rate2[is.na(fert_app$TD_content_N_fert_rate2)] <- 0 
+fert_app$TD_content_N_fert_rate3[is.na(fert_app$TD_content_N_fert_rate3)] <- 0 
+
+fert_app <- fert_app %>%
+  mutate(
+    TD_sum_N_content = TD_content_N_fert_rate1 + 
+      TD_content_N_fert_rate2 + 
+      TD_content_N_fert_rate3)
+
+
+################################################################################
+###############  sum the contnet for all N applications trial + S and TD #######
+################################################################################
+fert_app <- fert_app %>%
+  mutate(
+    Total_sum_N_content = sum_N_content +
+      S_sum_N_content +
+      TD_sum_N_content)
+
+
+####################################################################################################
+##################            Assign cost to each product N first        ###########################
+####################################################################################################
+
+str(fert_app)
+
+fert_app <- fert_app %>%
+  mutate(
+    content_P_fert1 = 
+      case_when(
+        product_fert1 == "map" ~ 0.22,
+        product_fert1 == "primedsz" ~ 0.17,
+        product_fert1 == "dap" ~ 0.2,
+        product_fert1 == "urea" ~ 0.0, 
+        product_fert1 == "ssp" ~ 0.088, 
+        product_fert1 == "granulock" ~ 0.175, 
+        product_fert1 == "granulockz" ~ 0.218, 
+        product_fert1 == "mapzn" ~ 0.22, 
+        product_fert1 == "zincguardd2" ~ 0.193,
+        product_fert1 == "soa" ~ 0.0, 
+        product_fert1 == "mesz" ~ 0.175, 
+        product_fert1 == "acremax" ~ 0.11,
+        product_fert1 == "27:12:00" ~ 0.12, 
+        product_fert1 == "24:16:00" ~ 0.16,
+        product_fert1 == "primezn" ~ 0.13,
+        TRUE ~ 0))
+fert_app <- fert_app %>%
+  mutate(
+    content_P_fert2 = 
+      case_when(
+        product_fert2 == "map" ~ 0.22,
+        product_fert2 == "primedsz" ~ 0.17,
+        product_fert2 == "dap" ~ 0.2,
+        product_fert2 == "urea" ~ 0.0, 
+        product_fert2 == "ssp" ~ 0.088, 
+        product_fert2 == "granulock" ~ 0.175, 
+        product_fert2 == "granulockz" ~ 0.218, 
+        product_fert2 == "mapzn" ~ 0.22, 
+        product_fert2 == "zincguardd2" ~ 0.193,
+        product_fert2 == "soa" ~ 0.0, 
+        product_fert2 == "mesz" ~ 0.175, 
+        product_fert2 == "acremax" ~ 0.11,
+        product_fert2 == "27:12:00" ~ 0.12, 
+        product_fert2 == "24:16:00" ~ 0.16,
+        product_fert2 == "primezn" ~ 0.13,
+        TRUE ~ 0))
+fert_app <- fert_app %>%
+  mutate(
+    content_P_fert3 = 
+      case_when(
+        product_fert3 == "map" ~ 0.22,
+        product_fert3 == "primedsz" ~ 0.17,
+        product_fert3 == "dap" ~ 0.2,
+        product_fert3 == "urea" ~ 0.0, 
+        product_fert3 == "ssp" ~ 0.088, 
+        product_fert3 == "granulock" ~ 0.175, 
+        product_fert3 == "granulockz" ~ 0.218, 
+        product_fert3 == "mapzn" ~ 0.22, 
+        product_fert3 == "zincguardd2" ~ 0.193,
+        product_fert3 == "soa" ~ 0.0, 
+        product_fert3 == "mesz" ~ 0.175, 
+        product_fert3 == "acremax" ~ 0.11,
+        product_fert3 == "27:12:00" ~ 0.12, 
+        product_fert3 == "24:16:00" ~ 0.16,
+        product_fert3 == "primezn" ~ 0.13,
+        TRUE ~ 0))
+
+#rate * content for trial
+
+str(fert_app)
+fert_app <- fert_app %>% 
+  mutate(content_P_fert_rate1 = (content_P_fert1 * rate_fert1),
+         content_P_fert_rate2 = (content_P_fert2 * rate_fert2),
+         content_P_fert_rate3 = (content_P_fert3 * rate_fert3))
+
+fert_app$content_P_fert_rate1[is.na(fert_app$content_P_fert_rate1)] <- 0 
+fert_app$content_P_fert_rate2[is.na(fert_app$content_P_fert_rate2)] <- 0 
+fert_app$content_P_fert_rate3[is.na(fert_app$content_P_fert_rate3)] <- 0 
+
+fert_app <- fert_app %>%
+  mutate(
+    sum_P_content = content_P_fert_rate1 + 
+      content_P_fert_rate2 + 
+      content_P_fert_rate3)
+
+
+
+
+#################################################################################################
+#### starter ####################################################################################
+
+fert_app <- fert_app %>%
+  mutate(
+    S_content_P_fert1 = 
+      case_when(
+        S_product_fert1 == "map" ~ 0.22,
+        S_product_fert1 == "primedsz" ~ 0.17,
+        S_product_fert1 == "dap" ~ 0.2,
+        S_product_fert1 == "urea" ~ 0.0, 
+        S_product_fert1 == "ssp" ~ 0.088, 
+        S_product_fert1 == "granulock" ~ 0.175, 
+        S_product_fert1 == "granulockz" ~ 0.218, 
+        S_product_fert1 == "mapzn" ~ 0.22, 
+        S_product_fert1 == "zincguardd2" ~ 0.193,
+        S_product_fert1 == "soa" ~ 0.0, 
+        S_product_fert1 == "mesz" ~ 0.175, 
+        S_product_fert1 == "acremax" ~ 0.11,
+        S_product_fert1 == "27:12:00" ~ 0.12, 
+        S_product_fert1 == "24:16:00" ~ 0.16,
+        S_product_fert1 == "primezn" ~ 0.13,
+        TRUE ~ 0))
+fert_app <- fert_app %>%
+  mutate(
+    S_content_P_fert2 = 
+      case_when(
+        S_product_fert2 == "map" ~ 0.22,
+        S_product_fert2 == "primedsz" ~ 0.17,
+        S_product_fert2 == "dap" ~ 0.2,
+        S_product_fert2 == "urea" ~ 0.0, 
+        S_product_fert2 == "ssp" ~ 0.088, 
+        S_product_fert2 == "granulock" ~ 0.175, 
+        S_product_fert2 == "granulockz" ~ 0.218, 
+        S_product_fert2 == "mapzn" ~ 0.22, 
+        S_product_fert2 == "zincguardd2" ~ 0.193,
+        S_product_fert2 == "soa" ~ 0.0, 
+        S_product_fert2 == "mesz" ~ 0.175, 
+        S_product_fert2 == "acremax" ~ 0.11,
+        S_product_fert2 == "27:12:00" ~ 0.12, 
+        S_product_fert2 == "24:16:00" ~ 0.16,
+        S_product_fert2 == "primezn" ~ 0.13,
+        TRUE ~ 0))
+fert_app <- fert_app %>%
+  mutate(
+    S_content_P_fert3 = 
+      case_when(
+        S_product_fert3 == "map" ~ 0.22,
+        S_product_fert3 == "primedsz" ~ 0.17,
+        S_product_fert3 == "dap" ~ 0.2,
+        S_product_fert3 == "urea" ~ 0.0, 
+        S_product_fert3 == "ssp" ~ 0.088, 
+        S_product_fert3 == "granulock" ~ 0.175, 
+        S_product_fert3 == "granulockz" ~ 0.218, 
+        S_product_fert3 == "mapzn" ~ 0.22, 
+        S_product_fert3 == "zincguardd2" ~ 0.193,
+        S_product_fert3 == "soa" ~ 0.0, 
+        S_product_fert3 == "mesz" ~ 0.175, 
+        S_product_fert3 == "acremax" ~ 0.11,
+        S_product_fert3 == "27:12:00" ~ 0.12, 
+        S_product_fert3 == "24:16:00" ~ 0.16,
+        S_product_fert3 == "primezn" ~ 0.13,
+        TRUE ~ 0))
+
+str(fert_app)
+fert_app <- fert_app %>% 
+  mutate(S_content_P_fert_rate1 = (S_content_P_fert1 * S_rate_fert1),
+         S_content_P_fert_rate2 = (S_content_P_fert2 * S_rate_fert2),
+         S_content_P_fert_rate3 = (S_content_P_fert3 * S_rate_fert3))
+
+fert_app$S_content_P_fert_rate1[is.na(fert_app$S_content_P_fert_rate1)] <- 0 
+fert_app$S_content_P_fert_rate2[is.na(fert_app$S_content_P_fert_rate2)] <- 0 
+fert_app$S_content_P_fert_rate3[is.na(fert_app$S_content_P_fert_rate3)] <- 0 
+
+fert_app <- fert_app %>%
+  mutate(
+    S_sum_P_content = S_content_P_fert_rate1 + 
+      S_content_P_fert_rate2 + 
+      S_content_P_fert_rate3)
+
+
+#######################################################################################################
+#############   Topdress
+fert_app <- fert_app %>%
+  mutate(
+    TD_content_P_fert1 = 
+      case_when(
+        TD_product_fert1 == "map" ~ 0.22,
+        TD_product_fert1 == "primedsz" ~ 0.17,
+        TD_product_fert1 == "dap" ~ 0.2,
+        TD_product_fert1 == "urea" ~ 0.0, 
+        TD_product_fert1 == "ssp" ~ 0.088, 
+        TD_product_fert1 == "granulock" ~ 0.175, 
+        TD_product_fert1 == "granulockz" ~ 0.218, 
+        TD_product_fert1 == "mapzn" ~ 0.22, 
+        TD_product_fert1 == "zincguardd2" ~ 0.193,
+        TD_product_fert1 == "soa" ~ 0.0, 
+        TD_product_fert1 == "mesz" ~ 0.175, 
+        TD_product_fert1 == "acremax" ~ 0.11,
+        TD_product_fert1 == "27:12:00" ~ 0.12, 
+        TD_product_fert1 == "24:16:00" ~ 0.16,
+        TD_product_fert1 == "primezn" ~ 0.13,
+        TRUE ~ 0))
+fert_app <- fert_app %>%
+  mutate(
+    TD_content_P_fert2 = 
+      case_when(
+        TD_product_fert2 == "map" ~ 0.22,
+        TD_product_fert2 == "primedsz" ~ 0.17,
+        TD_product_fert2 == "dap" ~ 0.2,
+        TD_product_fert2 == "urea" ~ 0.0, 
+        TD_product_fert2 == "ssp" ~ 0.088, 
+        TD_product_fert2 == "granulock" ~ 0.175, 
+        TD_product_fert2 == "granulockz" ~ 0.218, 
+        TD_product_fert2 == "mapzn" ~ 0.22, 
+        TD_product_fert2 == "zincguardd2" ~ 0.193,
+        TD_product_fert2 == "soa" ~ 0.0, 
+        TD_product_fert2 == "mesz" ~ 0.175, 
+        TD_product_fert2 == "acremax" ~ 0.11,
+        TD_product_fert2 == "27:12:00" ~ 0.12, 
+        TD_product_fert2 == "24:16:00" ~ 0.16,
+        TD_product_fert2 == "primezn" ~ 0.13,
+        TRUE ~ 0))
+fert_app <- fert_app %>%
+  mutate(
+    TD_content_P_fert3 = 
+      case_when(
+        TD_product_fert3 == "map" ~ 0.22,
+        TD_product_fert3 == "primedsz" ~ 0.17,
+        TD_product_fert3 == "dap" ~ 0.2,
+        TD_product_fert3 == "urea" ~ 0.0, 
+        TD_product_fert3 == "ssp" ~ 0.088, 
+        TD_product_fert3 == "granulock" ~ 0.175, 
+        TD_product_fert3 == "granulockz" ~ 0.218, 
+        TD_product_fert3 == "mapzn" ~ 0.22, 
+        TD_product_fert3 == "zincguardd2" ~ 0.193,
+        TD_product_fert3 == "soa" ~ 0.0, 
+        TD_product_fert3 == "mesz" ~ 0.175, 
+        TD_product_fert3 == "acremax" ~ 0.11,
+        TD_product_fert3 == "27:12:00" ~ 0.12, 
+        TD_product_fert3 == "24:16:00" ~ 0.16,
+        TD_product_fert3 == "primezn" ~ 0.13,
+        TRUE ~ 0))
+
+str(fert_app)
+fert_app <- fert_app %>% 
+  mutate(TD_content_P_fert_rate1 = (TD_content_P_fert1 * TD_rate_fert1),
+         TD_content_P_fert_rate2 = (TD_content_P_fert2 * TD_rate_fert2),
+         TD_content_P_fert_rate3 = (TD_content_P_fert3 * TD_rate_fert3))
+
+fert_app$TD_content_P_fert_rate1[is.na(fert_app$TD_content_P_fert_rate1)] <- 0 
+fert_app$TD_content_P_fert_rate2[is.na(fert_app$TD_content_P_fert_rate2)] <- 0 
+fert_app$TD_content_P_fert_rate3[is.na(fert_app$TD_content_P_fert_rate3)] <- 0 
+
+fert_app <- fert_app %>%
+  mutate(
+    TD_sum_P_content = TD_content_P_fert_rate1 + 
+      TD_content_P_fert_rate2 + 
+      TD_content_P_fert_rate3)
+
+################################################################################
+###############  sum the contnet for all N applications trial + S and TD #######
+################################################################################
+fert_app <- fert_app %>%
+  mutate(
+    Total_sum_P_content = sum_P_content +
+      S_sum_P_content +
+      TD_sum_P_content)
+
+
+################################################################################################
+##### export working and heaps less than workings
+################################################################################################
+
+#getwd()
+## all of workings
+write.csv(fert_app,
+          "W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_all_steps.csv")
+str(fert_app)
+
+
+selection_fert_appl <- fert_app %>%
+  dplyr::select(
+    Paddock_ID:Strip_Rate,
+    Strip_Type,
+    Start_Fert,
+    Top_Dress,
+    
+    sum_N_content,
+    S_sum_N_content,
+    TD_sum_N_content,
+    Total_sum_N_content,
+    
+    sum_P_content,
+    S_sum_P_content,
+    TD_sum_P_content,
+    Total_sum_P_content
+    
+  )
+
+
+write.csv(selection_fert_appl,
+          "W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_select_clm.csv")
