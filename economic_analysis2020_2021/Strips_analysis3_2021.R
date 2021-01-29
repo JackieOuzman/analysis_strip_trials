@@ -5,7 +5,7 @@ libs <- c("dplyr", "tidyverse",
           "ggplot2", "readxl",
           "PairedData", "cowplot", "grid", 
           "RGraphics", 
-          "gridExtra", "rdrop2", "readr")
+          "gridExtra", "rdrop2", "readr", "readxl")
 
 install.libraries <- function(lib=NULL){
   new <- lib[!(lib %in% installed.packages()[, "Package"])]
@@ -28,62 +28,58 @@ load.libraries(libs)
 #tidy this code up so I can have functions for analysis
 # perhaps have a file that list the site and location of data along with paddock ID as well as a date when analysis was run
 
-
-baseDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "Streamline")
+#############################################################################################################
+#######################         set up file directory                               ########################
+Trial_type <- "N"  # "P"
+Number_of_strips <-   "strip3" # "strip2"
+  
+baseDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "Streamline" , Trial_type, Number_of_strips)
 outputDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "Streamline")
 baseDir
 list.files(baseDir, full.names = FALSE)
+###########################################################################################################
+## I would be good to work on this step to run all the files in the directory at once.
 
+input_file <-"Dougs1_SegID_Zone.csv"
 
-
-input_file <-"Rail_Yld_SegID_Zone.csv"
-
-paddock_ID_1 <- "318130"
-paddock_ID_2 <- "318131"
+#paddock_ID_1 <- "318130"
+#paddock_ID_2 <- "318131"
   
   
 ################################################################################################################
+#######################         Read in the yield data                               ########################### 
+
 function_1_import_data <- function(input_file){
 strips <- read_csv(paste0(baseDir, "/",input_file))
-strips <- mutate(strips,
-                 paddock_name = paste0(input_file)) 
-strips <- mutate(strips,
-                 paddock_name = str_extract(strips$paddock_name, "[^_]+"))
 
 return(strips)}
 
 
 assign("strips", function_1_import_data(input_file))
 
+###############################################################################################################
+#############    This analysis doesnt include the Alt GSP strip   so i will remove it now  ####################
+
+strips <-   strips %>% 
+  filter((GSP !="Alt GSP") %>% 
+             replace_na(TRUE))
 
 ################################################################################################################
 
 #tidy up data frame
 #make clms standard and remove the NA vlues in rate clm - having trouble with this as function because of the errors if the clm name doesnt exist
+#names(strips)
 
 function_2_tidy_clm <- function(strips) {
-  strips <- if (c("Rates") %in% names(strips) == TRUE) {
-    rename(strips, Rate = Rates)
-  } else {
-    rename(strips, Rate = Rate)
-  }
+  
   strips <- if (c("Yld_Mass_D") %in% names(strips) == TRUE) {
     rename(strips, YldMassDry = Yld_Mass_D)
   } else {
     rename(strips, YldMassDry = YldMassDry)
   }
-  strips <- if (c("zone") %in% names(strips) == TRUE) {
-    rename(strips, Zone = zone)
-  } else {
-    rename(strips, Zone = Zone)
-  }
-  strips <- if (c("zones") %in% names(strips) == TRUE) {
-     rename(strips, Zone = zones)
-   } else {
-     rename(strips, Zone = Zone)
-   }
+  
   strips <- filter(strips,!is.na(Rate))
-  strips$Rate <- as.double(strips$Rate)
+  strips$Rate <- as.double(strips$Rate) #need to double check that I always have a number
   strips$YldMassDry <- as.double(strips$YldMassDry)
   strips$DistOnLine <- as.double(strips$DistOnLine)
    
@@ -114,7 +110,27 @@ assign("strips", function_2_tidy_clm(strips))
 
 Rates_labels <- data.frame(Rate = unique(strips$Rate)) %>% 
   arrange(Rate) %>% 
-  mutate(rate_name = c("rate1","Grower_rate" , "rate2"))
+  mutate(rate_name_order = c("low","medium" , "high")) 
+
+#what the rate of the GR?
+GSP_rate <- strips %>% 
+  filter(GSP == "GSP") %>% 
+  distinct(Rate)
+
+
+Rates_labels <- Rates_labels %>% 
+  mutate(
+    rate_name = case_when(
+      Rate == GSP_rate[[1]] ~ "Grower_rate",
+      TRUE ~ rate_name_order))  
+#and again to get the other names 
+Rates_labels <- Rates_labels %>%
+  mutate(rate_name = case_when(
+    rate_name == "low" ~ "rate1",
+    rate_name == "high" ~ "rate2",
+    TRUE ~ rate_name
+  ))
+
 
 strips <- left_join(strips, Rates_labels, by= "Rate")
 
@@ -132,6 +148,7 @@ Zone_labels <-
   filter(!is.na(Zone)) %>% 
   arrange(Zone) %>% #this should work with text
   mutate(zone_name = c("zone1","zone2" ))
+
 
 # join this to the strips data
 strips <- left_join(strips, Zone_labels, by= "Zone")
@@ -174,6 +191,7 @@ zone_x_rateXvsGR_res_sig <-
 zone_x_rateXvsGR_res_sig 
 
 
+
 return(data.frame(zone_x_rateXvsGR_res_sig))
 }
 assign(paste0("zone_", "1", "rate_", "1"), function_paired_ttest(strips, 1, 1))
@@ -195,15 +213,29 @@ results_ttest <- bind_rows(zone_1rate_1,
 
 #what is the mean yield value for the zone by strip
 mean_zone1 <-  filter(strips,
-                          zone_name == "zone1") %>%
-                          group_by(Rate) %>%
-                          summarise(yield = mean(YldMassDry)) %>% 
-                          mutate(zone = "zone1" )
+                      zone_name == "zone1") %>%
+  group_by(Rate) %>%
+  summarise(
+    yield = mean(YldMassDry, na.rm = TRUE),
+    n = n(),
+    sd = sd(YldMassDry),
+    se = sd / sqrt(n),
+    PtCount_tally = sum(PtCount)
+  )  %>%
+  mutate(zone = "zone1")
+
+
 mean_zone2 <-  filter(strips,
                       zone_name == "zone2") %>%
-                      group_by(Rate) %>%
-                      summarise(yield = mean(YldMassDry)) %>% 
-                      mutate(zone = "zone2" )
+  group_by(Rate) %>%
+  summarise(
+    yield = mean(YldMassDry, na.rm = TRUE),
+    n = n(),
+    sd = sd(YldMassDry),
+    se = sd / sqrt(n),
+    PtCount_tally = sum(PtCount)
+  )  %>%
+  mutate(zone = "zone2")
 
 mean_zone <- bind_rows(mean_zone1, mean_zone2)
 mean_zone <- left_join(mean_zone,Rates_labels)
@@ -222,8 +254,10 @@ rm(zone_1rate_1,
 ##################################################################################################################
 ### Plotting the results
 ## step 1 complie the results avearge of segment per zone
+names(strips)
+
 for_plotting <- filter(strips, !is.na(zone_name)) %>% 
-        group_by(Rate, Zone, rate_name, zone_name, zone_name2, paddock_name,SegmentID, ) %>% 
+        group_by(Rate, Zone, rate_name, zone_name, zone_name2, Field,SegmentID, ) %>% 
         summarise_all(mean)
 
 function_zone_plots <- function(for_plotting, zone_x){
@@ -289,7 +323,7 @@ zone2_range
 max_yld <- max(for_plotting$YldMassDry, na.rm = TRUE)
 min_yld <- min(for_plotting$YldMassDry, na.rm = TRUE)
 
-label_paddock<-   unique(for_plotting$paddock_name)
+label_paddock<-   unique(for_plotting$Field)
 label_paddock <- str_split(label_paddock, "_", simplify = TRUE)
 label_paddock <- label_paddock[1,1]
 
@@ -323,14 +357,15 @@ plot_whole_strip
 # table 1 soil testing results
 
 
-DB_file_name <- "N&P 2019 data for analysis Vic 16 April2020.csv"
-# paddock ID 318130 and 318131
-paddock_ID_1 <- "318130"
-paddock_ID_2 <- "318131"
-
-function_tabel_soil_testing <- function(DB_file_name, paddock_ID_1, paddock_ID_2){
+paddock_ID <- data.frame(distinct(strips,Zone_ID)) %>% 
+   filter(!is.na(Zone_ID))
+paddock_ID_1 <- paddock_ID[1,1]
+paddock_ID_2 <- paddock_ID[2,1]
 paddock_ID <- c(paddock_ID_1, paddock_ID_2)
-harm_database  <- read_csv(paste0("W:/value_soil_testing_prj/data_base/",DB_file_name))
+
+function_tabel_soil_testing <- function( paddock_ID_1, paddock_ID_2){
+
+harm_database <- read_excel( "C:/Users/ouz001/working_from_home/soil_testing/Streamline/GRDC 2020 Paddock Database_SA_VIC_Jan14 2021.xlsx")
 
 #fix up some names
 harm_database<-
@@ -351,8 +386,9 @@ harm_database <-filter(harm_database, Paddock_code != "NA")
 
 #extract the paddock I want 
 site <- filter(harm_database,
-               Paddock_code == paddock_ID) %>% 
-   dplyr::select(5, 6: 11)
+               Paddock_code == paddock_ID_1 |
+                 Paddock_code == paddock_ID_2) %>% 
+  dplyr::select(5, 6: 11)
 
 #remove the text
 site <-site %>% 
@@ -374,13 +410,24 @@ site <- site %>% mutate_if(is.character,~replace(.,.== "9999", 'Replacement'))
 site
 return(site)
 }
-assign(("site"), function_tabel_soil_testing(DB_file_name, paddock_ID_1, paddock_ID_2))
+assign(("site"), function_tabel_soil_testing( paddock_ID_1, paddock_ID_2))
 
 
 ##############################################################################################################
 # table 2 yield  results
-#this is adding aclm that should be in the import file but is empty now
-all_results <- all_results %>% mutate(Details = NA)
+#this is adding a clm that should be in the import file but is empty now
+#all_results <- all_results %>% mutate(Details = NA)
+
+temp <- dplyr::select(strips, Rate, Strip_Rate, Start_Fert, Top_Dress) %>% 
+  distinct(Strip_Rate, .keep_all = TRUE)
+
+str(all_results)
+str(temp)
+all_results <- left_join(all_results, temp, by = "Rate")
+
+all_results
+all_results <- rename(all_results, Details = Strip_Rate)
+all_results
 
 function_tabel_yield <- function(all_results, Zone_labels){
   all_results <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
