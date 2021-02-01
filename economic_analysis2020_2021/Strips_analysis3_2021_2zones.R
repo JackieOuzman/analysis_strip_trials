@@ -303,11 +303,12 @@ zone_plot <- filter(for_plotting, zone_name == paste0("zone", zone_x)) %>%
         axis.title=element_text(size=10))+
   labs(x = "Fertiliser Rates",
        y= "Yield t/ha",
-       title = paste0( label_zone),
-       caption = "Below table reports mean values and significant differences compared to GSR"
-       )+
-  theme(plot.caption = element_text(size=8, face="italic", color="black"))+
-  annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
+       title = paste0( label_zone))+
+       #caption = "Below table reports mean values and significant differences compared to GSR"
+       #)+
+  theme(plot.caption = element_text(size=8, face="italic", color="black"))
+  #+
+  #annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
 
 return(zone_plot)
 }
@@ -485,7 +486,8 @@ mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
                                       Yld = paste0(yield, Significant))
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, Zone, Details, Yld)
 mean_zone_av_output_display <- spread(mean_zone_av_output_display, Zone, Yld)
-mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
+#mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
+mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,2)] #record the clms
 
 return(mean_zone_av_output_display)
 }
@@ -497,21 +499,37 @@ table1 <- tableGrob(site , rows = NULL, theme=TSpecial )
 table2 <- tableGrob(tabel_yield, rows = NULL, theme=TSpecial)
 
 
-plot_whole_strip
-plot_zone1
-plot_zone2
 
-table1
+note_on_graph <- paste0("The table reports mean values and significant differences compared to GSR. ",
+               "\n", 
+               "box plot = 25%, 50%, 75%, dashed line = mean .",
+               "\n",
+               Sys.Date())
 
 
-collection <- grid.arrange(plot_zone1, plot_zone2, table2, table1, plot_whole_strip, nrow = 5,  ncol=2, 
-                           layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)),
-                           bottom = textGrob(
-                             Sys.Date(),
-                             gp = gpar(fontface = 3, fontsize = 9),
-                             hjust = 2,
-                             x = 1
-                           ))
+
+collection <-
+  grid.arrange(
+    plot_zone1,
+    plot_zone2,
+    table2,
+    table1,
+    plot_whole_strip,
+    nrow = 5,
+    ncol = 2,
+    layout_matrix = cbind(c(1, 1, 3, 5, 5), c(2, 2, 4, 5, 5)),
+    bottom = textGrob(
+      note_on_graph,
+      gp = gpar(fontface = 3, fontsize = 9),
+      #hjust = 2,
+      #hjust = 0,
+      #x = 1
+    )
+  )
+                           
+
+
+
 
 collection
 
