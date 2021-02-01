@@ -41,6 +41,8 @@ list.files(baseDir, full.names = FALSE)
 ## I would be good to work on this step to run all the files in the directory at once.
 
 input_file <-"Dougs1_SegID_Zone.csv"
+name_Paddock <- unlist(strsplit(input_file,"_"))[1]
+## add this into the strips df
 
 
 ################################################################################################################
@@ -259,7 +261,7 @@ rm(zone_1rate_1,
 names(strips)
 
 for_plotting <- filter(strips, !is.na(zone_name)) %>% 
-        group_by(Rate, Zone, rate_name, zone_name, zone_name2, Field,SegmentID, ) %>% 
+        group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
         summarise_all(mean)
 
 function_zone_plots <- function(for_plotting, zone_x){
@@ -349,7 +351,7 @@ zone2_range
 max_yld <- max(for_plotting$YldMassDry, na.rm = TRUE)
 min_yld <- min(for_plotting$YldMassDry, na.rm = TRUE)
 
-label_paddock<-   unique(for_plotting$Field)
+label_paddock<-   unique(for_plotting$name_Paddock)
 label_paddock <- str_split(label_paddock, "_", simplify = TRUE)
 label_paddock <- label_paddock[1,1]
 
