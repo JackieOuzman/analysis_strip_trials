@@ -30,7 +30,7 @@ load.libraries(libs)
 
 #############################################################################################################
 #######################         set up file directory                               ########################
-Trial_type <- "N"  # "P"
+Trial_type <- "P"  # "N"
 Number_of_strips <-   "strip3" # "strip2"
   
 baseDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "Streamline" , Trial_type, Number_of_strips)
@@ -40,13 +40,14 @@ list.files(baseDir, full.names = FALSE)
 ###########################################################################################################
 ## I would be good to work on this step to run all the files in the directory at once.
 
-input_file <-"Dougs1_SegID_Zone.csv"
+input_file <-"Clarke_Well_Yld_SegID_Zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
 
 
 ################################################################################################################
 #######################         Read in the yield data                               ########################### 
+
 function_1_import_data <- function(input_file){
   strips <- read_csv(paste0(baseDir, "/",input_file))
   strips <- strips %>% 
@@ -68,7 +69,7 @@ strips <-   strips %>%
 
 #tidy up data frame
 #make clms standard and remove the NA vlues in rate clm - having trouble with this as function because of the errors if the clm name doesnt exist
-#names(strips)
+names(strips)
 
 function_2_tidy_clm <- function(strips) {
   
@@ -510,16 +511,9 @@ collection <-
   )
 
 
-# collection <- grid.arrange(plot_zone1, plot_zone2, table2, table1, plot_whole_strip, nrow = 5,  ncol=2, 
-#                            layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)),
-#                            bottom = textGrob(
-#                              Sys.Date(),
-#                              gp = gpar(fontface = 3, fontsize = 9),
-#                              hjust = 2,
-#                              x = 1
-#                            ))
 
-collection
+
+
 
 
 

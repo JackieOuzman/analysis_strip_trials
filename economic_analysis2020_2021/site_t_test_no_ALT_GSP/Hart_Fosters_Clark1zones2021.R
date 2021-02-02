@@ -30,7 +30,7 @@ load.libraries(libs)
 
 #############################################################################################################
 #######################         set up file directory                               ########################
-Trial_type <- "N"  # "P"
+Trial_type <- "P"  # "N"
 Number_of_strips <-   "strip3" # "strip2"
   
 baseDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "Streamline" , Trial_type, Number_of_strips)
@@ -40,20 +40,21 @@ list.files(baseDir, full.names = FALSE)
 ###########################################################################################################
 ## I would be good to work on this step to run all the files in the directory at once.
 
-input_file <-"Dougs1_SegID_Zone.csv"
+input_file <-"Clarke_Fosters_Yld_SegID.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
 
-
 ################################################################################################################
 #######################         Read in the yield data                               ########################### 
+
 function_1_import_data <- function(input_file){
-  strips <- read_csv(paste0(baseDir, "/",input_file))
-  strips <- strips %>% 
-    mutate(name_Paddock= name_Paddock,
-           input_file = name_Paddock)
-  
-  return(strips)}
+strips <- read_csv(paste0(baseDir, "/",input_file))
+strips <- strips %>% 
+  mutate(name_Paddock= name_Paddock,
+         input_file = name_Paddock)
+
+return(strips)}
+
 
 assign("strips", function_1_import_data(input_file))
 
@@ -68,7 +69,9 @@ strips <-   strips %>%
 
 #tidy up data frame
 #make clms standard and remove the NA vlues in rate clm - having trouble with this as function because of the errors if the clm name doesnt exist
-#names(strips)
+names(strips)
+#DryYield
+
 
 function_2_tidy_clm <- function(strips) {
   
@@ -76,6 +79,7 @@ function_2_tidy_clm <- function(strips) {
     rename(strips, YldMassDry = Yld_Mass_D)
   } else {
     rename(strips, YldMassDry = DryYield)
+    
   }
   
   strips <- filter(strips,!is.na(Rate))
@@ -208,13 +212,20 @@ assign(paste0("zone_", "2", "rate_", "2"), function_paired_ttest(strips, 2, 2))
 ## function to join everything  togther
 #join these togther
 function_all_results <- function(zone_1rate_1,
-                                 zone_1rate_2,
-                                 zone_2rate_1,
-                                 zone_2rate_2){
+                                 zone_1rate_2){
+
+# function_all_results <- function(zone_1rate_1,
+#                                  zone_1rate_2,
+#                                  zone_2rate_1,
+#                                  zone_2rate_2){
+# results_ttest <- bind_rows(zone_1rate_1,
+#                            zone_1rate_2,
+#                            zone_2rate_1,
+#                            zone_2rate_2)
+
 results_ttest <- bind_rows(zone_1rate_1,
-                           zone_1rate_2,
-                           zone_2rate_1,
-                           zone_2rate_2)
+                           zone_1rate_2
+                           )
 
 #what is the mean yield value for the zone by strip
 mean_zone1 <-  filter(strips,
@@ -230,28 +241,33 @@ mean_zone1 <-  filter(strips,
   mutate(zone = "zone1")
 
 
-mean_zone2 <-  filter(strips,
-                      zone_name == "zone2") %>%
-  group_by(Rate) %>%
-  summarise(
-    yield = mean(YldMassDry, na.rm = TRUE),
-    n = n(),
-    sd = sd(YldMassDry),
-    se = sd / sqrt(n),
-    PtCount_tally = sum(PtCount)
-  )  %>%
-  mutate(zone = "zone2")
+# mean_zone2 <-  filter(strips,
+#                       zone_name == "zone2") %>%
+#   group_by(Rate) %>%
+#   summarise(
+#     yield = mean(YldMassDry, na.rm = TRUE),
+#     n = n(),
+#     sd = sd(YldMassDry),
+#     se = sd / sqrt(n),
+#     PtCount_tally = sum(PtCount)
+#   )  %>%
+#   mutate(zone = "zone2")
 
-mean_zone <- bind_rows(mean_zone1, mean_zone2)
+#mean_zone <- bind_rows(mean_zone1, mean_zone2)
+mean_zone <- bind_rows(mean_zone1)
 mean_zone <- left_join(mean_zone,Rates_labels)
 
 results_ttest <- left_join(mean_zone, results_ttest)
 return(results_ttest)}
 
+# assign(("all_results"), function_all_results(zone_1rate_1,
+#                                             zone_1rate_2,
+#                                             zone_2rate_1,
+#                                             zone_2rate_2))
+
 assign(("all_results"), function_all_results(zone_1rate_1,
-                                            zone_1rate_2,
-                                            zone_2rate_1,
-                                            zone_2rate_2))
+                                             zone_1rate_2))
+
 rm(zone_1rate_1,
    zone_1rate_2,
    zone_2rate_1,
@@ -262,7 +278,7 @@ rm(zone_1rate_1,
 names(strips)
 
 for_plotting <- filter(strips, !is.na(zone_name)) %>% 
-        group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
+        group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock, SegmentID, ) %>% 
         summarise_all(mean)
 
 function_zone_plots <- function(for_plotting, zone_x){
@@ -290,9 +306,9 @@ zone_plot <- filter(for_plotting, zone_name == paste0("zone", zone_x)) %>%
        title = paste0( label_zone))+
        #caption = "Below table reports mean values and significant differences compared to GSR"
        #)+
-       theme(plot.caption = element_text(size=8, face="italic", color="black"))
-       #+
-       #annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
+  theme(plot.caption = element_text(size=8, face="italic", color="black"))
+  #+
+  #annotate("text", x = 2, y= 0, size = 3,label = "box plot = 25%, 50%, 75%, dashed line = mean")
 
 return(zone_plot)
 }
@@ -470,7 +486,8 @@ mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
                                       Yld = paste0(yield, Significant))
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, Zone, Details, Yld)
 mean_zone_av_output_display <- spread(mean_zone_av_output_display, Zone, Yld)
-mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
+#mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
+mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,2)] #record the clms
 
 return(mean_zone_av_output_display)
 }
@@ -482,11 +499,12 @@ table1 <- tableGrob(site , rows = NULL, theme=TSpecial )
 table2 <- tableGrob(tabel_yield, rows = NULL, theme=TSpecial)
 
 
+
 note_on_graph <- paste0("The table reports mean values and significant differences compared to GSR. ",
-                        "\n", 
-                        "box plot = 25%, 50%, 75%, dashed line = mean .",
-                        "\n",
-                        Sys.Date())
+               "\n", 
+               "box plot = 25%, 50%, 75%, dashed line = mean .",
+               "\n",
+               Sys.Date())
 
 
 
@@ -508,16 +526,10 @@ collection <-
       #x = 1
     )
   )
+                           
 
 
-# collection <- grid.arrange(plot_zone1, plot_zone2, table2, table1, plot_whole_strip, nrow = 5,  ncol=2, 
-#                            layout_matrix = cbind(c(1,1,3,5,5), c(2,2,4,5,5)),
-#                            bottom = textGrob(
-#                              Sys.Date(),
-#                              gp = gpar(fontface = 3, fontsize = 9),
-#                              hjust = 2,
-#                              x = 1
-#                            ))
+
 
 collection
 
