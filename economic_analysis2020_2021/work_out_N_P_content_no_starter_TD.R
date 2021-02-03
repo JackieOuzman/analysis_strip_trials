@@ -143,6 +143,8 @@ fert_app <- fert_app %>%
         product_fert1 == "24:16" ~ 0.24,
         product_fert1 == "prime zn" ~ 0.14,
         product_fert1 == "meszn n12; p17.5; k0; zn10" ~ .12,
+        product_fert1 == "uan" ~ .105,
+        product_fert1 == "prime msz" ~ .1,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -165,6 +167,8 @@ fert_app <- fert_app %>%
         product_fert2 == "24:16" ~ 0.24,
         product_fert2 == "prime zn" ~ 0.14,
         product_fert2 == "meszn n12; p17.5; k0; zn10" ~ .12,
+        product_fert2 == "uan" ~ .105,
+        product_fert2 == "prime msz" ~ .1,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -187,6 +191,8 @@ fert_app <- fert_app %>%
         product_fert3 == "24:16" ~ 0.24,
         product_fert3 == "prime zn" ~ 0.14,
         product_fert3 == "meszn n12; p17.5; k0; zn10" ~ .12,
+        product_fert3 == "uan" ~ .105,
+        product_fert3 == "prime msz" ~ .1,
         TRUE ~ 0))
 #rate * content for trial
 
@@ -248,6 +254,7 @@ fert_app <- fert_app %>%
         product_fert1 == "24:16" ~ 0.16,
         product_fert1 == "prime zn" ~ 0.13,
         product_fert1 == "meszn n12; p17.5; k0; zn10" ~ .175,
+        product_fert1 == "prime msz" ~ .18,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -270,6 +277,7 @@ fert_app <- fert_app %>%
         product_fert2 == "24:16" ~ 0.16,
         product_fert2 == "prime zn" ~ 0.13,
         product_fert2 == "meszn n12; p17.5; k0; zn10" ~ .175,
+        product_fert2 == "prime msz" ~ .18,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -292,6 +300,7 @@ fert_app <- fert_app %>%
         product_fert3 == "24:16" ~ 0.16,
         product_fert3 == "prime zn" ~ 0.13,
         product_fert3 == "meszn n12; p17.5; k0; zn10" ~ .175,
+        product_fert3 == "prime msz" ~ .18,
         TRUE ~ 0))
 
 #rate * content for trial
