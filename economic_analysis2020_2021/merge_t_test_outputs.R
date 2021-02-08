@@ -1,6 +1,11 @@
 ### spatial data with no yield data
 ### rainfall
 ### P and N content
+## for this to work I need to have all the output files sitting in one folder.
+### probably should add a step in here which looks for results_grower_....SegID_Zone.csv files and copies them over
+
+
+library(tidyverse)
 
 
 base_data <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_select_clm.csv")
@@ -35,4 +40,8 @@ for (file in file_list){
   }
 }
 
+
+### saved the merged dataframe
+
+write.csv(dataset,paste0(baseDir, "/t_test_merged.csv") )
 
