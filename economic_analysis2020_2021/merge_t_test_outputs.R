@@ -33,12 +33,17 @@ for (file in file_list){
   }
   
   # if the merged dataset does exist, append to it
-  if (exists("dataset")){
-    temp_dataset <-read.csv(file)
-    dataset<-rbind(dataset, temp_dataset)
-    rm(temp_dataset)
-  }
+   if (exists("dataset")){
+     temp_dataset <-read.csv(file)
+     dataset<-rbind(dataset, temp_dataset)
+     
+     rm(temp_dataset)
+   }
 }
+
+dataset <- dataset %>% 
+  mutate(ID_analysis_zone = paste0(paddock_ID_Type, "_", Rate,"_", zone )) %>% 
+  distinct(ID_analysis_zone, .keep_all = TRUE)
 
 
 ### saved the merged dataframe
