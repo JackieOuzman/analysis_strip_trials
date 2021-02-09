@@ -8,10 +8,19 @@ str(for_tables)
 test <- for_tables %>% 
   filter(	 paddock_ID_Type == "31721_N Strip"&
              rate_name_order != "medium") %>% 
-  select(ID_analysis, yield, se, Total_sum_N_content, rate_name_order, zone )
-
+  select( yield, se, Total_sum_N_content, rate_name_order, paddock_ID_Zone )
+  #select(ID_analysis, yield, se, Total_sum_N_content, rate_name_order, zone, paddock_ID_Zone )
+str(test)
 
 ## turn the data frame into wide format.
 test_wide <- pivot_wider(test, 
-                         names_from =rate_name_order, 
-                         values_from = yield)
+                         id_cols = paddock_ID_Zone,
+                         names_from =rate_name_order,
+                         values_from = yield
+                         )
+
+#
+
+###
+test_group <-  test %>% 
+  group_by(paddock_ID_Zone)

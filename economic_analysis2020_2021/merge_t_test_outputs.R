@@ -41,9 +41,11 @@ for (file in file_list){
    }
 }
 
+
+
 dataset <- dataset %>% 
-  mutate(ID_analysis_zone = paste0(paddock_ID_Type, "_", Rate,"_", zone )) %>% 
-  distinct(ID_analysis_zone, .keep_all = TRUE)
+  mutate(ID_analysis_zone_temp = paste0(paddock_ID_Zone, "_", Rate )) %>% 
+  distinct(ID_analysis_zone_temp, .keep_all = TRUE)
 
 
 ### saved the merged dataframe

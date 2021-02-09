@@ -7,10 +7,11 @@ spatial_data_no_yld <-read_csv("W:/value_soil_testing_prj/Yield_data/analysis_st
 
 
 
-
+str(t_test_results)
 #tidy up clm and make a unique ID
 t_test_results <- t_test_results %>% 
-  select(-X1, -X) 
+  select(-X1, -X, -ID_analysis_zone_temp)  %>% 
+  mutate(ID_analysis = paste0(paddock_ID_Type, "_",Rate))
     
 
 
@@ -31,6 +32,8 @@ spatial_data_no_yld <- spatial_data_no_yld %>%
          -Start_Fert,
          -Top_Dress)
           
+str(spatial_data_no_yld)
+str(t_test_results)
 
 
 ## join the df toghter
