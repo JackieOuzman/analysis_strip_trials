@@ -549,7 +549,7 @@ collection <-
 #a csv output file
 str(all_results_1)
 #add zone ID paddock code with trial type 
-       
+ names(strips)      
 
 all_results_1 <- all_results_1 %>% 
   mutate(paddock_ID_Type = paste0(unique(strips$Paddock_ID),"_",
@@ -558,7 +558,7 @@ all_results_1 <- all_results_1 %>%
 
 #save the output
 write.csv(all_results_1, paste0(outputDir, "/results_grower_", 
-                              distinct(all_results,paddock_ID_Type),
+                              distinct(all_results_1,paddock_ID_Type),
                               "_",
                               input_file))
 
@@ -579,7 +579,7 @@ ggsave( filename =
 ################                        Extra analysis for Ricks tables this is added to below t test      ############################
 ######################################################################################################################################
 
-str(strips)
+#str(strips)
 #unique(strips$GSP) #just chceking we dont have Alt GSP
 for_ricks_tables_1 <- strips %>% 
   filter(!is.na(zone_name)) %>%
@@ -800,7 +800,19 @@ names(for_ricks_tables_summary_narrow)
 for_ricks_tables_summary_narrow <- for_ricks_tables_summary_narrow %>% 
   dplyr::select(Zone_ID, Zone, comparison, yld_difference,yld_response,P_value,  Significant )
 
+## add in a few clms that help later
+for_ricks_tables_summary_narrow <- for_ricks_tables_summary_narrow %>% 
+  mutate(paddock_ID = unique(strips$Paddock_ID),
+        Strip_Type = unique(strips$Strip_Type),
+         input_file = input_file)
 
+#save the output
+write.csv(for_ricks_tables_summary_narrow, paste0(outputDir, "/rick_tables_", 
+                                                 distinct(for_ricks_tables_summary_narrow,paddock_ID),
+                                                 "_",
+                                                 input_file))
+
+outputDir
 
 #### what do I want to save?
 #for_ricks_tables_summary_narrow
@@ -808,7 +820,3 @@ for_ricks_tables_summary_narrow <- for_ricks_tables_summary_narrow %>%
 #all_results_1
 
 
-write.csv(for_ricks_tables_summary_narrow, paste0(outputDir, "/rick_tables_", 
-                                distinct(all_results,paddock_ID_Type),
-                                "_",
-                                input_file))
