@@ -16,11 +16,12 @@ str(test)
 test_wide <- pivot_wider(test, 
                          id_cols = paddock_ID_Zone,
                          names_from =rate_name_order,
-                         values_from = yield
+                         values_from = c(yield, se)
                          )
 
-#
 
-###
-test_group <-  test %>% 
-  group_by(paddock_ID_Zone)
+
+## add the difference calulation to see if the added fertilier has a increase in yield
+str(test_wide)
+test_wide <- test_wide %>% 
+  mutate(yield_response = yield_high - yield_low)
