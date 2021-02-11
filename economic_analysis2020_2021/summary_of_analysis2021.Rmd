@@ -1,0 +1,59 @@
+---
+title: "Soil_testing_outputs"
+author: "Jackie Ouzman"
+date: "11/02/2021"
+output: html_document
+---
+
+```{r setup and load library, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Summary of trials we have
+
+The first section is a sumary of the data we have.
+The trial type 
+Location of trials etc
+
+
+
+```{r load_data, message=FALSE, warning=FALSE, include=FALSE}
+fert_app_select_clm <- read.csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_select_clm.csv")
+
+spatial_data_no_yld <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid_2021-02-11.csv")
+
+
+# note that this file was generated from spatial analysis and R code
+# the R code / script is:
+
+#"W:\value_soil_testing_prj\Yield_data\analysis_strip_trials_April\economic_analysis2020_2021\spatial_data_no_yld.R"
+#"W:\value_soil_testing_prj\Yield_data\analysis_strip_trials_April\economic_analysis2020_2021\work_out_N_P_content_no_starter_TD.R"
+
+
+```
+
+## Summary of spatial data
+
+This data is a summary of what paddocks implemented a N or P fertiliser trial.
+For these paddocks, we were given spatial data that allowed us to create maps.
+These pre harvest map contain:
+
+- loaction of strips in paddock
+- location of zone (zones are location that the soil sampling was done)
+- legends which indicate how much fertiliser was applied (product and rate)
+
+
+
+```{r pressure, echo=FALSE}
+str(spatial_data_no_yld)
+
+spatial_data_no_yld_ID_only <- spatial_data_no_yld %>% 
+  distinct(Paddock_ID, .keep_all = TRUE) %>% 
+  dplyr::select(Paddock_ID, Strip_Type, StripCount, Alt_GSP,av_rain )
+  
+  spatial_data_no_yld %>% 
+  group_by(Paddock_ID, Strip_Type)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

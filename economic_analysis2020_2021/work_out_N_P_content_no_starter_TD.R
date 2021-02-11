@@ -16,7 +16,7 @@ library(readxl)
 #####################################################################################################
 ##############  what was the total amount of N or P applied per strip?  ############################
 ####################################################################################################
-fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid_2021-02-02.csv")
+fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid_2021-02-11.csv")
 
 
 

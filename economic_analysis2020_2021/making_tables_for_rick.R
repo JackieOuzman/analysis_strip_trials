@@ -1,5 +1,64 @@
 
 library(tidyverse)
+
+baseDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "Streamline", "output", "high_low_comparision" )
+outputDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "Streamline")
+baseDir
+file_list <- paste0(baseDir, "/",list.files(baseDir, ".csv", full.names = FALSE))
+file_list
+
+
+setwd(baseDir)
+file_list <- list.files()
+for (file in file_list){
+  
+  # if the merged dataset doesn't exist, create it
+  if (!exists("dataset")){
+    dataset <- read.csv(file)
+  }
+  
+  # if the merged dataset does exist, append to it
+  if (exists("dataset")){
+    temp_dataset <-read.csv(file)
+    dataset<-rbind(dataset, temp_dataset)
+    
+    rm(temp_dataset)
+  }
+}
+
+names(dataset)
+
+dataset <- dataset %>% 
+  mutate(ID_analysis_zone_temp = paste0(Zone_ID, "_", comparison )) %>% 
+  distinct(ID_analysis_zone_temp, .keep_all = TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 for_tables <- read_csv( "W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/results_for_table.csv")
 
 

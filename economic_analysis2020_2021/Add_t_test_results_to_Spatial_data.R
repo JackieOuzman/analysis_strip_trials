@@ -10,7 +10,7 @@ spatial_data_no_yld <-read_csv("W:/value_soil_testing_prj/Yield_data/analysis_st
 str(t_test_results)
 #tidy up clm and make a unique ID
 t_test_results <- t_test_results %>% 
-  select(-X1, -X, -ID_analysis_zone_temp)  %>% 
+  dplyr::select(-X1, -X, -ID_analysis_zone_temp)  %>% 
   mutate(ID_analysis = paste0(paddock_ID_Type, "_",Rate))
     
 
@@ -20,12 +20,12 @@ t_test_results <- t_test_results %>%
 spatial_data_no_yld <- spatial_data_no_yld %>% 
   filter((GSP !="Alt GSP") %>% 
            replace_na(TRUE)) %>%  
-  select(-X1) %>% 
+  dplyr::select(-X1) %>% 
   mutate(ID_analysis = paste0(Paddock_ID, "_", Strip_Type, "_",Rate))
 
 
 spatial_data_no_yld <- spatial_data_no_yld %>% 
-  select(-Paddock_ID,
+  dplyr::select(-Paddock_ID,
          -Rate,
          - GSP,
          -Strip_Type,
