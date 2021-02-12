@@ -608,10 +608,9 @@ for_ricks_tables_1 <- for_ricks_tables_1 %>%
 ######################################################################################################################################
 ### for each zone and comparsion what is the mean and st error
 
-str(for_ricks_tables_1)
-#comparison <- "high_low"
-#comparison <- "high_medium"
-comparison <- "medium_low"
+
+
+function_grand_mean_std_error <- function(comparison){
 
 clm <- paste0("comparison_", comparison)
 comparison_grand_mean <- paste0("grand_mean_", comparison)
@@ -628,14 +627,12 @@ grand_mean_std_error <- for_ricks_tables_1 %>%
   dplyr::select(-sd, -n)
 
 grand_mean_std_error
+}
 #### assign name according to comparsion
 
-assign(paste0("grand_mean_std_error_", comparison), grand_mean_std_error)
-
-#check I have these
-str(grand_mean_std_error_high_low)
-str(grand_mean_std_error_high_medium)
-str(grand_mean_std_error_medium_low)
+assign(paste0("grand_mean_std_error_", "high_low"), function_grand_mean_std_error("high_low"))
+assign(paste0("grand_mean_std_error_", "high_medium"), function_grand_mean_std_error("high_medium"))
+assign(paste0("grand_mean_std_error_", "medium_low"), function_grand_mean_std_error("medium_low"))
 
 
 
@@ -656,7 +653,7 @@ for_ricks_tables_wide <- pivot_wider(for_ricks_tables_2,
                                      names_from =rate_name_order,
                                      values_from = zone_yld
 )
-str(for_ricks_tables_wide)
+
 
 ## differences in yld clms
 for_ricks_tables_wide <- for_ricks_tables_wide %>% 
@@ -673,7 +670,7 @@ grand_mean_se
 
 for_ricks_tables_wide <- left_join(for_ricks_tables_wide, grand_mean_se)
 
-str(for_ricks_tables_wide)
+
 
 
 #####
@@ -696,7 +693,7 @@ for_ricks_tables_summary <- for_ricks_tables_wide %>%
     )
   )
 
-str(for_ricks_tables_summary)
+
 
 for_ricks_tables_summary <- for_ricks_tables_summary %>% 
   pivot_longer(cols = c("yld_resposne_high_v_low","yld_resposne_high_v_medium", "yld_resposne_medium_v_low"),
@@ -719,7 +716,7 @@ for_ricks_tables_summary
 ### Extra t test #######################################################################################################################
 
 #Prep the data making a sub selection of df for each zone and run the paired t test
-names(strips)
+
 
 
 
@@ -858,9 +855,6 @@ for_ricks_tables_summary <- for_ricks_tables_summary %>%
 
 
 #save the output
-
-"C:\Users\ouz001\working_from_home\soil_testing\Streamline\output\high_low_comparision"
-outputDir
 
 name <- paste0("C:/Users/ouz001/working_from_home/soil_testing/Streamline/output/high_low_comparision/high_low_comp_", distinct(all_results_1,paddock_ID_Type), ".csv")
 
