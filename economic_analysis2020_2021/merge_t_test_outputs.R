@@ -41,10 +41,10 @@ for (file in file_list){
    }
 }
 
-
+names(dataset)
 
 dataset <- dataset %>% 
-  mutate(ID_analysis_zone_temp = paste0(paddock_ID_Zone, "_", Rate )) %>% 
+  mutate(ID_analysis_zone_temp = paste0(Zone_ID, "_", Rate )) %>% 
   distinct(ID_analysis_zone_temp, .keep_all = TRUE)
 
 
