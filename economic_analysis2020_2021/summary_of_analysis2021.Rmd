@@ -1,26 +1,30 @@
 ---
-title: "Soil testing outputs"
+title: "Snapshot and summary of soil testing outputs"
 author: "Jackie Ouzman"
-date: "11/02/2021"
-output: html_document
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+    html_document:
+    code_folding: hide
+    df_print: paged
 ---
 
 ```{r setup and load library, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(ggplot2)
-library(scales)
+
+library(formattable)
 ```
 
-## Summary of trials 
+## Number of N and P trials for 2020 -2021  season 
 
 CSIRO team have been supplied with spatial data for the location of strip trials.
-Along with this information we have details on the type of trial and the fertilisers used.
+Along with this information we have details on the type of trial (either N or P) and the fertilisers used.
 
 
 At the date of this report the below graphs reflect the trials for the 2020 - 2021 season.
 
-Note that for a few paddocks we have both N and P trials.
+Note that a few paddocks have both N and P trials.
 
 
 
@@ -41,34 +45,45 @@ spatial_data_no_yld <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_s
 # number_paddocks <- distinct(spatial_data_no_yld, Paddock_ID , .keep_all = TRUE) %>% 
 #   dplyr::select(Paddock_ID, Strip_Type, Alt_GSP, av_rain) 
   
-plot1 <- distinct(spatial_data_no_yld, Paddock_ID , .keep_all = TRUE) %>% 
-  dplyr::select(Paddock_ID, Strip_Type, Alt_GSP, av_rain) %>%  
-  ggplot( aes(Strip_Type)) +
+plot1 <-
+  distinct(spatial_data_no_yld, Paddock_ID , .keep_all = TRUE) %>%
+  dplyr::select(Paddock_ID, Strip_Type, Alt_GSP, av_rain) %>%
+  ggplot(aes(Strip_Type)) +
   geom_bar() +
-  theme_bw()+
+  theme_bw() +
   geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
-  labs(title = "Number of P and N trials 2020 to 2021 season", y = "Count", x = "Type of trial")
+  labs(
+    title = "Number of P and N trials. 2020 to 2021 season",
+    y = "Count",
+    x = "Type of trial",
+    subtitle = paste0("Total number of paddocks = ", count(
+      distinct(spatial_data_no_yld, ID_trial_type)
+    ))
+  )
 plot1
 
 
 
 ```
 
-In each paddocks fertiliser strips were implented by the growers.
 
-The fertiliser rate of these strips we intented to be reflect how fertilser practices would change as a results of a soil test.
+## Fertiliser strips implemented
+
+In each paddocks fertiliser strips were implemented by the growers.
+
+The fertiliser rate of these strips we intended to reflect how fertilser practices would change as a results of a soil test.
 
 Each paddock had soil test taken for N and P per zone (often 2 zones per paddock).
 
-Need to add more details here....
+** Need to add more details here.... **
 
-Using the soil test results a recommended fertiliser rate could be derived.
+Using the soil test results a recommended fertiliser rate can be derived.
 
-However this recommend rate did not tranlate to a fertilise strip rate.
+However this recommend rate did not translate what was implemented in the fertilser trials.
 
-Instead the strip rates were often decised in collabration between the grower and consulntant.
+Instead the strip rates of the trials were often decided in collaboration between the grower and consultant.
 
-What the project ended up with was a number of strips that were differnt to the growers standrad prcatice.
+What the project ended up with was a number of strips that were different to the growers standard practice.
 
 A common scenario was; 
 
@@ -76,29 +91,27 @@ A common scenario was;
 - double the growers rate 
 - strip that reflected the growers rate.
 
-In the frist season of data collection, we identified the growers standard practice and compared the fertiliser strips to this.
+In the first season of data collection, we identified the growers standard practice and compared the fertiliser strips to this.
 
-We did this is each zone that the soil samples were taken.
+We did this comparision in each zone for the paddock.
 
 
 The below graph is the number of strips per paddock.
 
-Note that the grouping called Alt GPS contains 2 strips that reflect the growers standard practice.
+Note that the grouping called 'Alt GPS' contains 2 strips that reflect the growers standard practice,
+and the grouping called 'no alt GPS' only contains one strip that reflect the growers standard practice.
 
-while the no alt GPS only conatins one strip that reflect the growers standrad practice.
-
-(more details on Alt to follow).
+(There is more details on Alt GSP in the next section).
 
 Note:
 
-For some paddocks / growers variable fertilsier rate is common prcatice.
-In these paddocks it is difficult to reflect the growers standard practice, as it changes through the paddock.
+For some paddocks / growers variable fertiliser rate is common practice.
+In these paddocks it is difficult to represent the growers standard practice, as it changes through the paddock.
 
-The below graph summaries the number of different rates per paddock.
-The most common is 3 different rates (for the alt GSP this is listed as 4 strips beacuse we have an alterative GPS)
+The graph of the number of different rates per paddock, shows for most paddocks 3 different rates were implemented (note, for the 'Alt GSP' grouping this is listed as 4 strips because there is an addition strip to reprenst the GPS)
 
-Also note that we have a paddock that has 9 rates.
-This is one of Micheal Moodies paddocks and reflects both the VR and the trial desigin.
+The highest number of strips per paddock is 9 rates.
+This is one of Micheal Moodies paddocks and reflects both the VR and the trial design.
 These paddocks may be excluded from the final analysis.
 
 
@@ -120,23 +133,24 @@ plot3
 
 ```
 
+## Altertaive GSP
 
-The results in the frist season were suprising.
+The results in the first season were surprising.
 
-Higher rates of fertiliser did not always equate to higher yeilds.
+Higher rates of fertiliser did not always equate to higher yields.
 
 This may occur for many reasons:
 
 - poor location of the strips.
-- mismatch between the strips and the yield mointor data.
+- mismatch between the strips and the yield monitor data.
 - small sample size e.g. the number of yield points per strip and zone.
 - large variation in the soil type.
 - edge effect of the strips
 
 
-In order to better understand the yeild varition of the paddocks, we identified an extra strip to reflect the growers standard practice.
+In order to better understand the yield variation of the paddocks, we identified an extra strip to reflect the growers standard practice.
 
-This analysis will be undertaken at a later date, but we will quatify the yield variablity betwen the GSP and the Alt GSP.
+We aim to use the two strips that repsrent the grwoers standandr practice to quantify vield variarbility. This analysis will be underatken at a later date and may be used to filter data which will be included in the ecomoinc analysis.
 
 In some paddocks we cannot identify an additional strip to reflect the Alt GSP.
 The below graphs reflect the numbers.
@@ -156,18 +170,19 @@ plot2
 
 ```
 
+## Rainfall
 
 The cost of fertiliser is reflected by the rainfall zone.
 
 We have used the location of the trials to derive and average rainfall.
 
-See code - for more details
+** See code - for more details **
 
 The rainfall is assigned to rainfall class
 
-low rainfall            <= 350 mm
-medium rainfall between 350 to 500 mm
-high rainfall > 500 mm
+- low rainfall            <= 350 mm
+- medium rainfall between 350 to 500 mm
+- high rainfall > 500 mm
 
 
 
@@ -202,13 +217,30 @@ plot4 <- distinct(spatial_data_no_yld, ID_trial_type , .keep_all = TRUE) %>%
 plot4
 ```
 
+
+## Fertiliser products and rates
+
 The fertiliser that was applied in each strip was confirmed with a pre harvest map.
 
-The product and rates applied are converted to N or P content
+** could include a pre harvest map **
+
+The fertiliser product and rates applied are converted to N or P content for each strip in the project.
 The below code is a check of what products have been applied in a N and P trial
 
+Note that some products are placeholders and more information will follow.
+For example 'no strip' or 'double' means that the product and or rate have not been supplied yet.
 
-```{r fert_applied, echo=FALSE, message=FALSE, warning=FALSE}
+Another note is the product applied in the strip may not reflect the nature of the strip trial.
+In the strips both N and P products have often been applied.
+The below code and process we are requesting all products applied in the strips.
+
+Other products applied as a started and or topdress have also been captured.
+At this satge Therese doesnt want this included in the calulations for total N or P applied.
+
+
+### Products applied in N trials
+
+```{r fert_applied product N, echo=FALSE, message=FALSE, warning=FALSE}
 
 
 
@@ -237,8 +269,25 @@ N_products_narrow <- pivot_longer(N_products,
 N_products_narrow <- N_products_narrow %>% 
   dplyr::distinct(product, .keep_all = TRUE)
 
-print(N_products_narrow$product)
+N_products_narrow <- N_products_narrow %>% 
+  dplyr::select(product)
 
+#print(N_products_narrow)
+# N_products_narrow
+ N_products_narrow_df <- data.frame(N_products_narrow)
+# N_products_narrow_df
+
+N_products_narrow_df %>% 
+  formattable(align = "l", - 1) 
+
+
+
+```
+
+### Products applied in P trials
+
+
+```{r fert_applied product P, echo=FALSE, message=FALSE, warning=FALSE}
 ## what is are the products applied P?
 P_products <- fert_app_all_steps %>% 
   filter(Strip_Type == "P Strip")
@@ -259,28 +308,43 @@ P_products_narrow <- pivot_longer(P_products,
 P_products_narrow <- P_products_narrow %>% 
   dplyr::distinct(product, .keep_all = TRUE)
 
-print(P_products_narrow$product)
+P_products_narrow <- P_products_narrow %>% 
+  dplyr::select(product)
+
+#print(P_products_narrow)
+P_products_narrow_df <- data.frame(P_products_narrow)
+#P_products_narrow_df
+
+
+P_products_narrow_df %>% 
+   formattable(align = "l", - 1) 
 ```
 
 
-ahh
+
+### How much N was applied in the strips?
 
 
-### how much N or P was applied?
+Summary stats on how much N was applied in the strips.
+Note I have removed the 'Alt GSP' from this analysis.
+
+The results are a bit suprising as in the high rainfall zone the mean and medium N content applied is lower than in the medium rainfall zone.
+
+This may also reflect the trial desigins not all paddocks had a zero strip (N applied = 0).
+There are more strips with zero N applied in the high rainfall zone.
+
 ```{r fert_applied in N, echo=FALSE, message=FALSE, warning=FALSE}
-str(fert_app_all_steps)
-
 N_applied <- fert_app_all_steps %>% 
   filter(Strip_Type == "N Strip")  %>% 
-   filter((GSP !="Alt GSP")%>% 
-                  replace_na(TRUE)) %>% 
+  filter((GSP !="Alt GSP")%>% 
+           replace_na(TRUE)) %>% 
   dplyr::select(ID_Rate_GSP_type,
                 Paddock_ID,
                 Total_sum_N_content,
                 GSP,
                 av_rain)
 
-str(N_applied)
+#str(N_applied)
 N_applied <- N_applied %>% 
   dplyr::mutate(
     rainfall_class = case_when(
@@ -292,17 +356,90 @@ N_applied <- N_applied %>%
 
 N_applied$rainfall_class <- as.factor(N_applied$rainfall_class)
 N_applied$rainfall_class <- factor(N_applied$rainfall_class, 
-                                             levels = c("high", "medium", "low"))
+                                   levels = c("high", "medium", "low"))
 
 
 N_applied_summary <- N_applied %>% 
   group_by(rainfall_class) %>% 
-  summarise(max_N_applied = max(Total_sum_N_content),
-            mim_N_applied = min(Total_sum_N_content))
+  summarise("maximum N applied" = max(Total_sum_N_content, na.rm = FALSE),
+            "minimum N applied" = min(Total_sum_N_content, na.rm = FALSE),
+            "mean N applied" = mean(Total_sum_N_content, na.rm = FALSE),
+            "median N applied" = median(Total_sum_N_content, na.rm = FALSE),
+            "count" = n())
 
-print(N_applied_summary)
+
+N_applied_summary %>% 
+  formattable()
+
+Zero_N_applied <-  N_applied %>% 
+  filter(Total_sum_N_content == 0) %>% 
+  group_by(rainfall_class) %>% 
+  summarise("count strips with zero rate" = n())
+
+
+Zero_N_applied %>% 
+  formattable(align = "l", - 1) 
+
 ```
 
+
+## How much P was applied.
+
+Summary stats on how much P was applied in the strips.
+Note I have removed the 'Alt GSP' from this analysis.
+
+
+The results may reflect the trial desigin, not all paddocks had a zero strip (P applied = 0).
+There are more strips with zero P applied in the medium rainfall zone, than in the high or low rainfall zone.
+
+```{r fert_applied in P, echo=FALSE, message=FALSE, warning=FALSE}
+P_applied <- fert_app_all_steps %>% 
+  filter(Strip_Type == "P Strip")  %>% 
+  filter((GSP !="Alt GSP")%>% 
+           replace_na(TRUE)) %>% 
+  dplyr::select(ID_Rate_GSP_type,
+                Paddock_ID,
+                Total_sum_P_content,
+                GSP,
+                av_rain)
+
+
+P_applied <- P_applied %>% 
+  dplyr::mutate(
+    rainfall_class = case_when(
+      av_rain<=350 ~ "low",
+      av_rain >500 ~ "high",
+      TRUE ~ "medium"
+    )
+  )
+
+P_applied$rainfall_class <- as.factor(P_applied$rainfall_class)
+P_applied$rainfall_class <- factor(P_applied$rainfall_class, 
+                                   levels = c("high", "medium", "low"))
+
+
+P_applied_summary <- P_applied %>% 
+  group_by(rainfall_class) %>% 
+  summarise("maximum P applied" = max(Total_sum_P_content, na.rm = FALSE),
+            "minimum P applied" = min(Total_sum_P_content, na.rm = FALSE),
+            "mean P applied" = mean(Total_sum_P_content, na.rm = FALSE),
+            "median P applied" = median(Total_sum_P_content, na.rm = FALSE),
+            "count" = n())
+
+
+P_applied_summary %>% 
+  formattable()
+
+Zero_P_applied <-  P_applied %>% 
+  filter(Total_sum_P_content == 0) %>% 
+  group_by(rainfall_class) %>% 
+  summarise("count strips with zero rate" = n())
+
+
+Zero_P_applied %>% 
+  formattable(align = "l", - 1) 
+ 
+```
 
 
 ## Summary of spatial data
@@ -317,15 +454,27 @@ These pre harvest map contain:
 
 
 
-```{r pressure, echo=FALSE}
-str(spatial_data_no_yld)
+```{r pressure, echo=FALSE, message=FALSE, warning=FALSE}
+#str(spatial_data_no_yld)
 
-spatial_data_no_yld_ID_only <- spatial_data_no_yld %>% 
-  distinct(Paddock_ID, .keep_all = TRUE) %>% 
-  dplyr::select(Paddock_ID, Strip_Type, StripCount, Alt_GSP,av_rain )
-  
-  spatial_data_no_yld %>% 
-  group_by(Paddock_ID, Strip_Type)
+library(ggplot2)
+library(sf)
+library(rnaturalearth)
+
+spatial <-  st_as_sf(spatial_data_no_yld, coords = c("X", "Y"), crs = 4326)
+#spatial
+worldmap <- ne_countries(scale = 'medium', type = 'map_units',
+                         returnclass = 'sf')
+
+
+ggplot() + geom_sf(data = worldmap) +
+  geom_sf(data = spatial, color = "black", fill = NA)+
+  coord_sf(xlim = c(120, 160), ylim = c(-44, -25), expand = FALSE) +
+  theme_bw()+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  facet_wrap(.~ Strip_Type)+
+  labs(title = "Location of paddocks",
+       caption = "")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
