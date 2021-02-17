@@ -93,7 +93,7 @@ A common scenario was;
 
 In the first season of data collection, we identified the growers standard practice and compared the fertiliser strips to this.
 
-We did this comparision in each zone for the paddock.
+We did this comparison in each zone for the paddock.
 
 
 The below graph is the number of strips per paddock.
@@ -108,7 +108,7 @@ Note:
 For some paddocks / growers variable fertiliser rate is common practice.
 In these paddocks it is difficult to represent the growers standard practice, as it changes through the paddock.
 
-The graph of the number of different rates per paddock, shows for most paddocks 3 different rates were implemented (note, for the 'Alt GSP' grouping this is listed as 4 strips because there is an addition strip to reprenst the GPS)
+The graph of the number of different rates per paddock, shows for most paddocks 3 different rates were implemented (note, for the 'Alt GSP' grouping this is listed as 4 strips because there is an addition strip to represent the GPS)
 
 The highest number of strips per paddock is 9 rates.
 This is one of Micheal Moodies paddocks and reflects both the VR and the trial design.
@@ -133,7 +133,7 @@ plot3
 
 ```
 
-## Altertaive GSP
+## Alternative GSP
 
 The results in the first season were surprising.
 
@@ -150,7 +150,7 @@ This may occur for many reasons:
 
 In order to better understand the yield variation of the paddocks, we identified an extra strip to reflect the growers standard practice.
 
-We aim to use the two strips that repsrent the grwoers standandr practice to quantify vield variarbility. This analysis will be underatken at a later date and may be used to filter data which will be included in the ecomoinc analysis.
+We aim to use the two strips that represent the growers standard practice to quantify yield variability. This analysis will be undertaken at a later date and may be used to filter data which will be included in the economic analysis.
 
 In some paddocks we cannot identify an additional strip to reflect the Alt GSP.
 The below graphs reflect the numbers.
@@ -235,7 +235,7 @@ In the strips both N and P products have often been applied.
 The below code and process we are requesting all products applied in the strips.
 
 Other products applied as a started and or topdress have also been captured.
-At this satge Therese doesnt want this included in the calulations for total N or P applied.
+At this stage Therese doesn't want this included in the calculations for total N or P applied.
 
 
 ### Products applied in N trials
@@ -328,9 +328,9 @@ P_products_narrow_df %>%
 Summary stats on how much N was applied in the strips.
 Note I have removed the 'Alt GSP' from this analysis.
 
-The results are a bit suprising as in the high rainfall zone the mean and medium N content applied is lower than in the medium rainfall zone.
+The results are a bit surprising as in the high rainfall zone the mean and medium N content applied is lower than in the medium rainfall zone.
 
-This may also reflect the trial desigins not all paddocks had a zero strip (N applied = 0).
+This may also reflect the trial designs not all paddocks had a zero strip (N applied = 0).
 There are more strips with zero N applied in the high rainfall zone.
 
 ```{r fert_applied in N, echo=FALSE, message=FALSE, warning=FALSE}
@@ -389,7 +389,7 @@ Summary stats on how much P was applied in the strips.
 Note I have removed the 'Alt GSP' from this analysis.
 
 
-The results may reflect the trial desigin, not all paddocks had a zero strip (P applied = 0).
+The results may reflect the trial design, not all paddocks had a zero strip (P applied = 0).
 There are more strips with zero P applied in the medium rainfall zone, than in the high or low rainfall zone.
 
 ```{r fert_applied in P, echo=FALSE, message=FALSE, warning=FALSE}
@@ -448,7 +448,7 @@ This data is a summary of what paddocks implemented a N or P fertiliser trial.
 For these paddocks, we were given spatial data that allowed us to create maps.
 These pre harvest map contain:
 
-- loaction of strips in paddock
+- location of strips in paddock
 - location of zone (zones are location that the soil sampling was done)
 - legends which indicate how much fertiliser was applied (product and rate)
 
@@ -478,3 +478,125 @@ ggplot() + geom_sf(data = worldmap) +
 ```
 
 
+
+## Yield response to fertilisers application (high medium low rates)
+
+Different comparisons are made between fertilisers strips for each zone.
+
+Comparison of yield response in the strip / zone per paddock between:
+
+- High fertiliser rate vs low fertiliser rate (yield for high fert rate - yield for low fert rate)
+- High fertiliser rate vs medium fertiliser rate (yield for high fert rate - yield for medium fert rate)
+- Medium fertiliser rate vs low fertiliser rate (yield for medium fert rate - yield for low fert rate)
+
+The yield response is classed as 'positive' when higher rates of fertiliser results in higher yields
+
+The yield response is classed as 'no response' when higher rates of fertiliser results in no change in yields (this is defined as 0 +/- standard error)
+
+
+The yield response is classed as 'negative' when higher rates of fertiliser results in lower yields.
+
+T- test was also run for each comparison and the significant differences at p < 0.05 reported.
+Note that some significant values are not reported for the zone, this may occur when there is not enough data points to run the t - test (although there is still have yield values to make a comparison). 
+
+
+```{r rick table for high low comparision, echo=FALSE, message=FALSE, warning=FALSE}
+
+# note that this comes from a script called #"W:\value_soil_testing_prj\Yield_data\analysis_strip_trials_April\economic_analysis2020_2021\Add_high_l#ow_t_test_results_to_Spatial_data.R"
+
+high_low_comp <- read.csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/results_for_table_high_low.csv")
+
+### ricks table
+
+## for P trials count to make a table
+high_low_P_N_trials <- high_low_comp %>%
+  group_by(Strip_Type, comparison, yld_response) %>%
+  summarise(count = n())
+
+
+high_low_comp$comparison <-
+  factor(
+    high_low_comp$comparison,
+    levels = c("high_v_low", "high_v_medium", "medium_v_low"),
+    labels = c(
+      "high fert rate vs low fert rate",
+      "high fert rate vs medium fert rate",
+      "medium fert rate vs low fert rate"
+    )
+  )
+
+
+high_low_plot <-
+  ggplot(high_low_comp, mapping = aes(x = yld_response, fill = Significant)) +
+  geom_bar() +
+  facet_grid(Strip_Type ~ comparison)+ 
+             #labeller(Strip_Type = label_wrap_gen(width = 16 ),
+             #         comparison = label_wrap_gen(width = 16))) +
+  theme_bw() +
+  scale_x_discrete(
+    labels = c(
+      "positive" = "positive",
+      "no_response" = "no response",
+      "negative" = "negative"
+    )
+  ) +
+  geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
+  labs(
+    title = "Comparison of yield response in strips with different fertiliser rate (per paddocks and zone)",
+    subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
+    y = "Count of paddocks in yield response class",
+    x = "yield response"
+  )
+high_low_plot
+
+```
+
+
+## Yield response to fertilisers application (growers rates compared to other rates)
+
+
+I am not sure what to do here.
+
+I cannot make a table similar to what I have above because I don't have the SE for the comparison population.
+
+Also I don't know how meaningful this will be, for example the growers rate is not always the middle fertiliser rate, the strips may have 3 rates 0, 30, 60 and 60 may be the grower rate.
+The similar example may exist where you have 3 rates 30, 60, 120 and 30 may be the growers rate.
+
+So what do you want to compare? 
+If you do something different to the growers rate will there be a difference in yield?
+And if there is difference is this difference significance?
+
+
+
+```{r rick table for GR comparision, echo=FALSE, message=FALSE, warning=FALSE}
+
+# note that this comes from a script called #"W:\value_soil_testing_prj\Yield_data\analysis_strip_trials_April\economic_analysis2020_2021\Add_t_test#_results_to_Spatial_data.R"
+
+GR_comparison <-  read.csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/results_for_table.csv")
+#All I can ask here is - if cahnge your fertiliser to do something different, is it significantly different?
+
+#Pull out strip type from the paddock_ID_Type clm
+GR_comparison <-  GR_comparison %>% 
+  mutate(Strip_Type = paddock_ID_Type )
+GR_comparison$Strip_Type <- gsub("[[:punct:]]|[[:digit:]]", "", GR_comparison$Strip_Type)
+
+#order these for graphing
+GR_comparison$Significant <-
+  factor(
+    GR_comparison$Significant,
+    levels = c("significant", "not significant"))
+  
+
+
+GSPvsRates_plot <-ggplot(GR_comparison, mapping = aes(x=Significant ))+
+  geom_bar() +
+  facet_grid(.~ Strip_Type)+
+  theme_bw()+
+  geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
+  labs(title = "Comparison of yield response in strips with different fertiliser rate (per paddocks and zone) compared to GSP", 
+       subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
+       y = "Count of zones with a significant difference", 
+       x = "result of t - test compared to GSP")
+
+GSPvsRates_plot
+```
