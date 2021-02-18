@@ -78,9 +78,7 @@ str(all_strips_centroid)
 all_strips_centroid <-all_strips_centroid %>% 
   dplyr::mutate(Alt_GSP = ifelse(stringr::str_detect(GSP_list, "Alt GSP"), "Alt_GPS", "No_Alt_GSP"))
 
-#getwd()
-# st_write(all_strips_centroid, "W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid.csv", 
-# layer_options = "GEOMETRY=AS_XY")
+
 
 st_write(all_strips_centroid, 
          paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld", "_",Sys.Date(), ".csv"), 
