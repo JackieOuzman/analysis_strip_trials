@@ -202,6 +202,34 @@ plot2
 
 ```
 
+We have compared the GSP and Alt GSP per zone.
+t test and mean values
+I dont have the example paddocks run yet but its looking ok, when this is done I need to merge into one file
+ 
+#"W:\value_soil_testing_prj\Yield_data\2020\processing\r_outputs\GSP"
+
+```{r plot2 alt strips results, echo=FALSE, message=FALSE, warning=FALSE}
+
+#"W:\value_soil_testing_prj\Yield_data\2020\processing\r_outputs\GSP"
+
+#1. merge into one file
+
+GSPvsAltGSP_plot <-ggplot(GR_AltGSP, mapping = aes(x=Significant ))+
+  geom_bar() +
+  facet_grid(.~ Strip_Type)+
+  theme_bw()+
+  geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
+  labs(title = "Comparison of yield response in strips with the same fertiliser rate to reprseent the GSP (per zone)", 
+       subtitle = "",
+       y = "Count of zones with a significant difference", 
+       x = "result of t - test GSP vs. Alt GSP")
+
+GSPvsAltGSP_plot
+
+
+```
+
+
 ## Rainfall
 
 The cost of fertiliser is reflected by the rainfall zone.
