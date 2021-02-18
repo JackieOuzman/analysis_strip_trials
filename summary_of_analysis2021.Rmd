@@ -29,25 +29,27 @@ Note that a few paddocks have both N and P trials.
 
 
 ```{r load_data, echo=FALSE, message=FALSE, warning=FALSE}
-fert_app_select_clm <- read.csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_select_clm.csv")
 
-spatial_data_no_yld <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid_2021-02-11.csv")
-
-
-# note that this file was generated from spatial analysis and R code
-# the R code / script is:
-
-#"W:\value_soil_testing_prj\Yield_data\analysis_strip_trials_April\economic_analysis2020_2021\spatial_data_no_yld.R"
-#"W:\value_soil_testing_prj\Yield_data\analysis_strip_trials_April\economic_analysis2020_2021\work_out_N_P_content_no_starter_TD.R"
+#note that this script runs off the shapefile and has on intermediate steps
 
 
+spatial_data_no_yld <- st_read("W:/value_soil_testing_prj/Yield_data/2020/All_Strips_2020_wgs84.shp")
+spatial_data_no_yld_df <- data.frame(spatial_data_no_yld)
+spatial_data_no_yld_df <- spatial_data_no_yld_df %>% dplyr::select(-geometry)
 
-# number_paddocks <- distinct(spatial_data_no_yld, Paddock_ID , .keep_all = TRUE) %>% 
-#   dplyr::select(Paddock_ID, Strip_Type, Alt_GSP, av_rain) 
-  
+
+spatial_data_no_yld_df <- spatial_data_no_yld_df %>% 
+  dplyr::mutate(ID_Rate_GSP_type = paste0(Paddock_ID, "-", Rate, "-", GSP,"-",Strip_Type ),
+         ID_trial_type = paste0(Paddock_ID, "-",Strip_Type))
+
+spatial_data_no_yld_df <-spatial_data_no_yld_df %>% 
+  dplyr::mutate(Alt_GSP = ifelse(stringr::str_detect(GSP_list, "Alt GSP"), "Alt_GPS", "No_Alt_GSP"))
+
+
+
 plot1 <-
-  distinct(spatial_data_no_yld, Paddock_ID , .keep_all = TRUE) %>%
-  dplyr::select(Paddock_ID, Strip_Type, Alt_GSP, av_rain) %>%
+  dplyr::distinct(spatial_data_no_yld_df, Paddock_ID , .keep_all = TRUE) %>%
+  dplyr::select(Paddock_ID, Strip_Type, Alt_GSP) %>%
   ggplot(aes(Strip_Type)) +
   geom_bar() +
   theme_bw() +
@@ -57,7 +59,7 @@ plot1 <-
     y = "Count",
     x = "Type of trial",
     subtitle = paste0("Total number of paddocks = ", count(
-      distinct(spatial_data_no_yld, ID_trial_type)
+      distinct(spatial_data_no_yld_df, ID_trial_type)
     ))
   )
 plot1
@@ -75,9 +77,11 @@ The fertiliser rate of these strips we intended to reflect how fertilser practic
 
 Each paddock had soil test taken for N and P per zone (often 2 zones per paddock).
 
-** Need to add more details here.... **
+**Need to add more details here....**
 
 Using the soil test results a recommended fertiliser rate can be derived.
+
+**Sean has now supplied this 18/02/2021 and more notes will be added to this**
 
 However this recommend rate did not translate what was implemented in the fertilser trials.
 
@@ -91,38 +95,59 @@ A common scenario was;
 - double the growers rate 
 - strip that reflected the growers rate.
 
+Other scenario include:
+
+- zero strip
+- 2 rates lower than GSP
+- 2 rates higher than GSP
+
 In the first season of data collection, we identified the growers standard practice and compared the fertiliser strips to this.
+
+We reported if the strip rate was significantly different to the GSP.
 
 We did this comparison in each zone for the paddock.
 
+More details on this is below sections.
 
-The below graph is the number of strips per paddock.
+## Number of strips per paddock
 
-Note that the grouping called 'Alt GPS' contains 2 strips that reflect the growers standard practice,
-and the grouping called 'no alt GPS' only contains one strip that reflect the growers standard practice.
 
-(There is more details on Alt GSP in the next section).
-
-Note:
-
-For some paddocks / growers variable fertiliser rate is common practice.
-In these paddocks it is difficult to represent the growers standard practice, as it changes through the paddock.
-
-The graph of the number of different rates per paddock, shows for most paddocks 3 different rates were implemented (note, for the 'Alt GSP' grouping this is listed as 4 strips because there is an addition strip to represent the GPS)
+The graph of the number of different rates per paddock, shows for most paddocks 3 different rates were implemented.
 
 The highest number of strips per paddock is 9 rates.
 This is one of Micheal Moodies paddocks and reflects both the VR and the trial design.
 These paddocks may be excluded from the final analysis.
 
+For some paddocks / growers variable fertiliser rate is common practice.
+In these paddocks it is difficult to represent the growers standard practice, as it changes through the paddock.
+
+
+**Note** that the grouping called 'Alt GPS' contains 2 strips that reflect the growers standard practice,
+and the grouping called 'no alt GPS' only contains one strip that reflect the growers standard practice.
+
+I have created a new clm to adjusts this values.
 
 
 ```{r plot3 number of strips, echo=FALSE, message=FALSE, warning=FALSE}
 
+#Note the below plot run off an step1 script been run and succesful output
+#"W:\value_soil_testing_prj\Yield_data\2020\processing\r_scripts\step1_spatial_data_no_yld.R"
+
+spatial_data_no_yld <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-02-18.csv")
+
+spatial_data_no_yld$StripCount <- as.double(spatial_data_no_yld$StripCount)
+spatial_data_no_yld <- spatial_data_no_yld %>% 
+  dplyr::mutate(StripCount2 = case_when(
+    Alt_GSP == "Alt_GPS" ~ (as.double(StripCount)-1 ),
+    Alt_GSP == "No_Alt_GSP" ~ StripCount,
+    TRUE ~ NA_real_
+  ))
+
+
 plot3 <- distinct(spatial_data_no_yld, ID_trial_type , .keep_all = TRUE) %>% 
-  dplyr::select(Paddock_ID, StripCount,  Strip_Type, Alt_GSP, av_rain) %>%  
-  ggplot( aes(as.factor(StripCount))) +
+  dplyr::select(Paddock_ID, StripCount2,  Strip_Type, Alt_GSP) %>%  
+  ggplot( aes(as.factor(StripCount2))) +
   geom_bar() +
-  facet_grid(Strip_Type~Alt_GSP)+
   theme_bw()+
   geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
   labs(title = "Total number of strips per paddocks. 2020 to 2021 season", 
@@ -145,7 +170,10 @@ This may occur for many reasons:
 - mismatch between the strips and the yield monitor data.
 - small sample size e.g. the number of yield points per strip and zone.
 - large variation in the soil type.
-- edge effect of the strips
+- edge effect of the strips.
+- low rates of fertiliser applied (eg too litlle to see a strong yield response).
+
+However despite these wide range of reasons it was thought that yield varaition is was driving these observations.
 
 
 In order to better understand the yield variation of the paddocks, we identified an extra strip to reflect the growers standard practice.
@@ -154,6 +182,10 @@ We aim to use the two strips that represent the growers standard practice to qua
 
 In some paddocks we cannot identify an additional strip to reflect the Alt GSP.
 The below graphs reflect the numbers.
+
+
+
+
 
 ```{r plot2 alt strips, echo=FALSE, message=FALSE, warning=FALSE}
 plot2 <- distinct(spatial_data_no_yld, ID_trial_type , .keep_all = TRUE) %>% 
