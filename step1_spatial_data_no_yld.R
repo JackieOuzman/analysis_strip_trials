@@ -17,6 +17,8 @@ library(png)
 library(readxl)
 library(raster)
 
+#update.packages(ask = FALSE, checkBuilt = TRUE)
+
 ########################################################################################################
 ############# Spatial data for rainfall class #########################################################
 ########################################################################################################
@@ -65,8 +67,17 @@ av_rain <- raster::raster("W:/value_soil_testing_prj/Yield_data/2020/processing/
 av_rain
 
 ##2. extract strips coordinates points from the raster (eg shapefile points and average rainfall grid)
-all_strips_centroid$av_rain <- raster::extract(av_rain, all_strips_centroid)
+#all_strips_centroid$av_rain <- raster::extract(av_rain, all_strips_centroid)
 
+all_strips_centroid$av_rain <- raster::extract(x = "av_rain", 
+                                        y = all_strips_centroid,
+                                        method = 'simple',
+                                        fun = mean,
+                                        na.rm = T,
+                                        sp = TRUE)
+all_strips_centroid #geographic CRS: WGS 84
+av_rain 
+crs(av_rain) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" 
 #####################################################################################################
 ##############  recode GSP_list clm to work out if I have alt GSP strip ############################
 ####################################################################################################
