@@ -67,28 +67,21 @@ av_rain <- raster::raster("W:/value_soil_testing_prj/Yield_data/2020/processing/
 av_rain
 
 ##2. extract strips coordinates points from the raster (eg shapefile points and average rainfall grid)
-#all_strips_centroid$av_rain <- raster::extract(av_rain, all_strips_centroid)
+all_strips_centroid$av_rain <- raster::extract(av_rain, all_strips_centroid)
 
-all_strips_centroid$av_rain <- raster::extract(x = "av_rain", 
-                                        y = all_strips_centroid,
-                                        method = 'simple',
-                                        fun = mean,
-                                        na.rm = T,
-                                        sp = TRUE)
-all_strips_centroid #geographic CRS: WGS 84
-av_rain 
-crs(av_rain) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" 
+
+
 #####################################################################################################
 ##############  recode GSP_list clm to work out if I have alt GSP strip ############################
 ####################################################################################################
-
+str(all_strips_centroid)
 all_strips_centroid <-all_strips_centroid %>% 
-  mutate(Alt_GSP = ifelse(str_detect(GSP_list, "Alt GSP"), "Alt_GPS", "No_Alt_GSP"))
+  dplyr::mutate(Alt_GSP = ifelse(stringr::str_detect(GSP_list, "Alt GSP"), "Alt_GPS", "No_Alt_GSP"))
 
 #getwd()
 # st_write(all_strips_centroid, "W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid.csv", 
 # layer_options = "GEOMETRY=AS_XY")
 
 st_write(all_strips_centroid, 
-         paste0("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid", "_",Sys.Date(), ".csv"), 
+         paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld", "_",Sys.Date(), ".csv"), 
          layer_options = "GEOMETRY=AS_XY")
