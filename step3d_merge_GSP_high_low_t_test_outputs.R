@@ -24,7 +24,7 @@ baseDir <-
     "2020",
     "processing",
     "r_outputs",
-    "high_low_comparision"
+    "GSP_low_high_comparision"
   )
 outputDir <-
   file.path(
@@ -68,5 +68,6 @@ dataset <- dataset %>%
 
 ### saved the merged dataframe
 
-write.csv(dataset,paste0(outputDir, "/hign_low_t_test_merged_3b.csv") )
+
+write.csv(dataset,paste0(outputDir, "/GSP_low_high_comparision_t_test_merged_3d.csv") )
 

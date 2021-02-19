@@ -8,7 +8,7 @@
 library(tidyverse)
 
 
-#base_data <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_select_clm.csv")
+
 
 
 ## yield results
@@ -16,11 +16,31 @@ library(tidyverse)
 #I need to move this into a folder with all the ttest outputs
 
 
-baseDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "Streamline", "output", "grower_results" )
-outputDir <- file.path("C:","Users", "ouz001", "working_from_home","soil_testing",  "Streamline")
+baseDir <-
+  file.path(
+    "W:",
+    "value_soil_testing_prj",
+    "Yield_data",
+    "2020",
+    "processing",
+    "r_outputs",
+    "grower_results"
+  )
+outputDir <-
+  file.path(
+    "W:",
+    "value_soil_testing_prj",
+    "Yield_data",
+    "2020",
+    "processing",
+    "r_outputs",
+    "merged_comparision_output"
+  )
 baseDir
 file_list <- paste0(baseDir, "/",list.files(baseDir, ".csv", full.names = FALSE))
 file_list
+
+
 
 
 setwd(baseDir)
@@ -50,5 +70,5 @@ dataset <- dataset %>%
 
 ### saved the merged dataframe
 
-write.csv(dataset,paste0(baseDir, "/t_test_merged.csv") )
-baseDir
+write.csv(dataset,paste0(outputDir, "/t_test_merged_3a.csv") )
+
