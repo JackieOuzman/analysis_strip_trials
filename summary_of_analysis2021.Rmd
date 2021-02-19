@@ -16,6 +16,7 @@ library(tidyverse)
 library(ggplot2)
 
 library(formattable)
+library(sf)
 ```
 
 ## Number of N and P trials for 2020 -2021  season 
@@ -85,7 +86,7 @@ Using the soil test results a recommended fertiliser rate can be derived.
 
 **Sean has now supplied this 18/02/2021 and more notes will be added to this**
 
-However this recommend rate did not translate what was implemented in the fertilser trials.
+However this recommend rate did not translate what was implemented in the fertiliser trials.
 
 Instead the strip rates of the trials were often decided in collaboration between the grower and consultant.
 
@@ -173,9 +174,9 @@ This may occur for many reasons:
 - small sample size e.g. the number of yield points per strip and zone.
 - large variation in the soil type.
 - edge effect of the strips.
-- low rates of fertiliser applied (eg too litlle to see a strong yield response).
+- low rates of fertiliser applied (e.g. too little to see a strong yield response).
 
-However despite these wide range of reasons it was thought that yield varaition is was driving these observations.
+However despite these wide range of reasons it was thought that yield variation is was driving these observations.
 
 
 In order to better understand the yield variation of the paddocks, we identified an extra strip to reflect the growers standard practice.
@@ -206,29 +207,26 @@ plot2
 
 We have compared the GSP and Alt GSP per zone.
 t test and mean values
-I dont have the example paddocks run yet but its looking ok, when this is done I need to merge into one file
+I don't have the example paddocks run yet but its looking OK, when this is done I need to merge into one file
  
-#"W:\value_soil_testing_prj\Yield_data\2020\processing\r_outputs\GSP"
+
 
 ```{r plot2 alt strips results, echo=FALSE, message=FALSE, warning=FALSE}
-
-#"W:\value_soil_testing_prj\Yield_data\2020\processing\r_outputs\GSP"
+GSP_AltGSP_t_test <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/merged_comparision_output/GSP_AltGSP_t_test_merged_3c.csv")
 
 #1. merge into one file
 
-GSPvsAltGSP_plot <-ggplot(GR_AltGSP, mapping = aes(x=Significant ))+
+GSPvsAltGSP_plot <-ggplot(GSP_AltGSP_t_test, mapping = aes(x=Significant ))+
   geom_bar() +
   facet_grid(.~ Strip_Type)+
   theme_bw()+
   geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
-  labs(title = "Comparison of yield response in strips with the same fertiliser rate to reprseent the GSP (per zone)", 
+  labs(title = "Comparison of yield response in strips with the same fertiliser rate to represent the GSP (per zone)", 
        subtitle = "",
        y = "Count of zones with a significant difference", 
-       x = "result of t - test GSP vs. Alt GSP")
+       x = "result of t - test (GSP vs. Alt GSP)")
 
 GSPvsAltGSP_plot
-
-
 ```
 
 
@@ -277,6 +275,10 @@ plot4 <- distinct(spatial_data_no_yld, ID_trial_type , .keep_all = TRUE) %>%
        #subtitle = paste0("Total number of paddocks = ", count(distinct(spatial_data_no_yld, ID_trial_type )))
        
 plot4
+
+
+write.csv(spatial_data_no_yld, "W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-02-18_forSean.csv")
+
 ```
 
 
@@ -307,7 +309,7 @@ At this stage Therese doesn't want this included in the calculations for total N
 
 
 
-fert_app_all_steps <- read.csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_all_steps.csv")
+fert_app_all_steps <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_all_steps.csv")
 
 #str(fert_app_all_steps)
 
@@ -564,9 +566,10 @@ Note that some significant values are not reported for the zone, this may occur 
 
 ```{r rick table for high low comparision, echo=FALSE, message=FALSE, warning=FALSE}
 
-# note that this comes from a script called #"W:\value_soil_testing_prj\Yield_data\analysis_strip_trials_April\economic_analysis2020_2021\Add_high_l#ow_t_test_results_to_Spatial_data.R"
 
-high_low_comp <- read.csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/results_for_table_high_low.csv")
+
+                          
+high_low_comp <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/merged_comparision_output/hign_low_t_test_merged_3b.csv")
 
 ### ricks table
 
@@ -617,48 +620,132 @@ high_low_plot
 ## Yield response to fertilisers application (growers rates compared to other rates)
 
 
-I am not sure what to do here.
+Different comparisons are made between the growers standard practice and fertilisers strips for each zone.
 
-I cannot make a table similar to what I have above because I don't have the SE for the comparison population.
+Comparison of yield response in the strip / zone per paddock between:
+
+- Growers standard practice GSP  vs low fertiliser rate (yield for GSP fert rate - yield for low fert rate)
+- Growers standard practice GSP  fertiliser rate vs high fertiliser rate (yield for GSP fert rate - yield for high fert rate)
+
+
+The yield response is classed as 'positive' when higher rates of fertiliser results in higher yields
+
+The yield response is classed as 'no response' when higher rates of fertiliser results in no change in yields (this is defined as 0 +/- standard error)
+
+The yield response is classed as 'negative' when higher rates of fertiliser results in lower yields.
+
+T- test was also run for each comparison and the significant differences at p < 0.05 reported.
+Note that some significant values are not reported for the zone, this may occur when there is not enough data points to run the t - test (although there is still have yield values to make a comparison). 
 
 Also I don't know how meaningful this will be, for example the growers rate is not always the middle fertiliser rate, the strips may have 3 rates 0, 30, 60 and 60 may be the grower rate.
 The similar example may exist where you have 3 rates 30, 60, 120 and 30 may be the growers rate.
 
-So what do you want to compare? 
-If you do something different to the growers rate will there be a difference in yield?
-And if there is difference is this difference significance?
+In the code I have got a step to check that I have a rate lower than the GSP and a rate higher than the GSP.
+There will be paddocks / zones with 2 lower rates 2 higher rate, only one other rate etc...
+Not sure how I will solve this - maybe just nominate what to use?
 
 
 
 ```{r rick table for GR comparision, echo=FALSE, message=FALSE, warning=FALSE}
 
-# note that this comes from a script called #"W:\value_soil_testing_prj\Yield_data\analysis_strip_trials_April\economic_analysis2020_2021\Add_t_test#_results_to_Spatial_data.R"
-
-GR_comparison <-  read.csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/results_for_table.csv")
-#All I can ask here is - if cahnge your fertiliser to do something different, is it significantly different?
-
-#Pull out strip type from the paddock_ID_Type clm
-GR_comparison <-  GR_comparison %>% 
-  mutate(Strip_Type = paddock_ID_Type )
-GR_comparison$Strip_Type <- gsub("[[:punct:]]|[[:digit:]]", "", GR_comparison$Strip_Type)
-
-#order these for graphing
-GR_comparison$Significant <-
-  factor(
-    GR_comparison$Significant,
-    levels = c("significant", "not significant"))
-  
 
 
-GSPvsRates_plot <-ggplot(GR_comparison, mapping = aes(x=Significant ))+
+GR_comparison <-  read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/merged_comparision_output/GSP_low_high_comparision_t_test_merged_3d.csv")
+     
+
+GR_comparison_plot <-
+  ggplot(GR_comparison, mapping = aes(x = yld_response, fill = Significant)) +
   geom_bar() +
-  facet_grid(.~ Strip_Type)+
-  theme_bw()+
+  facet_grid(Strip_Type ~ comparison)+ 
+             #labeller(Strip_Type = label_wrap_gen(width = 16 ),
+             #         comparison = label_wrap_gen(width = 16))) +
+  theme_bw() +
+  scale_x_discrete(
+    labels = c(
+      "positive" = "positive",
+      "no_response" = "no response",
+      "negative" = "negative"
+    )
+  ) +
   geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
-  labs(title = "Comparison of yield response in strips with different fertiliser rate (per paddocks and zone) compared to GSP", 
-       subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
-       y = "Count of zones with a significant difference", 
-       x = "result of t - test compared to GSP")
+  labs(
+    title = "Comparison of yield response in strips the GSP vs higher and lower rates",
+    subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
+    y = "Count of paddocks in yield response class",
+    x = "yield response"
+  )
+GR_comparison_plot
 
-GSPvsRates_plot
+
+
+
+
+
+
+
+                      
+# #All I can ask here is - if cahnge your fertiliser to do something different, is it significantly different?
+# 
+# #Pull out strip type from the paddock_ID_Type clm
+# GR_comparison <-  GR_comparison %>% 
+#   mutate(Strip_Type = paddock_ID_Type )
+# GR_comparison$Strip_Type <- gsub("[[:punct:]]|[[:digit:]]", "", GR_comparison$Strip_Type)
+# 
+# #order these for graphing
+# GR_comparison$Significant <-
+#   factor(
+#     GR_comparison$Significant,
+#     levels = c("significant", "not significant"))
+#   
+# 
+# 
+# GSPvsRates_plot <-ggplot(GR_comparison, mapping = aes(x=Significant ))+
+#   geom_bar() +
+#   facet_grid(.~ Strip_Type)+
+#   theme_bw()+
+#   geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
+#   labs(title = "Comparison of yield response in strips with different fertiliser rate (per paddocks and zone) compared to GSP", 
+#        subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
+#        y = "Count of zones with a significant difference", 
+#        x = "result of t - test compared to GSP")
+# 
+# GSPvsRates_plot
 ```
+
+
+
+## Yield response to fertilisers application (recommended rates compared to other rates)
+
+I have not done this yet and Sean is still working on the N rates.
+I will need to add this analysis to the t-test analysis 
+I assume the approach will be similar to the above comparisons.
+
+I will need to make a approx recommended rate.
+For this I will use the recommended rate and evaluate which rate that was implemented was the closest.
+A = recommend rate - abs(rate 1)
+B = recommend rate - abs(rate 2)
+C =  rate - abs(rate 3)
+
+then work out which has the smallest value A, B or C, this will be the approx recommended rate.
+
+Then I will hopeful assign a rate lower than recommend rate and a rate higher than recommend rate.
+
+Comparison of yield response in the strip / zone per paddock between:
+
+- Approx recommend rate  vs low fertiliser rate (yield for app rec fertiliser rate - yield for low fertiliser rate)
+- Approx recommend rate  fertiliser rate vs high fertiliser rate (yield for app rec fertiliser rate - yield for high fertiliser rate)
+
+
+**More To come**
+
+## Translating the Yield response to GM
+
+I have all the elements to do this (I hope).
+The file is called "step4a_results_for_economics.csv"
+
+Located here...
+"W:\value_soil_testing_prj\Yield_data\2020\processing\processing_files\step4a_results_for_economics.csv"
+
+**Again more To come**
+
+

@@ -68,7 +68,7 @@ dataset <- dataset %>%
   distinct(ID_analysis_zone_temp, .keep_all = TRUE)
 
 
-### saved the merged dataframe
-
+### saved the merged dataframe in 2 spots
+outputDir
 write.csv(dataset,paste0(outputDir, "/t_test_merged_3a.csv") )
-
+write.csv(dataset,paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files", "/step3a_t_test_merged.csv") )

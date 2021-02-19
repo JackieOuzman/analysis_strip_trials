@@ -16,7 +16,7 @@ library(readxl)
 #####################################################################################################
 ##############  what was the total amount of N or P applied per strip?  ############################
 ####################################################################################################
-fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid_2021-02-11.csv")
+fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-02-18.csv")
 
 
 
@@ -344,7 +344,7 @@ fert_app <- fert_app %>%
 #getwd()
 ## all of workings
 write.csv(fert_app,
-          "W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_all_steps.csv")
+          "W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_all_steps.csv")
 str(fert_app)
 
 
@@ -371,30 +371,9 @@ selection_fert_app <- fert_app %>%
 
 
 write.csv(selection_fert_app,
-          "W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_select_clm.csv")
+          "W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_select_clm.csv")
+          
 
 ### What was used by growers - not I need to have the starter and topdress cals to run for this to work.
 
 
-Strip_product1 <- data_frame(product =unique(fert_app$product_fert1))
-Strip_product2 <- data_frame(product =unique(fert_app$product_fert2))
-Strip_product3 <- data_frame(product =unique(fert_app$product_fert3))
-
-Start_product1 <- data_frame(product =unique(fert_app$S_product_fert1))
-Start_product2 <- data_frame(product =unique(fert_app$S_product_fert2))
-Start_product3 <- data_frame(product =unique(fert_app$S_product_fert3))
-
-
-Top_dress_product1 <- data_frame(product =unique(fert_app$TD_product_fert1))
-Top_dress_product2 <- data_frame(product =unique(fert_app$TD_product_fert2))
-Top_dress_product3 <- data_frame(product =unique(fert_app$TD_product_fert3))
-
-
-#make it into one long list...
-
-whats_used <- rbind(Strip_product1,Strip_product2, Strip_product3,
-              Start_product1, Start_product2, Start_product3,
-              Top_dress_product1, Top_dress_product2, Top_dress_product3)
-
-
-whats_used <- distinct(whats_used, product)

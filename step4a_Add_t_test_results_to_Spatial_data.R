@@ -1,9 +1,11 @@
 
 library(tidyverse)
 
+                    
+t_test_results <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step3a_t_test_merged.csv" )
 
-t_test_results <- read_csv( "C:/Users/ouz001/working_from_home/soil_testing/Streamline/output/grower_results/t_test_merged.csv")
-spatial_data_no_yld <-read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/fert_app_select_clm.csv")
+                                  
+spatial_data_no_yld <-read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_select_clm.csv")
 
 
 
@@ -42,6 +44,7 @@ join <- left_join(t_test_results, spatial_data_no_yld)
 
 join <- join %>% relocate(ID_analysis, .before = Rate)
 
-write.csv(join, "W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/economic_analysis2020_2021/results_for_table.csv")
+write.csv(join, "W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step4a_results_for_economics.csv")
 
+          
           
