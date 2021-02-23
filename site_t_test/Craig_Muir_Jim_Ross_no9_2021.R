@@ -669,7 +669,7 @@ for_ricks_tables_wide <- tidyr::pivot_wider(for_ricks_tables_2,
                                      values_from = zone_yld
 )
 
-
+str(for_ricks_tables_wide)
 ## differences in yld clms
 for_ricks_tables_wide <- for_ricks_tables_wide %>% 
   mutate(high_vs_low = high - low,
@@ -736,7 +736,7 @@ assigned_names2
 
 for_ricks_tables_summary <- cbind(for_ricks_tables_summary, assigned_names2)
   
-
+for_ricks_tables_summary
 
 ### Extra t test #######################################################################################################################
 
@@ -1070,7 +1070,15 @@ GR_vs_low_High_rate <- GR_vs_low_High_rate %>%
 GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate) %>% 
   summarise(count= n())
 
+
 ## all good - if it wasnt I would need to adjust something??
+
+## filter out one rate so we only have 3
+GR_vs_low_High_rate <- GR_vs_low_High_rate %>% 
+  filter(Rate != 30)
+
+
+
 
 unique(GR_vs_low_High_rate$GSP_high_low)   
 # first I need to make anew clm for the comparsions
