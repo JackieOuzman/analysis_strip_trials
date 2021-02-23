@@ -253,7 +253,7 @@ mean_zone1 <-  filter(strips,
 #   mutate(zone = "zone2")
 
 #mean_zone <- bind_rows(mean_zone1, mean_zone2)
-mean_zone <- left_join(mean_zone,Rates_labels)
+mean_zone <- left_join(mean_zone1,Rates_labels)
 
 results_ttest <- left_join(mean_zone, results_ttest)
 return(results_ttest)}
@@ -494,7 +494,8 @@ mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
                                       Yld = paste0(yield, Significant))
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, Zone, Details, Yld)
 mean_zone_av_output_display <- tidyr::spread(mean_zone_av_output_display, Zone, Yld)
-mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
+#mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
+mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,2)] #record the clms
 
 return(mean_zone_av_output_display)
 }
