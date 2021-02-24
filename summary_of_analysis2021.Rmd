@@ -136,7 +136,7 @@ I have created a new clm to adjusts this values.
 #Note the below plot run off an step1 script been run and succesful output
 #"W:\value_soil_testing_prj\Yield_data\2020\processing\r_scripts\step1_spatial_data_no_yld.R"
 
-spatial_data_no_yld <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-02-18.csv")
+spatial_data_no_yld <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-02-24.csv")
 
 spatial_data_no_yld$StripCount <- as.double(spatial_data_no_yld$StripCount)
 spatial_data_no_yld <- spatial_data_no_yld %>% 

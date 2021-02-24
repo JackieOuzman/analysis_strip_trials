@@ -89,7 +89,7 @@ dataset <- dataset %>%
 
 
 ### saved the merged dataframe
-
+#outputDir
 write.csv(dataset,paste0(outputDir, "/hign_low_t_test_merged_3b.csv") )
 
 
