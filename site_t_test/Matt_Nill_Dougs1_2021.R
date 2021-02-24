@@ -846,6 +846,18 @@ for_ricks_tables_summary <- for_ricks_tables_summary %>%
          input_file = input_file)
 
 
+
+
+
+assigned_names1 <- distinct(all_results_1,rate_name_order, .keep_all = TRUE) %>% 
+  dplyr::select(rate_name_order, Details)
+assigned_names2 <- pivot_wider(assigned_names1,
+                               names_from = rate_name_order, 
+                               names_prefix = "rate_",
+                               values_from = Details)
+assigned_names2
+
+for_ricks_tables_summary <- cbind(for_ricks_tables_summary, assigned_names2)
 ###################################################################################################################################
 ## what are we saving or have saved 
 #for_ricks_tables_summary (saved below)
@@ -1259,7 +1271,9 @@ GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
   mutate(paddock_ID = unique(strips$Paddock_ID),
          Strip_Type = unique(strips$Strip_Type),
          input_file = input_file)
-
+str(GR_vs_low_High_rate_summary)
+assigned_names2
+GR_vs_low_High_rate_summary <- cbind(GR_vs_low_High_rate_summary,assigned_names2)
 
 #save the output
 name_CSP_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_", 
