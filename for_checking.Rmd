@@ -1,0 +1,221 @@
+---
+title: "Report_For_TM"
+author: "Jackie Ouzman"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+    html_document:
+    code_folding: hide
+    df_print: paged
+---
+
+```{r setup and load library, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(dplyr)
+library(tidyverse)
+library(readr)
+library(lubridate)
+library(DT)
+library(sp)
+
+
+library(rgdal)
+library(sf)
+
+#install.packages("plotKML")
+library(plotKML)
+library(knitr)
+library(png)
+
+library(readxl)
+
+
+library(ggmap)
+library(maps)
+library(mapdata)
+
+library(raster)
+library(formattable)
+
+```
+
+## Growers and details
+
+
+
+- Agrivision	Craig Muir 	Rick Plant	    33111
+- Agrivision	Craig Muir	Andrew Parsons	33142
+- Agrivision	Craig Muir	Jim Ross	      33132
+- Agrivision	Craig Muir	Postlethwaite	  33121
+
+```{r define_sites, echo=FALSE, message=FALSE, warning=FALSE}
+
+png_folder <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/png"
+
+Growers_folder <- "W:/value_soil_testing_prj/Yield_data/2020/Agrivision/Craig_Muir/"
+
+#site1
+site1 <- "Rick_Plant/Tynans_Flat_1/output/"
+yld_trace_site1 <- "TyanansFlat1_yld_trace.png"
+harvest_map_site1 <- "TyanansFlat1_harvest_map.png"
+Paddock_selected_site1 <- "33111"
+site_name_1 <- paste0("^",Paddock_selected_site1)
+
+
+#site2
+site2 <- "Andrew_Parsons/Jampot_East/output/"
+yld_trace_site2 <- "Jampot_east_yld trace.png"
+harvest_map_site2 <- "Jampot_east_harvest_map.png"
+Paddock_selected_site2 <- "33142"
+site_name_2 <- paste0("^",Paddock_selected_site2)
+
+
+#site3
+site3 <- "Jim_Ross/No_9/output/"
+yld_trace_site3 <- "No9_yld trace.png"
+harvest_map_site3 <- "No9_harvest_map.png"
+Paddock_selected_site3 <- "33132"
+site_name_3 <- paste0("^",Paddock_selected_site3)
+
+
+
+#site4
+site4 <- "Postlethwaite/Egans/output/"
+yld_trace_site4 <- "Egans_yld trace.png"
+harvest_map_site4 <- "Egans_harvest_map.png"
+Paddock_selected_site4 <- "33121"
+site_name_4 <- paste0("^",Paddock_selected_site4)
+
+```
+
+```{r read spatial data, message=FALSE, warning=FALSE, include=FALSE}
+spatial_data_no_yld <- st_read("W:/value_soil_testing_prj/Yield_data/2020/All_Strips_2020_wgs84.shp")
+spatial_data_no_yld_df <- data.frame(spatial_data_no_yld)
+spatial_data_no_yld_df <- spatial_data_no_yld_df %>% dplyr::select(-geometry)
+
+```
+
+## Site 1
+
+# Harvest map
+
+```{r display site 1, echo=FALSE, message=FALSE, warning=FALSE}
+
+include_graphics(paste0(Growers_folder,site1,  harvest_map_site1))
+```
+
+# Yield trace
+
+```{r display site 1 yld trace, echo=FALSE, message=FALSE, warning=FALSE}
+include_graphics(paste0(Growers_folder,site1,  yld_trace_site1))
+```
+
+# Results
+
+```{r display results site 1, echo=FALSE, message=FALSE, warning=FALSE}
+include_graphics(dir(png_folder, full.names=T, pattern=site_name_1))
+
+
+
+```
+
+## Checks for CSIRO site 1
+
+```{r checks site 1, echo=FALSE, message=FALSE, warning=FALSE}
+
+fert_applied <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_select_clm.csv")
+
+site1_fert_applied <- fert_applied %>% 
+  dplyr::filter(Paddock_ID == Paddock_selected_site1) %>% 
+  dplyr::select(Paddock_ID, Rate,Strip_Rate,
+                Strip_Type,
+                Total_sum_N_content,
+                Total_sum_P_content) %>% 
+  arrange(Rate)
+
+site1_fert_applied$Total_sum_N_content <- round(site1_fert_applied$Total_sum_N_content, 2)
+site1_fert_applied$Total_sum_P_content <- round(site1_fert_applied$Total_sum_P_content, 2)
+
+
+
+site1_fert_applied %>% 
+  formattable(align = "l", - 1  )
+```
+
+## Comments site 1
+
+```{r comments on spatial data, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+comments_site1 <- spatial_data_no_yld_df %>% 
+  dplyr::filter(Paddock_ID == Paddock_selected_site1) %>% 
+distinct( Comments, .keep_all = TRUE) %>% 
+  dplyr::select(Paddock_ID ,Comments )
+
+comments_site1 %>% 
+  formattable(align = "l", - 1  )
+```
+
+
+## Site 2
+
+# Harvest map
+
+```{r display site 2, echo=FALSE, message=FALSE, warning=FALSE}
+
+include_graphics(paste0(Growers_folder,site2,  harvest_map_site2))
+```
+
+# Yield trace
+
+```{r display site 2 yld trace, echo=FALSE, message=FALSE, warning=FALSE}
+include_graphics(paste0(Growers_folder,site2,  yld_trace_site2))
+```
+
+# Results
+
+```{r display results site 2, echo=FALSE, message=FALSE, warning=FALSE}
+include_graphics(dir(png_folder, full.names=T, pattern=site_name_2))
+
+
+
+```
+
+## Checks for CSIRO site 2
+
+```{r checks site 2, echo=FALSE, message=FALSE, warning=FALSE}
+
+fert_applied <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_select_clm.csv")
+
+site2_fert_applied <- fert_applied %>% 
+  dplyr::filter(Paddock_ID == Paddock_selected_site2) %>% 
+  dplyr::select(Paddock_ID, Rate,Strip_Rate,
+                Strip_Type,
+                Total_sum_N_content,
+                Total_sum_P_content) %>% 
+  arrange(Rate)
+
+site2_fert_applied$Total_sum_N_content <- round(site2_fert_applied$Total_sum_N_content, 2)
+site2_fert_applied$Total_sum_P_content <- round(site2_fert_applied$Total_sum_P_content, 2)
+
+
+
+site2_fert_applied %>% 
+  formattable(align = "l", - 1  )
+```
+
+## Comments site 2
+
+```{r comments on spatial data 2, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+comments_site2 <- spatial_data_no_yld_df %>% 
+  dplyr::filter(Paddock_ID == Paddock_selected_site2) %>% 
+distinct( Comments, .keep_all = TRUE) %>% 
+  dplyr::select(Paddock_ID ,Comments )
+
+comments_site2 %>% 
+  formattable(align = "l", - 1  )
+```
+
