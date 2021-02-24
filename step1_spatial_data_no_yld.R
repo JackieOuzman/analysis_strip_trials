@@ -83,3 +83,4 @@ all_strips_centroid <-all_strips_centroid %>%
 st_write(all_strips_centroid, 
          paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld", "_",Sys.Date(), ".csv"), 
          layer_options = "GEOMETRY=AS_XY")
+
