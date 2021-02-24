@@ -7,10 +7,6 @@
 
 library(tidyverse)
 
-
-
-
-
 ## yield results
 ## need to be merged into a single file
 #I need to move this into a folder with all the ttest outputs
@@ -40,6 +36,30 @@ baseDir
 file_list <- paste0(baseDir, "/",list.files(baseDir, ".csv", full.names = FALSE))
 file_list
 
+#list of clm headings that I want
+clm_headings <- c(
+  "X" ,
+  "Zone_ID",
+  "Zone",
+  "comparison",
+  "yld_response",
+  "low" ,
+  "medium",
+  "high" ,
+  "high_vs_low",
+  "high_vs_medium",
+  "medium_vs_low",
+  "Significant",
+  "P_value",
+  "paddock_ID",
+  "Strip_Type",
+  "input_file",
+  "rate_low",
+  "rate_medium",
+  "rate_high",
+  "rate_very_high"
+)
+
 
 setwd(baseDir)
 file_list <- list.files()
@@ -48,11 +68,13 @@ for (file in file_list){
   # if the merged dataset doesn't exist, create it
   if (!exists("dataset")){
     dataset <- read.csv(file)
+    dataset[clm_headings[!(clm_headings %in% colnames(dataset))]] = 'NA'
   }
   
   # if the merged dataset does exist, append to it
    if (exists("dataset")){
      temp_dataset <-read.csv(file)
+     temp_dataset[clm_headings[!(clm_headings %in% colnames(temp_dataset))]] = 'NA'
      dataset<-rbind(dataset, temp_dataset)
      
      rm(temp_dataset)
@@ -69,4 +91,7 @@ dataset <- dataset %>%
 ### saved the merged dataframe
 
 write.csv(dataset,paste0(outputDir, "/hign_low_t_test_merged_3b.csv") )
+
+
+
 
