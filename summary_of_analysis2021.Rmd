@@ -566,9 +566,7 @@ Note that some significant values are not reported for the zone, this may occur 
 
 ```{r rick table for high low comparision, echo=FALSE, message=FALSE, warning=FALSE}
 
-
-
-                          
+                        
 high_low_comp <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/merged_comparision_output/hign_low_t_test_merged_3b.csv")
 
 ### ricks table
@@ -584,9 +582,9 @@ high_low_comp$comparison <-
     high_low_comp$comparison,
     levels = c("high_v_low", "high_v_medium", "medium_v_low"),
     labels = c(
-      "high fert rate vs low fert rate",
-      "high fert rate vs medium fert rate",
-      "medium fert rate vs low fert rate"
+      "high fert vs low fert",
+      "high fert vs medium fert",
+      "medium fert vs low fert"
     )
   )
 
@@ -595,9 +593,8 @@ high_low_plot <-
   ggplot(high_low_comp, mapping = aes(x = yld_response, fill = Significant)) +
   geom_bar() +
   facet_grid(Strip_Type ~ comparison)+ 
-             #labeller(Strip_Type = label_wrap_gen(width = 16 ),
-             #         comparison = label_wrap_gen(width = 16))) +
   theme_bw() +
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
   scale_x_discrete(
     labels = c(
       "positive" = "positive",
@@ -605,14 +602,14 @@ high_low_plot <-
       "negative" = "negative"
     )
   ) +
-  geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
-  labs(
-    title = "Comparison of yield response in strips with different fertiliser rate (per paddocks and zone)",
+    labs(
+    title = "Comparison of yield response in strips with different fertiliser rate",
     subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
     y = "Count of paddocks in yield response class",
     x = "yield response"
   )
 high_low_plot
+
 
 ```
 
@@ -684,32 +681,7 @@ GR_comparison_plot
 
 
                       
-# #All I can ask here is - if cahnge your fertiliser to do something different, is it significantly different?
-# 
-# #Pull out strip type from the paddock_ID_Type clm
-# GR_comparison <-  GR_comparison %>% 
-#   mutate(Strip_Type = paddock_ID_Type )
-# GR_comparison$Strip_Type <- gsub("[[:punct:]]|[[:digit:]]", "", GR_comparison$Strip_Type)
-# 
-# #order these for graphing
-# GR_comparison$Significant <-
-#   factor(
-#     GR_comparison$Significant,
-#     levels = c("significant", "not significant"))
-#   
-# 
-# 
-# GSPvsRates_plot <-ggplot(GR_comparison, mapping = aes(x=Significant ))+
-#   geom_bar() +
-#   facet_grid(.~ Strip_Type)+
-#   theme_bw()+
-#   geom_text(aes(y = ((..count..)), label = ((..count..))), stat = "count", vjust = -0.25) +
-#   labs(title = "Comparison of yield response in strips with different fertiliser rate (per paddocks and zone) compared to GSP", 
-#        subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
-#        y = "Count of zones with a significant difference", 
-#        x = "result of t - test compared to GSP")
-# 
-# GSPvsRates_plot
+
 ```
 
 

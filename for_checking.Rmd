@@ -1,11 +1,10 @@
+
 ---
-title: "Report_For_TM"
-author: "Jackie Ouzman"
+title: "Growers report"
+author: "JCSIRO team"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
-    html_document:
-    code_folding: hide
-    df_print: paged
+    html_document: default
 ---
 
 ```{r setup and load library, include=FALSE}
@@ -37,19 +36,46 @@ library(mapdata)
 
 library(raster)
 library(formattable)
+library(magick)
+library(readxl)
 
 ```
 
 ## Growers and details
-
-
-
-- Agrivision	Craig Muir 	Rick Plant	    33111
-- Agrivision	Craig Muir	Andrew Parsons	33142
-- Agrivision	Craig Muir	Jim Ross	      33132
-- Agrivision	Craig Muir	Postlethwaite	  33121
-
 ```{r define_sites, echo=FALSE, message=FALSE, warning=FALSE}
+
+#this needs to be fixed up to access share point file
+paddock_done2020<- read_excel("W:/value_soil_testing_prj/Yield_data/2020/paddock_done2020_frmshare_point.xlsx", 
+                                              sheet = "T-test_done")
+
+paddock_done2020 <- paddock_done2020 %>% 
+  dplyr::mutate(paddock5_digits = substr(`Paddock code`, start = 1, stop = 5))
+
+paddock_done2020 <- paddock_done2020 %>% 
+  filter(Organisation == "Agrivision" )
+
+
+
+list_paddocks <- paddock_done2020 %>% 
+  distinct(paddock5_digits, .keep_all= TRUE) %>% 
+  dplyr::select(paddock = paddock5_digits,
+         Organisation,
+         Contact,
+         Farmer,
+         `Paddock tested`,
+         'issues/ comments')
+
+
+
+list_paddocks %>% 
+  formattable(align = "l", - 1  )
+
+
+```
+
+
+
+```{r define_sites2, echo=FALSE, message=FALSE, warning=FALSE}
 
 png_folder <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/png"
 
@@ -96,126 +122,346 @@ spatial_data_no_yld_df <- spatial_data_no_yld_df %>% dplyr::select(-geometry)
 
 ```
 
-## Site 1
+# Site 1
 
-# Harvest map
+### Harvest map
 
 ```{r display site 1, echo=FALSE, message=FALSE, warning=FALSE}
 
 include_graphics(paste0(Growers_folder,site1,  harvest_map_site1))
 ```
 
-# Yield trace
+
+### Yield trace
 
 ```{r display site 1 yld trace, echo=FALSE, message=FALSE, warning=FALSE}
 include_graphics(paste0(Growers_folder,site1,  yld_trace_site1))
 ```
 
-# Results
+### Results
+
 
 ```{r display results site 1, echo=FALSE, message=FALSE, warning=FALSE}
-include_graphics(dir(png_folder, full.names=T, pattern=site_name_1))
 
-
+image_read(dir(png_folder, full.names=T, pattern=site_name_1)) %>% 
+  image_rotate(90)
 
 ```
 
-## Checks for CSIRO site 1
-
-```{r checks site 1, echo=FALSE, message=FALSE, warning=FALSE}
-
-fert_applied <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_select_clm.csv")
-
-site1_fert_applied <- fert_applied %>% 
-  dplyr::filter(Paddock_ID == Paddock_selected_site1) %>% 
-  dplyr::select(Paddock_ID, Rate,Strip_Rate,
-                Strip_Type,
-                Total_sum_N_content,
-                Total_sum_P_content) %>% 
-  arrange(Rate)
-
-site1_fert_applied$Total_sum_N_content <- round(site1_fert_applied$Total_sum_N_content, 2)
-site1_fert_applied$Total_sum_P_content <- round(site1_fert_applied$Total_sum_P_content, 2)
 
 
 
-site1_fert_applied %>% 
-  formattable(align = "l", - 1  )
-```
-
-## Comments site 1
-
-```{r comments on spatial data, echo=FALSE, message=FALSE, warning=FALSE}
 
 
-comments_site1 <- spatial_data_no_yld_df %>% 
-  dplyr::filter(Paddock_ID == Paddock_selected_site1) %>% 
-distinct( Comments, .keep_all = TRUE) %>% 
-  dplyr::select(Paddock_ID ,Comments )
 
-comments_site1 %>% 
-  formattable(align = "l", - 1  )
-```
+# Site 2
 
-
-## Site 2
-
-# Harvest map
+### Harvest map
 
 ```{r display site 2, echo=FALSE, message=FALSE, warning=FALSE}
 
 include_graphics(paste0(Growers_folder,site2,  harvest_map_site2))
 ```
 
-# Yield trace
+### Yield trace
 
 ```{r display site 2 yld trace, echo=FALSE, message=FALSE, warning=FALSE}
 include_graphics(paste0(Growers_folder,site2,  yld_trace_site2))
 ```
 
-# Results
+### Results
 
 ```{r display results site 2, echo=FALSE, message=FALSE, warning=FALSE}
-include_graphics(dir(png_folder, full.names=T, pattern=site_name_2))
 
-
+image_read(dir(png_folder, full.names=T, pattern=site_name_2)) %>% 
+  image_rotate(90)
 
 ```
 
-## Checks for CSIRO site 2
 
-```{r checks site 2, echo=FALSE, message=FALSE, warning=FALSE}
+# Site 3
+
+### Harvest map
+
+```{r display site 3, echo=FALSE, message=FALSE, warning=FALSE}
+
+include_graphics(paste0(Growers_folder,site3,  harvest_map_site3))
+```
+
+### Yield trace
+
+```{r display site 3 yld trace, echo=FALSE, message=FALSE, warning=FALSE}
+include_graphics(paste0(Growers_folder,site3,  yld_trace_site3))
+```
+
+### Results
+
+```{r display results site 3, echo=FALSE, message=FALSE, warning=FALSE}
+
+image_read(dir(png_folder, full.names=T, pattern=site_name_3)) %>% 
+  image_rotate(90)
+
+```
+
+
+# Site 4
+
+### Harvest map
+
+```{r display site 4, echo=FALSE, message=FALSE, warning=FALSE}
+
+include_graphics(paste0(Growers_folder,site4,  harvest_map_site4))
+```
+
+### Yield trace
+
+```{r display site 4 yld trace, echo=FALSE, message=FALSE, warning=FALSE}
+include_graphics(paste0(Growers_folder,site4,  yld_trace_site4))
+```
+
+### Results
+
+```{r display results site 4, echo=FALSE, message=FALSE, warning=FALSE}
+
+image_read(dir(png_folder, full.names=T, pattern=site_name_4)) %>% 
+  image_rotate(90)
+
+```
+
+
+## Checks for CSIRO 
+
+```{r checks site , echo=FALSE, message=FALSE, warning=FALSE}
 
 fert_applied <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_select_clm.csv")
 
-site2_fert_applied <- fert_applied %>% 
-  dplyr::filter(Paddock_ID == Paddock_selected_site2) %>% 
-  dplyr::select(Paddock_ID, Rate,Strip_Rate,
+check_fert_applied <- fert_applied %>%
+  dplyr::filter(
+    Paddock_ID == Paddock_selected_site1 |
+      Paddock_ID == Paddock_selected_site2 |
+      Paddock_ID == Paddock_selected_site3 |
+      Paddock_ID == Paddock_selected_site4
+  ) %>%
+  dplyr::select(Paddock_ID,
+                Rate,
+                Strip_Rate,
                 Strip_Type,
                 Total_sum_N_content,
-                Total_sum_P_content) %>% 
-  arrange(Rate)
-
-site2_fert_applied$Total_sum_N_content <- round(site2_fert_applied$Total_sum_N_content, 2)
-site2_fert_applied$Total_sum_P_content <- round(site2_fert_applied$Total_sum_P_content, 2)
+                Total_sum_P_content) %>%
+  arrange(Paddock_ID, Rate)
 
 
+check_fert_applied$Total_sum_N_content <- round(check_fert_applied$Total_sum_N_content, 2)
+check_fert_applied$Total_sum_P_content <- round(check_fert_applied$Total_sum_P_content, 2)
 
-site2_fert_applied %>% 
+
+
+check_fert_applied %>% 
   formattable(align = "l", - 1  )
 ```
 
-## Comments site 2
+## Comments from the spatial data
 
 ```{r comments on spatial data 2, echo=FALSE, message=FALSE, warning=FALSE}
 
 
-comments_site2 <- spatial_data_no_yld_df %>% 
-  dplyr::filter(Paddock_ID == Paddock_selected_site2) %>% 
+comments_frm_spatial_data <- spatial_data_no_yld_df %>% 
+  dplyr::filter(
+    Paddock_ID == Paddock_selected_site1 |
+      Paddock_ID == Paddock_selected_site2 |
+      Paddock_ID == Paddock_selected_site3 |
+      Paddock_ID == Paddock_selected_site4
+  ) %>%
 distinct( Comments, .keep_all = TRUE) %>% 
   dplyr::select(Paddock_ID ,Comments )
 
-comments_site2 %>% 
+comments_frm_spatial_data %>% 
   formattable(align = "l", - 1  )
 ```
 
+# Check the comparisions
+
+#### 2 Growers standard practice strips (GSP vs Alt GSP)
+
+```{r plot2 alt strips results, echo=FALSE, message=FALSE, warning=FALSE}
+GSP_AltGSP_t_test <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/merged_comparision_output/GSP_AltGSP_t_test_merged_3c.csv")
+
+GSPvsAltGSP_plot <- GSP_AltGSP_t_test %>% 
+  dplyr::filter(
+    paddock_ID == Paddock_selected_site1 |
+      paddock_ID == Paddock_selected_site2 |
+      paddock_ID == Paddock_selected_site3 |
+      paddock_ID == Paddock_selected_site4
+  ) %>% 
+  ggplot( mapping = aes(x=Significant ))+
+  geom_bar() +
+  facet_grid(.~ Strip_Type)+
+  theme_bw()+
+  labs(title = "Comparison of yield response in strips with the same fertiliser rate", 
+       subtitle = "Strip with growers standard practice vs alterative growers standard practice",
+       y = "Count of zones with a significant difference", 
+       x = "result of t - test (GSP vs. Alt GSP)")
+
+GSPvsAltGSP_plot
+```
+
+#### High medium and low fertiliser rates
+
+The below table shows what fertiliser rates were assigned to low medium and high fertiliser rates.
+The comparision was done with low medium and high.
+
+
+```{r what is defined as high low , echo=FALSE, message=FALSE, warning=FALSE}
+
+                        
+high_low_comp <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/merged_comparision_output/hign_low_t_test_merged_3b.csv")
+
+
+
+high_low_comp <- high_low_comp %>%
+  dplyr::filter(
+    paddock_ID == Paddock_selected_site1 |
+      paddock_ID == Paddock_selected_site2 |
+      paddock_ID == Paddock_selected_site3 |
+      paddock_ID == Paddock_selected_site4
+  )
+
+high_low_comp_define <-distinct(high_low_comp,paddock_ID, .keep_all = TRUE  ) %>% 
+  dplyr::select(paddock_ID, 
+                'rate low' = rate_low,
+                'rate medium' = rate_medium,
+                'rate high' = rate_high,
+                'rate very high' = rate_very_high)
+
+high_low_comp_define %>% 
+  formattable(align = "l", - 1  )
+```
+
+
+```{r rick table for high low comparision, echo=FALSE, message=FALSE, warning=FALSE}
+
+                        
+
+
+high_low_comp$comparison <-
+  factor(
+    high_low_comp$comparison,
+    levels = c("high_v_low", "high_v_medium", "medium_v_low"),
+    labels = c(
+      "high fert vs low fert",
+      "high fert vs medium fert",
+      "medium fert vs low fert"
+    )
+  )
+
+
+high_low_plot <-
+  ggplot(high_low_comp, mapping = aes(x = yld_response, fill = Significant)) +
+  geom_bar() +
+  facet_grid(Strip_Type ~ comparison)+ 
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  scale_x_discrete(
+    labels = c(
+      "positive" = "positive",
+      "no_response" = "no response",
+      "negative" = "negative"
+    )
+  ) +
+    labs(
+    title = "Comparison of yield response in strips with different fertiliser rate",
+    subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
+    y = "Count of paddocks in yield response class",
+    x = "yield response"
+  )
+high_low_plot
+
+```
+
+
+# Yield response to fertilisers application (growers rates compared to other rates)
+
+
+Different comparisons are made between the growers standard practice and fertilisers strips for each zone.
+
+Comparison of yield response in the strip / zone per paddock between:
+
+- Growers standard practice GSP  vs low fertiliser rate (yield for GSP fert rate - yield for low fert rate)
+- Growers standard practice GSP  fertiliser rate vs high fertiliser rate (yield for GSP fert rate - yield for high fert rate)
+
+
+The yield response is classed as 'positive' when higher rates of fertiliser results in higher yields
+
+The yield response is classed as 'no response' when higher rates of fertiliser results in no change in yields (this is defined as 0 +/- standard error)
+
+The yield response is classed as 'negative' when higher rates of fertiliser results in lower yields.
+
+T- test was also run for each comparison and the significant differences at p < 0.05 reported.
+Note that some significant values are not reported for the zone, this may occur when there is not enough data points to run the t - test (although there is still have yield values to make a comparison). 
+
+
+The below table details what rates were excluded from the anlaysis.
+
+```{r rick table for GSP vs high / low rates exluded, echo=FALSE, message=FALSE, warning=FALSE}
+
+rates_exluded <- paddock_done2020 %>% 
+  distinct(paddock5_digits, .keep_all= TRUE) %>% 
+  dplyr::select(paddock = paddock5_digits,
+         `Paddock tested`,
+         'issues/ comments',
+          'Rates excluded' = Rates_excluded)
+
+
+
+rates_exluded %>% 
+  formattable(align = "l", - 1  )
+
+
+```
+
+```{r rick table for GSP vs high / low rates, echo=FALSE, message=FALSE, warning=FALSE}
+
+                      
+
+GR_comparison <-  read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/merged_comparision_output/GSP_low_high_comparision_t_test_merged_3d.csv")
+GR_comparison <- GR_comparison %>%
+  dplyr::filter(
+    paddock_ID == Paddock_selected_site1 |
+      paddock_ID == Paddock_selected_site2 |
+      paddock_ID == Paddock_selected_site3 |
+      paddock_ID == Paddock_selected_site4
+  )
+
+GR_comparison_plot <-
+  ggplot(GR_comparison, mapping = aes(x = yld_response, fill = Significant)) +
+  geom_bar() +
+  facet_grid(Strip_Type ~ comparison)+ 
+  #labeller(Strip_Type = label_wrap_gen(width = 16 ),
+  #         comparison = label_wrap_gen(width = 16))) +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  scale_x_discrete(
+    labels = c(
+      "positive" = "positive",
+      "no_response" = "no response",
+      "negative" = "negative"
+    )
+  ) +
+  labs(
+    title = "Comparison of yield response for GSP vs higher/lower rates",
+    subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
+    y = "Count of paddocks in yield response class",
+    x = "yield response"
+  )
+GR_comparison_plot
+```
+
+
+
+Action required:
+1. review that the results look sensible and nothing needs re running - are the reports ok to send off?
+2. the fertiliser appplied has translated correctly to units of N or P
+3. are the paddocks to be included in the ecomnics analysis?
+
+
+[For Notes ](W:/value_soil_testing_prj/Yield_data/2020/paddock_done2020_frmshare_point.xlsx)
