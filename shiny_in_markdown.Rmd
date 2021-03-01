@@ -1,0 +1,78 @@
+---
+title: "temp2"
+author: "Jackie Ouzman"
+date: "26/05/2020"
+output: html_document
+runtime: shiny
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+
+library(shiny)
+library(tidyverse)
+library(readxl)
+library(DT)
+library(formattable)
+
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+paddock_done2020_start<- read_excel("C:/Users/ouz001/CSIRO/Ratcliff, Christina (A&F, Waite Campus) - Soil_Testing_Project/paddock_done2020.xlsx", 
+                              sheet = "T-test_done")
+paddock_done2020_start <- paddock_done2020_start %>% 
+  dplyr::mutate(paddock5_digits = substr(`Paddock code`, start = 1, stop = 5))
+
+#widget
+selectInput("Organisation", "Choose Organisation: ", 
+  choices = sort(unique(paddock_done2020_start$Organisation)), 
+  selected = "Agrivision", multiple = FALSE)
+
+
+
+renderText(input$Organisation)
+
+paddock_done2020 <- reactive({
+filter(paddock_done2020_start, Organisation %in% input$Organisation) %>% 
+  distinct(paddock5_digits, .keep_all= TRUE) %>% 
+  dplyr::select(paddock = paddock5_digits,
+         Organisation,
+         Contact,
+         Farmer,
+         `Paddock tested`,
+         'issues/ comments')  
+})
+
+
+
+
+
+renderFormattable({
+paddock_done2020() %>% 
+   formattable(align = "l", - 1  )
+   })
+
+
+
+```
+
+
+
+```{r define_sites, echo=FALSE, message=FALSE, warning=FALSE}
+
+print(file.path("foo", "bar", "..", "name")) # "foo/bar/../name"
+
+png_folder <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/png"
+
+Growers_folder <- paste0("W:/value_soil_testing_prj/Yield_data/2020/", 
+unique(paddock_done2020$Organisation), "/",unique(paddock_done2020$Contact), "/")
+test
+
+#site1
+site1 <- "Rick_Plant/Tynans_Flat_1/output/"
+yld_trace_site1 <- "TyanansFlat1_yld_trace.png"
+harvest_map_site1 <- "TyanansFlat1_harvest_map.png"
+Paddock_selected_site1 <- "33111"
+site_name_1 <- paste0("^",Paddock_selected_site1)
