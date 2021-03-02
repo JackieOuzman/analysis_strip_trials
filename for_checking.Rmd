@@ -44,31 +44,42 @@ library(readxl)
 ## Growers and details
 ```{r define_sites, echo=FALSE, message=FALSE, warning=FALSE}
 
-#this needs to be fixed up to access share point file
-paddock_done2020<- read_excel("W:/value_soil_testing_prj/Yield_data/2020/paddock_done2020_frmshare_point.xlsx", 
-                                              sheet = "T-test_done")
 
-paddock_done2020 <- paddock_done2020 %>% 
+
+#######################################################################################################################################################
+paddock_done2020_t<- read_excel("C:/Users/ouz001/CSIRO/Ratcliff, Christina (A&F, Waite Campus) - Soil_Testing_Project/paddock_done2020.xlsx", 
+                              sheet = "T-test_done")
+
+paddock_done2020_t <- paddock_done2020_t %>% 
   dplyr::mutate(paddock5_digits = substr(`Paddock code`, start = 1, stop = 5))
 
-paddock_done2020 <- paddock_done2020 %>% 
-  filter(Organisation == "Agrivision" )
+#select orgaiastion
 
+selection_organisation <- "Agrivision"
 
+paddock_done2020 <- 
+  filter(paddock_done2020_t, Organisation %in% selection_organisation) %>% 
+    distinct(paddock5_digits, .keep_all= TRUE) %>% 
+    dplyr::select(paddock = paddock5_digits,
+                  Organisation,
+                  Contact,
+                  Farmer,
+                  `Paddock tested`,
+                  'issues/ comments',
+                  'Rates excluded' = Rates_excluded)  
 
-list_paddocks <- paddock_done2020 %>% 
-  distinct(paddock5_digits, .keep_all= TRUE) %>% 
-  dplyr::select(paddock = paddock5_digits,
-         Organisation,
-         Contact,
-         Farmer,
-         `Paddock tested`,
-         'issues/ comments')
+paddock_done2020_display <- 
+  filter(paddock_done2020_t, Organisation %in% selection_organisation) %>% 
+    distinct(paddock5_digits, .keep_all= TRUE) %>% 
+    dplyr::select(Paddock = paddock5_digits,
+                  Organisation,
+                  Contact,
+                  Farmer,
+                  `Paddock tested`,
+                  'issues/ comments')  
 
-
-
-list_paddocks %>% 
-  formattable(align = "l", - 1  )
+paddock_done2020_display %>% 
+   formattable(align = "l", - 1  )
 
 
 ```
@@ -77,41 +88,88 @@ list_paddocks %>%
 
 ```{r define_sites2, echo=FALSE, message=FALSE, warning=FALSE}
 
+
+## set up some folder to look for data:
+
 png_folder <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/png"
 
-Growers_folder <- "W:/value_soil_testing_prj/Yield_data/2020/Agrivision/Craig_Muir/"
-
-#site1
-site1 <- "Rick_Plant/Tynans_Flat_1/output/"
-yld_trace_site1 <- "TyanansFlat1_yld_trace.png"
-harvest_map_site1 <- "TyanansFlat1_harvest_map.png"
-Paddock_selected_site1 <- "33111"
-site_name_1 <- paste0("^",Paddock_selected_site1)
+Growers_folder <- paste0("W:/value_soil_testing_prj/Yield_data/2020/", 
+unique(paddock_done2020$Organisation), "/",unique(paddock_done2020$Contact), "/")
 
 
-#site2
-site2 <- "Andrew_Parsons/Jampot_East/output/"
-yld_trace_site2 <- "Jampot_east_yld trace.png"
-harvest_map_site2 <- "Jampot_east_harvest_map.png"
-Paddock_selected_site2 <- "33142"
-site_name_2 <- paste0("^",Paddock_selected_site2)
-
-
-#site3
-site3 <- "Jim_Ross/No_9/output/"
-yld_trace_site3 <- "No9_yld trace.png"
-harvest_map_site3 <- "No9_harvest_map.png"
-Paddock_selected_site3 <- "33132"
-site_name_3 <- paste0("^",Paddock_selected_site3)
+Growers_folder <- gsub(" ", "_", Growers_folder)
+Growers_folder <- gsub("-", "_", Growers_folder)
 
 
 
-#site4
-site4 <- "Postlethwaite/Egans/output/"
-yld_trace_site4 <- "Egans_yld trace.png"
-harvest_map_site4 <- "Egans_harvest_map.png"
-Paddock_selected_site4 <- "33121"
-site_name_4 <- paste0("^",Paddock_selected_site4)
+#each folder for the sites (4 listed here)
+site1 <- paste0((unique(paddock_done2020$Farmer)[1]),"/",
+                (unique(paddock_done2020$`Paddock tested`)[1]),
+                "/output/")
+                
+site2 <- paste0((unique(paddock_done2020$Farmer)[2]),"/",
+                (unique(paddock_done2020$`Paddock tested`)[2]),
+                "/output/")
+
+site3 <- paste0((unique(paddock_done2020$Farmer)[3]),"/",
+                (unique(paddock_done2020$`Paddock tested`)[3]),
+                "/output/")
+
+site4 <- paste0((unique(paddock_done2020$Farmer)[4]),"/",
+                (unique(paddock_done2020$`Paddock tested`)[4]),
+                "/output/")
+
+site1 <- gsub(" ", "_", site1)
+site1 <- gsub("-", "_", site1)
+site2 <- gsub(" ", "_", site2)
+site2 <- gsub("-", "_", site2)
+site3 <- gsub(" ", "_", site3)
+site3 <- gsub("-", "_", site3)
+site4 <- gsub(" ", "_", site4)
+site4 <- gsub("-", "_", site4)
+
+
+
+#Lets look for a yld trace maps
+
+#list files that conatin the word "trace" followed by anything and ending with the word ".png":
+yld_trace_site1 <- list.files(path = paste0(Growers_folder, site1),pattern = "trace(.*).png$", ignore.case = TRUE)
+yld_trace_site2 <- list.files(path = paste0(Growers_folder, site2),pattern = "trace(.*).png$", ignore.case = TRUE)
+yld_trace_site3 <- list.files(path = paste0(Growers_folder, site3),pattern = "trace(.*).png$", ignore.case = TRUE)
+yld_trace_site4 <- list.files(path = paste0(Growers_folder, site4),pattern = "trace(.*).png$", ignore.case = TRUE)
+
+#list files that conatin the word "harvest" followed by anything and ending with the word ".png": and excluding pre (2 steps)
+
+
+harvest_pre_post_site1 <- list.files(path = paste0(Growers_folder, site1),pattern = "harvest(.*).png$", ignore.case = TRUE)
+harvest_pre_post_site2 <- list.files(path = paste0(Growers_folder, site2),pattern = "harvest(.*).png$", ignore.case = TRUE)
+harvest_pre_post_site3 <- list.files(path = paste0(Growers_folder, site3),pattern = "harvest(.*).png$", ignore.case = TRUE)
+harvest_pre_post_site4 <- list.files(path = paste0(Growers_folder, site4),pattern = "harvest(.*).png$", ignore.case = TRUE)
+
+harvest_map_site1 <- grep(harvest_pre_post_site1, pattern = 'pre', invert=TRUE, value=TRUE)
+harvest_map_site2 <- grep(harvest_pre_post_site2, pattern = 'pre', invert=TRUE, value=TRUE)
+harvest_map_site3 <- grep(harvest_pre_post_site3, pattern = 'pre', invert=TRUE, value=TRUE)
+harvest_map_site4 <- grep(harvest_pre_post_site4, pattern = 'pre', invert=TRUE, value=TRUE)
+
+
+
+### paddock id details
+site_name_1 <- paste0("^",paddock_done2020$paddock[1])
+site_name_2 <- paste0("^",paddock_done2020$paddock[2])
+site_name_3 <- paste0("^",paddock_done2020$paddock[3])
+site_name_4 <- paste0("^",paddock_done2020$paddock[4])
+
+
+
+
+Paddock_selected_site1 <- paddock_done2020$paddock[1]
+Paddock_selected_site2 <- paddock_done2020$paddock[2]
+Paddock_selected_site3 <- paddock_done2020$paddock[3]
+Paddock_selected_site4 <- paddock_done2020$paddock[4]
+
+
+
+
 
 ```
 
@@ -229,7 +287,9 @@ image_read(dir(png_folder, full.names=T, pattern=site_name_4)) %>%
 ```
 
 
-## Checks for CSIRO 
+# Checks for CSIRO 
+
+### check the rate provided is equavlient to the calulated N/P contnet.
 
 ```{r checks site , echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -279,36 +339,69 @@ comments_frm_spatial_data %>%
   formattable(align = "l", - 1  )
 ```
 
-# Check the comparisions
+# Comparision of yield response: Growers standard practice strips (GSP vs Alt GSP)
 
-#### 2 Growers standard practice strips (GSP vs Alt GSP)
+The best outcome would be that the yield response in no response.
+
+Or if there was a yield response between the two strips they would be not significant.
+
+positive or negative yield resposnes that are significant suggest that there is a high degree of variability between the two strip that were applied with the same fertiliser.
+
+This may occur beacuse the strips have underlying soil, plant growth conditions.
+
 
 ```{r plot2 alt strips results, echo=FALSE, message=FALSE, warning=FALSE}
 GSP_AltGSP_t_test <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/merged_comparision_output/GSP_AltGSP_t_test_merged_3c.csv")
 
-GSPvsAltGSP_plot <- GSP_AltGSP_t_test %>% 
+GSPvsAltGSP_plot <- GSP_AltGSP_t_test %>%
   dplyr::filter(
     paddock_ID == Paddock_selected_site1 |
       paddock_ID == Paddock_selected_site2 |
       paddock_ID == Paddock_selected_site3 |
       paddock_ID == Paddock_selected_site4
-  ) %>% 
+  ) %>%
   ggplot( mapping = aes(x=Significant ))+
   geom_bar() +
   facet_grid(.~ Strip_Type)+
   theme_bw()+
-  labs(title = "Comparison of yield response in strips with the same fertiliser rate", 
+  labs(title = "Comparison of yield response in strips with the same fertiliser rate",
        subtitle = "Strip with growers standard practice vs alterative growers standard practice",
-       y = "Count of zones with a significant difference", 
+       y = "Count of zones with a significant difference",
        x = "result of t - test (GSP vs. Alt GSP)")
 
 GSPvsAltGSP_plot
+
+
+
+
+
+
+
 ```
 
-#### High medium and low fertiliser rates
+
+```{r table alt strips results, echo=FALSE, message=FALSE, warning=FALSE}
+GSP_AltGSP_t_test <- GSP_AltGSP_t_test %>% 
+  dplyr::filter(
+    paddock_ID == Paddock_selected_site1 |
+      paddock_ID == Paddock_selected_site2 |
+      paddock_ID == Paddock_selected_site3 |
+      paddock_ID == Paddock_selected_site4
+  ) 
+
+GSP_AltGSP_t_test <- GSP_AltGSP_t_test %>%  dplyr::select(Zone_ID ,yld_response, `mean difference` = rounded, Significant ) 
+
+ GSP_AltGSP_t_test %>% 
+   formattable(align = "l", - 1  )
+```
+
+
+
+
+# Comparision of yield response: High medium and low fertiliser rates
 
 The below table shows what fertiliser rates were assigned to low medium and high fertiliser rates.
-The comparision was done with low medium and high.
+
 
 
 ```{r what is defined as high low , echo=FALSE, message=FALSE, warning=FALSE}
@@ -338,7 +431,7 @@ high_low_comp_define %>%
 ```
 
 
-```{r rick table for high low comparision, echo=FALSE, message=FALSE, warning=FALSE}
+```{r high med low comparision, echo=FALSE, message=FALSE, warning=FALSE}
 
                         
 
@@ -379,7 +472,7 @@ high_low_plot
 ```
 
 
-# Yield response to fertilisers application (growers rates compared to other rates)
+# Comparision of yield response: the growers fertilisers rate of application vs. higher or lower fertilisers rates.
 
 
 Different comparisons are made between the growers standard practice and fertilisers strips for each zone.
@@ -401,15 +494,21 @@ Note that some significant values are not reported for the zone, this may occur 
 
 
 The below table details what rates were excluded from the anlaysis.
+For sites with more than 3 rates one strip rate was exluded from the analysis.
 
-```{r rick table for GSP vs high / low rates exluded, echo=FALSE, message=FALSE, warning=FALSE}
+If this should be a different rate and not the one excluded the analysis will need to be re - run.
+Please make a note.
+
+
+```{r  GSP vs high  low rates exluded, echo=FALSE, message=FALSE, warning=FALSE}
+
 
 rates_exluded <- paddock_done2020 %>% 
-  distinct(paddock5_digits, .keep_all= TRUE) %>% 
-  dplyr::select(paddock = paddock5_digits,
-         `Paddock tested`,
-         'issues/ comments',
-          'Rates excluded' = Rates_excluded)
+  distinct(paddock, .keep_all= TRUE) %>% 
+  dplyr::select(paddock ,
+                `Paddock tested`,
+                'issues/ comments',
+                'Rates excluded' = `Rates excluded`)
 
 
 
@@ -419,7 +518,10 @@ rates_exluded %>%
 
 ```
 
-```{r rick table for GSP vs high / low rates, echo=FALSE, message=FALSE, warning=FALSE}
+### not sure why the below wont run??
+
+
+```{r GR comp high low plot, echo=FALSE, message=FALSE, warning=FALSE}
 
                       
 
@@ -453,15 +555,24 @@ GR_comparison_plot <-
     y = "Count of paddocks in yield response class",
     x = "yield response"
   )
+
 GR_comparison_plot
+
+
+
 ```
 
+# Action required : 
 
 
-Action required:
-1. review that the results look sensible and nothing needs re running - are the reports ok to send off?
-2. the fertiliser appplied has translated correctly to units of N or P
-3. are the paddocks to be included in the ecomnics analysis?
+1. Review that the results look sensible and nothing needs re running - are the reports ok to send off?
+
+2. The fertiliser appplied has translated correctly to units of N or P.
+
+3. Are the paddocks to be included in the ecomnics analysis?
 
 
-[For Notes ](W:/value_soil_testing_prj/Yield_data/2020/paddock_done2020_frmshare_point.xlsx)
+
+Notes should be made in the below file:
+
+[For Notes ]("C:/Users/ouz001/CSIRO/Ratcliff, Christina (A&F, Waite Campus) - Soil_Testing_Project/paddock_done2020.xlsx")

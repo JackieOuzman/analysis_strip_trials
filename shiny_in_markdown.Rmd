@@ -60,7 +60,7 @@ paddock_done2020() %>%
 
 
 
-```{r define_sites, echo=FALSE, message=FALSE, warning=FALSE}
+```{r define_sites, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 print(file.path("foo", "bar", "..", "name")) # "foo/bar/../name"
 
