@@ -1,15 +1,5 @@
 
 
-## this goes with Jampot 
-
-## perhaps this should be a stand alone script that I run at the end???
-# I am accessing df called
-# strips
-# paddock_ID_1
-#Zone_labels
-#input_file
-#assigned_names2
-#all_results_1
 
 #remove all files expect...
 rm(list = ls()[!ls() %in% c("strips", 
@@ -264,11 +254,17 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 ## filter out one rate so we only have rec rate, lower than and higher than
 # try and aim for sensible rates not zero if it can be avoided
 # 1/2 the rec rate and *2 rec rate
+recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>% 
+  summarise(count= n()) %>% 
+  filter(rec_rate_high_low_p  == "rec_rate_p" ) %>% 
+  mutate(double_rec_rate = Rate*2,
+         half_rec_rate = Rate*.5)
+
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(96,48) & zone_name == "zone1")
+  filter(Rate %in% c(0,27,55) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(24,48,0) & zone_name == "zone2")
+  filter(Rate %in% c(27,55,110) & zone_name == "zone2")
 
 recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
 #rm(zone_1_filter, zone_2_filter)
@@ -358,23 +354,38 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 ## higher than P rate comparision
 grand_mean_recom_rate_H_se <- rbind(
-  #grand_mean_std_error_zone1_rec_rate_high,
+  grand_mean_std_error_zone1_rec_rate_high,
   grand_mean_std_error_zone2_rec_rate_high
 )
 
 ## lower than P rate comparision                                         
-grand_mean_recom_rate_L_se <- rbind(grand_mean_std_error_zone1_rec_rate_low,
-                                    grand_mean_std_error_zone2_rec_rate_low)
+grand_mean_recom_rate_L_se <- rbind(
+  grand_mean_std_error_zone1_rec_rate_low,
+  grand_mean_std_error_zone2_rec_rate_low)
 
-grand_mean_recom_rate_H_L_se <- full_join(grand_mean_recom_rate_H_se,grand_mean_recom_rate_L_se)
-grand_mean_recom_rate_H_L_se  
+grand_mean_recom_rate_H_L_se <- full_join(grand_mean_recom_rate_H_se,
+                                           grand_mean_recom_rate_L_se
+                                           )
+
+#### !!! select what comaprision are needed
+## we have no lower comparision so I need to empty these clm
+# this occurs beacsue we always have the rec rate flagged as a yield value
+ 
+
+grand_mean_recom_rate_H_L_se <- grand_mean_recom_rate_H_L_se %>% 
+  mutate(
+    #higher than recom rate comp
+    grand_mean_rec_rate_high_p = grand_mean_rec_rate_high_p,
+         se_comp_rec_rate_high_p = se_comp_rec_rate_high_p,
+    #lower than recom rate comp
+         grand_mean_rec_rate_low_p = grand_mean_rec_rate_low_p,
+         se_comp_rec_rate_low_p = se_comp_rec_rate_low_p)
 
 
-View(grand_mean_recom_rate_H_L_se)
+#View(grand_mean_recom_rate_H_L_se)
              
 
 ## I need to generate mean yield value for the zone and Rate
-str(recom_rate1)
 
 ## for P If the trial is N this needs to be changed
 rec_rate_p_vs_low_High <- recom_rate1 %>% 
@@ -392,15 +403,15 @@ rec_rate_p_vs_low_High_wide <- tidyr::pivot_wider(rec_rate_p_vs_low_High,
 rec_rate_p_vs_low_High_wide
 names(rec_rate_p_vs_low_High_wide)
 
+#### !!! select what comaprision are needed
 ## differences in yld clms
 rec_rate_p_vs_low_High_wide <- rec_rate_p_vs_low_High_wide %>% 
   mutate(
-         rec_rate_p_vs_lower = rec_rate_p   - lower_than_rec_rate_p,
+         rec_rate_p_vs_lower = rec_rate_p - lower_than_rec_rate_p,
+         #rec_rate_p_vs_lower = NA,
          rec_rate_p_vs_higher = rec_rate_p  - higher_than_rec_rate_p
          )
 rec_rate_p_vs_low_High_wide
-View(rec_rate_p_vs_low_High_wide)
-
 
 rec_rate_p_vs_low_High_wide
 grand_mean_recom_rate_H_L_se
@@ -408,9 +419,9 @@ grand_mean_recom_rate_H_L_se
 
 rec_rate_p_vs_low_High_wide <- left_join(rec_rate_p_vs_low_High_wide, 
                                          grand_mean_recom_rate_H_L_se)
-View(rec_rate_p_vs_low_High_wide)
+
 #####
-(rec_rate_p_vs_low_High_wide)
+
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_wide %>%
   mutate(
      yld_resposne_rec_v_low =  case_when(
@@ -427,7 +438,7 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_wide %>%
 
 str(rec_rate_p_vs_low_High_summary)
 
-
+#### !!! select what comaprision are needed if we are missing clm add at the end
 ### 
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
   tidyr::pivot_longer(
@@ -452,10 +463,11 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
     comparison = case_when(
       comparison == "yld_resposne_rec_v_low"  ~ "rec_p_v_lower",
       comparison == "yld_resposne_rec_v_high" ~ "rec_p_v_higher"
-    ))
+    )) 
+#%>%   mutate(lower_than_rec_rate_p = NA)
 
 rec_rate_p_vs_low_High_summary
-View(rec_rate_p_vs_low_High_summary)
+
 
 
 ### Extra t test #######################################################################################################################
@@ -527,17 +539,18 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
   filter(rec_rate_high_low_p != "rec_rate_p") %>% 
   arrange(rec_rate_high_low_p)
 
+### !!! user input required
 rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
                                     rec_rate_p_vs_lower_zone_2,
                                     
-                                    #rec_rate_p_vs_higher_zone_1,
+                                    rec_rate_p_vs_higher_zone_1,
                                     rec_rate_p_vs_higher_zone_2
 )
 
 
 
 
-## turn GR_vs_low_High_rate_summary to narrow format
+## turn rec rate_vs_low_High_rate_summary to narrow format
 
 ## need t0 add in the zone name 
 zoneID_zone_names <- recom_rate1 %>%  distinct(Zone_ID, .keep_all = TRUE) %>% 
@@ -548,16 +561,13 @@ rec_rate_p_low_vs_high_all <- left_join(rec_rate_p_low_vs_high_all,zoneID_zone_n
                                         by = c("zone" = "zone_name"))
 
 
-### stuck here The rec_rate_p_vs_low_High_summary needs a clm with zone names
 
-rec_rate_p_vs_low_High_summary
-rec_rate_p_low_vs_high_all
 
 rec_rate_p_vs_low_High_summary <- full_join(rec_rate_p_vs_low_High_summary, 
                                             rec_rate_p_low_vs_high_all, by = c("Zone_ID", "comparison"))
 
 names(rec_rate_p_vs_low_High_summary)
-View(rec_rate_p_vs_low_High_summary)
+
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
   dplyr::select(
     Zone_ID,
@@ -594,13 +604,19 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
   filter(!is.na(zone))
 
 #what is the recommed rate?
+names(recom_rate1)
 
-label_rec_rates <- recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Strip_Rate, Zone_ID) %>% 
+
+label_rec_rates <- recom_rate1 %>%  group_by(rec_rate_high_low_p, 
+                                             
+                                             Rate, Strip_Rate, Zone_ID) %>% 
   summarise(count= n())
 
+
+label_rec_rates
 label_rec_rates <- ungroup(label_rec_rates) %>% 
   dplyr::select( rec_rate_high_low_p, Strip_Rate, Zone_ID)
-
+label_rec_rates
 
 label_rec_rates <- tidyr::pivot_wider(
   label_rec_rates,
@@ -609,15 +625,16 @@ label_rec_rates <- tidyr::pivot_wider(
 )
 label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
-label_rec_rates <-label_rec_rates %>% rename(higher_than_rec_rate_p_label = higher_than_rec_rate_p,
+label_rec_rates <-label_rec_rates %>% rename(
+                           higher_than_rec_rate_p_label = higher_than_rec_rate_p,
                            lower_than_rec_rate_p_label = lower_than_rec_rate_p,
                            rec_rate_p_label = rec_rate_p)
 
 
-str(rec_rate_p_vs_low_High_summary)
+label_rec_rates
 
 rec_rate_p_vs_low_High_summary <- full_join(rec_rate_p_vs_low_High_summary, label_rec_rates)
-
+View(rec_rate_p_vs_low_High_summary)
 
 #save the output
 name_rec_rate_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_", 
