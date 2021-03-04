@@ -18,8 +18,9 @@ rm(list = ls()[!ls() %in% c("strips",
                             "Zone_labels",
                             "input_file",
                             "assigned_names2",
-                            "all_results_1",
-                            "function_grand_mean_std_error")])
+                            "all_results_1"
+                            #"function_grand_mean_std_error"
+                            )])
 
 
 recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_Feb24.xlsx")
@@ -369,7 +370,7 @@ grand_mean_recom_rate_H_L_se <- full_join(grand_mean_recom_rate_H_se,grand_mean_
 grand_mean_recom_rate_H_L_se  
 
 
-
+View(grand_mean_recom_rate_H_L_se)
              
 
 ## I need to generate mean yield value for the zone and Rate
@@ -381,7 +382,7 @@ rec_rate_p_vs_low_High <- recom_rate1 %>%
   summarise(zone_yld = mean(YldMassDry, na.rm = TRUE))
 
 rec_rate_p_vs_low_High <- ungroup(rec_rate_p_vs_low_High)
-
+rec_rate_p_vs_low_High
 rec_rate_p_vs_low_High_wide <- tidyr::pivot_wider(rec_rate_p_vs_low_High, 
                                                id_cols = c( Zone_ID),
                                                names_from =rec_rate_high_low_p,
@@ -398,24 +399,25 @@ rec_rate_p_vs_low_High_wide <- rec_rate_p_vs_low_High_wide %>%
          rec_rate_p_vs_higher = rec_rate_p  - higher_than_rec_rate_p
          )
 rec_rate_p_vs_low_High_wide
-
+View(rec_rate_p_vs_low_High_wide)
 
 
 rec_rate_p_vs_low_High_wide
 grand_mean_recom_rate_H_L_se
 
 
-rec_rate_p_vs_low_High_wide <- left_join(rec_rate_p_vs_low_High_wide, grand_mean_recom_rate_H_L_se)
-
+rec_rate_p_vs_low_High_wide <- left_join(rec_rate_p_vs_low_High_wide, 
+                                         grand_mean_recom_rate_H_L_se)
+View(rec_rate_p_vs_low_High_wide)
 #####
 (rec_rate_p_vs_low_High_wide)
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_wide %>%
   mutate(
-    # yld_resposne_rec_v_low =  case_when(
-    #   rec_rate_p_vs_lower > 0 + se_comp_rec_rate_low_p ~ "positive",
-    #   rec_rate_p_vs_lower < 0 - se_comp_rec_rate_low_p ~ "negative",
-    #   TRUE ~ "no_response"
-    # ),
+     yld_resposne_rec_v_low =  case_when(
+       rec_rate_p_vs_lower > 0 + se_comp_rec_rate_low_p ~ "positive",
+       rec_rate_p_vs_lower < 0 - se_comp_rec_rate_low_p ~ "negative",
+       TRUE ~ "no_response"
+     ),
     yld_resposne_rec_v_high =  case_when(
       rec_rate_p_vs_higher  > 0 +  se_comp_rec_rate_high_p ~ "negative",
       rec_rate_p_vs_higher  < 0 -  se_comp_rec_rate_high_p ~ "positive",
@@ -426,11 +428,11 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_wide %>%
 str(rec_rate_p_vs_low_High_summary)
 
 
-### stuck here
+### 
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
   tidyr::pivot_longer(
-    cols = c("yld_resposne_rec_v_high"), 
-             #"yld_resposne_rec_v_low"),
+    cols = c("yld_resposne_rec_v_high", 
+             "yld_resposne_rec_v_low"),
     names_to = "comparison",
     values_to = "yld_response"
   ) %>%
@@ -439,132 +441,136 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
     comparison,
     yld_response,
     higher_than_rec_rate_p,
-    #lower_than_rec_rate_p,
+    lower_than_rec_rate_p,
     rec_rate_p,
-    #rec_rate_p_vs_lower,
+    rec_rate_p_vs_lower,
     rec_rate_p_vs_higher,
-    #se_comp_rec_rate_low_p ,
+    se_comp_rec_rate_low_p ,
     se_comp_rec_rate_high_p 
   ) %>% 
   mutate(
     comparison = case_when(
-      comparison == "yld_resposne_rec_v_low"  ~ "rec_p_v_low",
-      comparison == "yld_resposne_rec_v_high" ~ "rec_p_v_high"
+      comparison == "yld_resposne_rec_v_low"  ~ "rec_p_v_lower",
+      comparison == "yld_resposne_rec_v_high" ~ "rec_p_v_higher"
     ))
 
 rec_rate_p_vs_low_High_summary
+View(rec_rate_p_vs_low_High_summary)
+
 
 ### Extra t test #######################################################################################################################
 
 #Prep the data making a sub selection of df for each zone and run the paired t test
 
-str(recom_rate1)
-unique(recom_rate1$rec_rate_high_low_p )
+#####################################################################################
 
-### the function needs more work 
-
-
-
-
-
-function_paired_ttest_GR_low_high <- function(recom_rate1, zone_x){
+function_paired_ttest_rec_rate_low_high <- function(recom_rate1, zone_x, comp){
   
   #select the zone data and the high vs low rates
-  zone_x_rec_r_p_vs_high <- recom_rate1 %>% 
+  zone_x_rec_r_p_vs_x <- recom_rate1 %>% 
     filter(zone_name == paste0("zone", zone_x)) %>%
-    filter(rec_rate_high_low_p == "rec_rate_p" | rec_rate_high_low_p == "higher_than_rec_rate_p")
+    filter(rec_rate_high_low_p == "rec_rate_p" | rec_rate_high_low_p == paste0(comp,"_than_rec_rate_p"))
+  
   
   #average the yld per segment and rate
-  zone_x_rec_p_vs_high_av <- group_by(zone_x_rec_r_p_vs_high, SegmentID, Rate, Zone, rate_name, zone_name , rec_rate_high_low_p) %>% 
+  zone_x_rec_r_p_vs_x_av <- group_by(zone_x_rec_r_p_vs_x, 
+                                     SegmentID, Rate, Zone,Zone_ID, 
+                                     rate_name, zone_name , rec_rate_high_low_p) %>% 
     summarise_all(mean, na.rm= TRUE)
+  str(zone_x_rec_r_p_vs_x_av)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_rec_rate_l <- zone_x_rec_p_vs_high_av$SegmentID[duplicated(zone_x_rec_r_p_vs_high$SegmentID)] #this returns a list of values I want to keep
-  zone_x_rec_p_vs_high_av <- zone_x_rec_p_vs_high_av %>% filter(SegmentID %in% list_SegmentID_values_rec_rate_l)
-  # run paired ttest
-  zone_x_rec_rate_p_vs_high_res <- t.test(YldMassDry ~ rec_rate_high_low_p, data = zone_x_rec_p_vs_high_av, paired = TRUE)
+  list_SegmentID_values_rec_rate_l <- zone_x_rec_r_p_vs_x_av$SegmentID[duplicated(zone_x_rec_r_p_vs_x$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_rec_rate_l
+  zone_x_rec_r_p_vs_x_av <- zone_x_rec_r_p_vs_x_av %>% filter(SegmentID %in% list_SegmentID_values_rec_rate_l)
+  str(zone_x_rec_r_p_vs_x_av)
+  zone_x_rec_rate_p_vs_x_res <- t.test(YldMassDry ~ rec_rate_high_low_p, 
+                                       data = zone_x_rec_r_p_vs_x_av, paired = TRUE)
   
   #####test results
   # Report values from the t.test
-  zone_x_rec_r_p_vs_high_res_sig <-
-    data.frame(P_value = as.double(zone_x_rec_rate_p_vs_high_res$p.value),
-               Mean_diff = (zone_x_rec_rate_p_vs_high_res$estimate)) %>%
+  zone_x_rec_rate_p_vs_x_res_sig <-
+    data.frame(P_value = as.double(zone_x_rec_rate_p_vs_x_res$p.value),
+               Mean_diff = (zone_x_rec_rate_p_vs_x_res$estimate)) %>%
     mutate(
-      comparison = "rec_p_v_high",
+      comparison = paste0("rec_p_v_", comp),
       zone = paste0("zone", zone_x),
       rounded = abs(round(Mean_diff, 2)),
       Significant = case_when(P_value < 0.05 ~ "significant",
                               TRUE ~ "not significant"))
-  zone_x_rec_r_p_vs_high_res_sig 
+  zone_x_rec_rate_p_vs_x_res_sig 
   
-  ##########################################################################################################################
-  #select the zone data and the GSP vs high rates
-  # zone_x_rec_r_p_vs_low <- recom_rate1 %>% 
-  #   filter(zone_name == paste0("zone", zone_x)) %>%
-  #   filter(rec_rate_high_low_p == "rec_rate_p" | rec_rate_high_low_p == "higher_than_rec_rate_p")
-  # 
-  # #average the yld per segment and rate
-  # zone_x_rec_p_vs_low_av <- group_by(zone_x_rec_r_p_vs_high, SegmentID, Rate, Zone, rate_name, zone_name , rec_rate_high_low_p) %>% 
-  #   summarise_all(mean, na.rm= TRUE)
-  # #ensure that the dataset is duplictaed
-  # list_SegmentID_values_rec_rate_2 <- zone_x_rec_p_vs_low_av$SegmentID[duplicated(zone_x_rec_r_p_vs_low$SegmentID)] #this returns a list of values I want to keep
-  # zone_x_rec_p_vs_low_av <- zone_x_rec_p_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_rec_rate_2)
-  # # run paired ttest
-  # zone_x_rec_rate_p_vs_low_res <- t.test(YldMassDry ~ rec_rate_high_low_p, data = zone_x_rec_p_vs_low_av, paired = TRUE)
-  # 
-  # #####test results
-  # # Report values from the t.test
-  # zone_x_rec_r_p_vs_low_res_sig <-
-  #   data.frame(P_value = as.double(zone_x_rec_rate_p_vs_low_res$p.value),
-  #              Mean_diff = (zone_x_rec_rate_p_vs_low_res$estimate)) %>%
-  #   mutate(
-  #     comparison = "GSP_v_high",
-  #     zone = paste0("zone", zone_x),
-  #     rounded = abs(round(Mean_diff, 2)),
-  #     Significant = case_when(P_value < 0.05 ~ "significant",
-  #                             TRUE ~ "not significant"))
-  # zone_x_rec_rate_p_vs_low_sig 
-  
-  
-  
-  #zone_x_rec_r_p_vs_low_res_sig
-  zone_x_rec_r_p_vs_high_res_sig
-  
-  
-  zone_x_rec_r_p_vs_low_vs_high_res_sig <- rbind(#zone_x_rec_r_p_vs_low_res_sig,
-                                                 zone_x_rec_r_p_vs_high_res_sig)
-  
-  return(data.frame(zone_x_rec_r_p_vs_low_vs_high_res_sig))
+  return(data.frame(zone_x_rec_rate_p_vs_x_res_sig))
 }
-assign(paste0("rec_rate_p_vs_low_high", "zone_", "1"), function_paired_ttest_GR_low_high(recom_rate1, 1))
-assign(paste0("rec_rate_p_vs_low_high","zone_", "2"), function_paired_ttest_GR_low_high(recom_rate1, 2))
+
+function(recom_rate1, zone_x, comp)
+  
+assign(paste0("rec_rate_p_vs_lower_", "zone_", "1"),function_paired_ttest_rec_rate_low_high(recom_rate1, 1, "lower"))
+assign(paste0("rec_rate_p_vs_lower_","zone_", "2"),function_paired_ttest_rec_rate_low_high(recom_rate1, 2, "lower"))
+
+assign(paste0("rec_rate_p_vs_higher_", "zone_", "1"),function_paired_ttest_rec_rate_low_high(recom_rate1, 1, "higher"))
+assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_rate_low_high(recom_rate1, 2, "higher"))
 
 
+#what ran?
+rec_rate_p_vs_lower_zone_1
+rec_rate_p_vs_lower_zone_2
 
-rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_low_highzone_1, rec_rate_p_vs_low_highzone_2) 
-rec_rate_p_low_vs_high_all <- left_join(rec_rate_p_low_vs_high_all, Zone_labels, by = c("zone"=  "zone_name"))
+rec_rate_p_vs_higher_zone_1
+rec_rate_p_vs_higher_zone_2
+
+# this is a check what comaprison I have what was I expecting to run?
+recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>% 
+  summarise(count= n()) %>% 
+  arrange(Zone_ID, Rate) %>% 
+  group_by(zone_name) %>% 
+  distinct(rec_rate_high_low_p)%>% 
+  filter(rec_rate_high_low_p != "rec_rate_p") %>% 
+  arrange(rec_rate_high_low_p)
+
+rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
+                                    rec_rate_p_vs_lower_zone_2,
+                                    
+                                    #rec_rate_p_vs_higher_zone_1,
+                                    rec_rate_p_vs_higher_zone_2
+)
+
+
 
 
 ## turn GR_vs_low_High_rate_summary to narrow format
-str(rec_rate_p_vs_low_High_summary)
-str(rec_rate_p_low_vs_high_all)
 
-rec_rate_p_vs_low_High_summary <- left_join(rec_rate_p_vs_low_High_summary, rec_rate_p_low_vs_high_all, by = c("Zone_ID", "comparison"))
+## need t0 add in the zone name 
+zoneID_zone_names <- recom_rate1 %>%  distinct(Zone_ID, .keep_all = TRUE) %>% 
+  dplyr::select(Zone_ID,zone_name )
+zoneID_zone_names
+
+rec_rate_p_low_vs_high_all <- left_join(rec_rate_p_low_vs_high_all,zoneID_zone_names,
+                                        by = c("zone" = "zone_name"))
+
+
+### stuck here The rec_rate_p_vs_low_High_summary needs a clm with zone names
+
+rec_rate_p_vs_low_High_summary
+rec_rate_p_low_vs_high_all
+
+rec_rate_p_vs_low_High_summary <- full_join(rec_rate_p_vs_low_High_summary, 
+                                            rec_rate_p_low_vs_high_all, by = c("Zone_ID", "comparison"))
 
 names(rec_rate_p_vs_low_High_summary)
-
+View(rec_rate_p_vs_low_High_summary)
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
   dplyr::select(
     Zone_ID,
-    Zone,
+    zone,
     comparison,
     yld_response,
     higher_than_rec_rate_p,
-    #lower_than_rec_rate_p,
+    lower_than_rec_rate_p,
     rec_rate_p,
     rec_rate_p_vs_higher,
-    #rec_rate_p_vs_lower  ,
+    rec_rate_p_vs_lower  ,
     se_comp_rec_rate_high_p,
-    #se_comp_rec_rate_low_p,
+    se_comp_rec_rate_low_p,
     Significant,
     P_value
   )
@@ -580,29 +586,42 @@ rec_rate_p_vs_low_High_summary
 assigned_names2
 rec_rate_p_vs_low_High_summary <- cbind(rec_rate_p_vs_low_High_summary,assigned_names2)
 rec_rate_p_vs_low_High_summary
+str(rec_rate_p_vs_low_High_summary)
+
+
+## not all comparison are valid - I need to drop some
+rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>% 
+  filter(!is.na(zone))
 
 #what is the recommed rate?
 
-label_rec_rates <- recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Strip_Rate) %>% 
+label_rec_rates <- recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Strip_Rate, Zone_ID) %>% 
   summarise(count= n())
+
 label_rec_rates <- ungroup(label_rec_rates) %>% 
-  dplyr::select( rec_rate_high_low_p, Strip_Rate)
+  dplyr::select( rec_rate_high_low_p, Strip_Rate, Zone_ID)
+
+
 label_rec_rates <- tidyr::pivot_wider(
   label_rec_rates,
   names_from = rec_rate_high_low_p,
   values_from = Strip_Rate
 )
+label_rec_rates <- data.frame(label_rec_rates)
+names(label_rec_rates)
+label_rec_rates <-label_rec_rates %>% rename(higher_than_rec_rate_p_label = higher_than_rec_rate_p,
+                           lower_than_rec_rate_p_label = lower_than_rec_rate_p,
+                           rec_rate_p_label = rec_rate_p)
 
-rec_rate_p_vs_low_High_summary <- cbind(rec_rate_p_vs_low_High_summary, label_rec_rates)
-rec_rate_p_vs_low_High_summary
+
+str(rec_rate_p_vs_low_High_summary)
+
+rec_rate_p_vs_low_High_summary <- full_join(rec_rate_p_vs_low_High_summary, label_rec_rates)
 
 
 #save the output
 name_rec_rate_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_", 
-                            dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
+                                 dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 name_rec_rate_low_high
-write.csv(rec_rate_p_vs_low_High_summary, name_rec_rate_low_high)
-
-
-
+write.csv(rec_rate_p_vs_low_High_summary, name_rec_rate_low_high)  
 
