@@ -1304,6 +1304,31 @@ GR_vs_low_High_rate_summary
 assigned_names2
 GR_vs_low_High_rate_summary <- cbind(GR_vs_low_High_rate_summary,assigned_names2)
 GR_vs_low_High_rate_summary
+
+#######################################################
+
+label_GR_v_rates <- ungroup(label_GR_v_rates) %>% 
+  dplyr::select( GSP_high_low, Rate, Zone_ID)
+
+label_GR_v_rates <- tidyr::pivot_wider(
+  label_GR_v_rates,
+  names_from = GSP_high_low ,
+  values_from = Rate
+)
+label_GR_v_rates <- data.frame(label_GR_v_rates)
+
+
+label_GR_v_rates <-label_GR_v_rates %>% rename(
+  higher_than_GSP_label = higher_than_GSP,
+  lower_than_GSP_label = lower_than_GSP,
+  the_GSP_label = the_GSP)
+
+GR_vs_low_High_rate_summary <- full_join(GR_vs_low_High_rate_summary, label_GR_v_rates)
+
+
+
+
+
 #save the output
 name_CSP_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_", 
                             dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
