@@ -1072,16 +1072,28 @@ GR_vs_low_High_rate <- GR_vs_low_High_rate %>%
       Rate_GSP -  Rate == 0 ~  "the_GSP",
       TRUE ~ "other"))
 
+###############################################################################################
+### !!!! User input !!!! #####################################################################
+###############################################################################################
 #how many rates are lower_than_GSP - this is checking how may are lower and how many higher
 GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate) %>% 
   summarise(count= n())
 
 
-## all good - if it wasnt I would need to adjust something??
+## filter out one rate so we only have gsp rate, lower than and higher than
+# try and aim for sensible rates not zero if it can be avoided
+# 1/2 the GSP rate and *2 GSP rate
+GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate, Zone_ID, zone_name) %>% 
+  summarise(count= n()) %>% 
+  filter(GSP_high_low  == "the_GSP" ) %>% 
+  mutate(double_GSP_rate = Rate*2,
+         half_GPS_rate = Rate*.5)
 
 ## filter out one rate so we only have 3
 # GR_vs_low_High_rate <- GR_vs_low_High_rate %>% 
-#   filter(Rate != 48)
+#   filter(Rate != 96)
+
+
 
 
 
@@ -1306,6 +1318,14 @@ GR_vs_low_High_rate_summary <- cbind(GR_vs_low_High_rate_summary,assigned_names2
 GR_vs_low_High_rate_summary
 
 #######################################################
+GR_vs_low_High_rate <- data.frame(GR_vs_low_High_rate)
+
+label_GR_v_rates <- GR_vs_low_High_rate %>%  group_by(GSP_high_low,
+                                                      Rate,
+                                                      #Strip_Rate,
+                                                      Zone_ID) %>%
+  summarise(count = n())
+
 
 label_GR_v_rates <- ungroup(label_GR_v_rates) %>% 
   dplyr::select( GSP_high_low, Rate, Zone_ID)
