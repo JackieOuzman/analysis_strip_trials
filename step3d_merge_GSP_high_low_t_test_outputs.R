@@ -36,6 +36,9 @@ baseDir
 file_list <- paste0(baseDir, "/",list.files(baseDir, ".csv", full.names = FALSE))
 file_list
 
+test <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_33121_P Strip.csv")
+names(test)
+
 #list of clm headings that I want
 clm_headings <- c(
   "X" ,
@@ -57,7 +60,10 @@ clm_headings <- c(
   "rate_low",
   "rate_medium",
   "rate_high",
-  "rate_very_high"
+  "rate_very_high",
+  "higher_than_GSP_label" ,
+  "lower_than_GSP_label" ,
+  "the_GSP_label"  
 )
 
 
