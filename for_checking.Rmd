@@ -1,7 +1,7 @@
 
 ---
 title: "Growers report"
-author: "JCSIRO team"
+author: "CSIRO team"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
     html_document: default
@@ -41,7 +41,7 @@ library(readxl)
 
 ```
 
-## Growers and details
+## Growers details
 ```{r define_sites, echo=FALSE, message=FALSE, warning=FALSE}
 
 
@@ -300,7 +300,7 @@ image_read(dir(png_folder, full.names=T, pattern=site_name_4)) %>%
 
 # Checks for CSIRO 
 
-### check the rate provided is equavlient to the calulated N/P contnet.
+### check the rate provided is equivalent to the calculated N/P content.
 
 ```{r checks site , echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -368,15 +368,15 @@ comments_frm_spatial_data %>%
   formattable(align = "l", - 1  )
 ```
 
-# Comparision of yield response: Growers standard practice strips (GSP vs Alt GSP)
+# Comparison of yield response: Growers standard practice strips (GSP vs Alt GSP)
 
-The best outcome would be that the yield response in no response.
+Ideally the yield would be the same in both strips (GSP and Alt GSP), and / or the yield would not be significantly different.
 
-Or if there was a yield response between the two strips they would be not significant.
 
-positive or negative yield resposnes that are significant suggest that there is a high degree of variability between the two strip that were applied with the same fertiliser.
 
-This may occur beacuse the strips have underlying soil, plant growth conditions.
+Significant yield differences between the two strips suggest that there is a high degree of variability between the two strip that were applied with the same fertiliser.
+
+This may occur because the strips have underlying soil, plant growth conditions.
 
 
 ```{r plot2 alt strips results, echo=FALSE, message=FALSE, warning=FALSE}
@@ -394,7 +394,7 @@ GSPvsAltGSP_plot <- GSP_AltGSP_t_test %>%
   facet_grid(.~ Strip_Type)+
   theme_bw()+
   labs(title = "Comparison of yield response in strips with the same fertiliser rate",
-       subtitle = "Strip with growers standard practice vs alterative growers standard practice",
+       subtitle = "Strip with growers standard practice vs alternative growers standard practice",
        y = "Count of zones with a significant difference",
        x = "result of t - test (GSP vs. Alt GSP)")
 
@@ -408,6 +408,7 @@ GSPvsAltGSP_plot
 
 ```
 
+### Detailed results of GSP vs Alt GSP
 
 ```{r table alt strips results, echo=FALSE, message=FALSE, warning=FALSE,fig.cap = "mean difference between the 2 GSP strips"}
 
@@ -433,7 +434,7 @@ GSP_AltGSP_t_test_display <- GSP_AltGSP_t_test_display %>%
                  Farmer,
                 `Paddock tested`,
                 #`yield response` = yld_response, 
-                `mean difference` = rounded, 
+                `Mean yield difference` = rounded, 
                 Significant 
                 ) 
 GSP_AltGSP_t_test_display <- GSP_AltGSP_t_test_display %>% 
@@ -447,7 +448,27 @@ GSP_AltGSP_t_test_display %>%
 
 
 
-# Comparision of yield response: High medium and low fertiliser rates
+# Comparison of yield response: High medium and low fertiliser rates
+
+Different comparisons are made between high, medium and low fertiliser rates for each zone.
+
+Comparison of yield response in the strip / zone per paddock between:
+
+- High fertiliser rate vs low fertiliser rate (yield for high fert rate - yield for low fert rate)
+- High fertiliser rate vs medium fertiliser rate (yield for high fert rate - yield for medium fert rate)
+- Medium fertiliser rate vs low fertiliser rate (yield for medium fert rate - yield for low fert rate)
+
+- **The yield response is classed as 'positive' when higher rates of fertiliser results in higher yields.**
+
+- The yield response is classed as 'no response' when higher rates of fertiliser results in no change in yields (this is defined as 0 +/- standard error)
+
+- The yield response is classed as 'negative' when higher rates of fertiliser results in lower yields.
+
+T- test was also run for each comparison and the significant differences at p < 0.05 reported.
+Note that some significant values are not reported for the zone, this may occur when there is not enough data points to run the t - test (although there is still have yield values to make a comparison). 
+
+
+
 
 The below table shows what fertiliser rates were assigned to low medium and high fertiliser rates.
 
@@ -536,8 +557,83 @@ high_low_plot
 
 ```
 
+### High fertiliser rate vs low fertiliser rate.
 
-# Comparision of yield response: the growers fertilisers rate of application vs. higher or lower fertilisers rates.
+```{r high vs low table part1, echo=FALSE, message=FALSE, warning=FALSE}
+#high low med comp high vs low  table rates
+
+high_low_comp_t <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/merged_comparision_output/hign_low_t_test_merged_3b.csv")
+
+high_low_comp_t <- high_low_comp_t %>%
+  dplyr::filter(
+    paddock_ID == Paddock_selected_site1 |
+      paddock_ID == Paddock_selected_site2 |
+      paddock_ID == Paddock_selected_site3 |
+      paddock_ID == Paddock_selected_site4
+  )
+high_low_comp_t <- left_join(high_low_comp_t,
+                           paddock_details, by = c("Zone_ID" = "Paddock code"))
+
+
+
+high_v_low_comp_results <- high_low_comp_t %>% 
+  filter(comparison == "high_v_low") %>%  
+  dplyr::select('Zone ID' = Zone_ID,
+                `zone name` = Zone.y ,
+                Farmer,
+                `Paddock tested`,
+                "yield response" = yld_response,
+                Significant) 
+high_v_low_comp_results <- high_v_low_comp_results %>% 
+  arrange(`Zone ID`)
+
+
+
+high_v_low_comp_results %>% 
+  formattable(align = "l", - 1  )
+
+```
+
+### High fertiliser rate vs medium fertiliser rate.
+
+```{r high vs medium  table part2, echo=FALSE, message=FALSE, warning=FALSE}
+
+high_v_med_comp_results <- high_low_comp_t %>% 
+  filter(comparison == "high_v_medium") %>%  
+  dplyr::select('Zone ID' = Zone_ID,
+                `zone name` = Zone.y ,
+                Farmer,
+                `Paddock tested`,
+                "yield response" = yld_response,
+                Significant) 
+high_v_med_comp_results <- high_v_med_comp_results %>% 
+  arrange(`Zone ID`)
+
+high_v_med_comp_results %>% 
+  formattable(align = "l", - 1  )
+```
+
+### Medium fertiliser rate vs low fertiliser rate.
+
+```{r medium vs low  table part3, echo=FALSE, message=FALSE, warning=FALSE}
+
+med_v_low_comp_results <- high_low_comp_t %>% 
+  filter(comparison == "medium_v_low") %>%  
+  dplyr::select('Zone ID' = Zone_ID,
+                `zone name` = Zone.y ,
+                Farmer,
+                `Paddock tested`,
+                "yield response" = yld_response,
+                Significant) 
+med_v_low_comp_results <- med_v_low_comp_results %>% 
+  arrange(`Zone ID`)
+
+med_v_low_comp_results %>% 
+  formattable(align = "l", - 1  )
+
+```
+
+# Comparison of yield response: the growers fertilisers rate of application vs. higher or lower fertilisers rates.
 
 
 Different comparisons are made between the growers standard practice and fertilisers strips for each zone.
@@ -558,36 +654,14 @@ T- test was also run for each comparison and the significant differences at p < 
 Note that some significant values are not reported for the zone, this may occur when there is not enough data points to run the t - test (although there is still have yield values to make a comparison). 
 
 
-The below table details what rates were excluded from the anlaysis.
-For sites with more than 3 rates one strip rate was exluded from the analysis.
+The below table details what rates were excluded from the analysis.
+For sites with more than 3 rates one strip rate was exuded from the analysis.
 
 If this should be a different rate and not the one excluded the analysis will need to be re - run.
 Please make a note.
 
 
-```{r  GSP vs high  low rates exluded, echo=FALSE, message=FALSE, warning=FALSE}
 
-#This need to be the rates for low medium and high
-# the best would to have it in the scripts and then it should be in the merged file
-# or could have a note in the done file.
-
-
-
-
-# rates_exluded <- paddock_done2020 %>% 
-#   distinct(paddock, .keep_all= TRUE) %>% 
-#   dplyr::select(paddock ,
-#                 `Paddock tested`,
-#                 'issues/ comments',
-#                 'Rates excluded' = `Rates excluded`)
-# 
-# 
-# 
-# rates_exluded %>% 
-#   formattable(align = "l", - 1  )
-
-
-```
 
 
 
@@ -633,17 +707,109 @@ GR_comparison_plot
 
 ```
 
+### Approx GSP vs higher fertiliser rates
+#### The rates were used for the analysis
+
+
+
+```{r GPS  comp high table rates, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+GR_comparison <- left_join(GR_comparison, paddock_details, by= c("Zone_ID" = "Paddock code"))
+
+
+GR_comparison_higher_rates <- GR_comparison %>% 
+  filter(comparison == "GSP_v_high") %>% 
+  dplyr::select('Zone ID' = Zone_ID,
+                #comparison,
+                Farmer,
+                `Paddock tested`,
+                `GSP rate` = "the_GSP_label",
+                `higher than GSP rate` = "higher_than_GSP_label") %>% 
+  arrange(`Zone ID`)
+
+
+GR_comparison_higher_results <- GR_comparison %>% 
+  filter(comparison == "GSP_v_high") %>%  
+  dplyr::select('Zone ID' = Zone_ID,
+                `zone name` = Zone.y ,
+                Farmer,
+                `Paddock tested`,
+                "yield response" = yld_response,
+                Significant) 
+
+
+GR_comparison_higher_results <- GR_comparison_higher_results %>% 
+  arrange(`Zone ID`)
+
+
+GR_comparison_higher_rates %>% 
+  formattable(align = "l", - 1  )
+```
+
+#### The results for the analysis
+```{r GPS comp high table results, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+GR_comparison_higher_results %>% 
+   formattable(align = "l", - 1  )
+
+```
+
+### Approx GSP vs lower fertiliser rates
+#### The rates were used for the analysis
+
+```{r GPS  comp lower table rates, echo=FALSE, message=FALSE, warning=FALSE}
 
 
 
 
-# Comparision of yield response: The closest match to recommended fertiliser rates compared to higher and lower fertiliser rates.
+GR_comparison_lower_rates <- GR_comparison %>% 
+  filter(comparison == "GSP_v_low") %>% 
+  dplyr::select('Zone ID' = Zone_ID,
+                #comparison,
+                `zone name` = Zone.y ,
+                Farmer,
+                `GSP rate` = "the_GSP_label",
+                `higher than GSP rate` = "lower_than_GSP_label") %>% 
+  arrange(`Zone ID`)
 
-The soil test results results in a recommeded N and P rate.
 
-Sean has done these calulations.
+GR_comparison_lower_results <- GR_comparison %>% 
+  filter(comparison == "GSP_v_low") %>%  
+  dplyr::select('Zone ID' = Zone_ID,
+                `zone name` = Zone.y ,
+                Farmer,
+                `Paddock tested`,
+                "yield response" = yld_response,
+                Significant) 
 
-The recommeded fertilier rate was not always implemented, so I have wored out the closest match.
+
+GR_comparison_lower_results <- GR_comparison_lower_results %>% 
+  arrange(`Zone ID`)
+
+GR_comparison_lower_rates %>% 
+   formattable(align = "l", - 1  )
+
+```
+
+
+#### The results for the analysis
+```{r GPS comp lower table results, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+GR_comparison_lower_results %>% 
+   formattable(align = "l", - 1  )
+
+```
+
+# Comparison of yield response: The closest match to recommended fertiliser rates compared to higher and lower fertiliser rates.
+
+The soil test results results in a recommended N and P rate.
+
+Sean has done these calculations.
+
+The recommended fertiliser rate was not always implemented, so I have worked out the closest match.
 
 
 The approx recommended rate:
@@ -663,11 +829,11 @@ Higher and lower rates won't always exist, for some paddocks.
 
 In some cases the rates will all be higher or all be lower, while for other paddocks there will be choice to be made (which rates should be used).
 
-If we need to choose what rates to incuded it is best to use this rough rule:
+If we need to choose what rates to induced it is best to use this rough rule:
 
 - Avoid 0 rates (won't always be practical)
-- lower rate should be close to half the recommeded rate
-- higher rate should be close to double the recommed rate.
+- lower rate should be close to half the recommended rate
+- higher rate should be close to double the  rate.
 
 
 
@@ -693,7 +859,7 @@ T- test was also run for each comparison and the significant differences at p < 
 Note that some significant values are not reported for the zone, this may occur when there is not enough data points to run the t - test (although there is still have yield values to make a comparison). 
 
 
-The below table details what rates were excluded from the anlaysis.
+The below table details what rates were excluded from the analysis.
 
 If this should be a different rate and not the one excluded the analysis will need to be re - run.
 Please make a note.
@@ -729,7 +895,7 @@ Rec_rate_comparison_plot <-
     )
   ) +
   labs(
-    title = "Comparison of yield response for apporx. recommed rate vs higher/lower rates",
+    title = "Comparison of yield response for approx. recommended rate vs higher/lower rates",
     subtitle = "The yield response is classed as positive when higher rates of fertiliser result in higher yields",
     y = "Count of paddocks in yield response class",
     x = "yield response"
@@ -742,8 +908,8 @@ Rec_rate_comparison_plot
 ```
 
 
-### Approx recomomed rate vs higher fertiliser rates
-#### The rates were used for the anlysis
+### Approx recommended rate vs higher fertiliser rates
+#### The rates were used for the analysis
 
 
 
@@ -782,7 +948,7 @@ Rec_rate_comparison_table_higher_rates %>%
 ```
 
 
-#### The results for the anlysis
+#### The results for the analysis
 
 ```{r rec rate comp high table results, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -793,8 +959,8 @@ Rec_rate_comparison_table_higher_results %>%
 
 ```
 
-### Approx recomomed rate vs lower fertiliser rates
-#### The rates were used for the anlysis
+### Approx recommended rate vs lower fertiliser rates
+#### The rates were used for the analysis
 
 
 
@@ -831,7 +997,7 @@ Rec_rate_comparison_table_lower_rates %>%
 ```
 
 
-#### The results for the anlysis
+#### The results for the analysis
 
 ```{r rec rate comp low table results, echo=FALSE, message=FALSE, warning=FALSE}
 Rec_rate_comparison_table_lower_results %>% 
@@ -843,13 +1009,13 @@ Rec_rate_comparison_table_lower_results %>%
 # Action required : 
 
 
-1. Review that the results look sensible and nothing needs re running - are the reports ok to send off?
+1. Review that the results look sensible and nothing needs re running - are the reports OK to send off?
 
-2. The fertiliser appplied has translated correctly to units of N or P.
+2. The fertiliser applied has translated correctly to units of N or P.
 
-3. Are the rates included in the comaprision analysis sensible and what you want.
+3. Are the rates included in the comparison analysis sensible and what you want.
 
-3. Are the paddocks to be included in the ecomnics analysis?
+3. Are the paddocks to be included in the economics analysis?
 
 
 
