@@ -101,12 +101,16 @@ str(recom_rate1_summary)
 
 recom_rate1_summary <- ungroup(recom_rate1_summary)
 
+str(recom_rate1_summary)
+
 ## Two steps need to filter data first (zone 1 and zone 2 need to have this as clm in 
 recom_rate1_summary_zone1 <- recom_rate1_summary %>%
   filter(zone_name == "zone1")
 recom_rate1_summary_zone2 <- recom_rate1_summary %>%
   filter(zone_name == "zone2")  
 
+recom_rate1_summary_zone1
+recom_rate1_summary_zone1
 
 recom_rate1_summary_zone1 <-recom_rate1_summary_zone1 %>%
     dplyr::mutate(
@@ -115,10 +119,11 @@ recom_rate1_summary_zone1 <-recom_rate1_summary_zone1 %>%
         difference_p == min(recom_rate1_summary_zone1$difference_p) ~ "best_match",
         difference_p == min(recom_rate1_summary_zone1$difference_p[recom_rate1_summary_zone1$difference_p !=
                                                                      min(recom_rate1_summary_zone1$difference_p)]) ~ "rate1",
-        difference_p == max(recom_rate1_summary_zone1$difference_p[recom_rate1_summary_zone1$difference_p !=
-                                                                     max(recom_rate1_summary_zone1$difference_p)]) ~ "rate2",
+        #difference_p == max(recom_rate1_summary_zone1$difference_p[recom_rate1_summary_zone1$difference_p !=
+        #                                                             max(recom_rate1_summary_zone1$difference_p)]) ~ "rate2",
         #use this if you have 4 rates best match rate 1 -3
-        difference_p == max(recom_rate1_summary_zone1$difference_p) ~ "rate3",
+        #difference_p == max(recom_rate1_summary_zone2$difference_p) ~ "rate3",
+        difference_p == max(recom_rate1_summary_zone1$difference_p) ~ "rate2",
         TRUE ~ as.character(Rate)
       )
   )
@@ -130,20 +135,21 @@ recom_rate1_summary_zone2 <-recom_rate1_summary_zone2 %>%
         difference_p == min(recom_rate1_summary_zone2$difference_p) ~ "best_match",
         difference_p == min(recom_rate1_summary_zone2$difference_p[recom_rate1_summary_zone2$difference_p !=
                                                                      min(recom_rate1_summary_zone2$difference_p)]) ~ "rate1",
-        difference_p == max(recom_rate1_summary_zone2$difference_p[recom_rate1_summary_zone2$difference_p !=
-                                                                     max(recom_rate1_summary_zone2$difference_p)]) ~ "rate2",
+        #difference_p == max(recom_rate1_summary_zone2$difference_p[recom_rate1_summary_zone2$difference_p !=
+        #                                                             max(recom_rate1_summary_zone2$difference_p)]) ~ "rate2",
         #use this if you have 4 rates best match rate 1 -3
-        difference_p == max(recom_rate1_summary_zone2$difference_p) ~ "rate3",
+        #difference_p == max(recom_rate1_summary_zone2$difference_p) ~ "rate3",
+        difference_p == max(recom_rate1_summary_zone2$difference_p) ~ "rate2",
         TRUE ~ as.character(Rate)
       )
   )
 
-recom_rate1_summary_zone1
-recom_rate1_summary_zone2
+str(recom_rate1_summary_zone1)
+str(recom_rate1_summary_zone2)
 # put them back togther
 recom_rate1_summary <- rbind(recom_rate1_summary_zone1, recom_rate1_summary_zone2)
 rm(recom_rate1_summary_zone1, recom_rate1_summary_zone2)
-recom_rate1_summary
+str(recom_rate1_summary)
 
 
 
@@ -155,20 +161,57 @@ recom_rate1_summary <- recom_rate1_summary %>%
   arrange(difference_n)  
 
 recom_rate1_summary <- ungroup(recom_rate1_summary)
-recom_rate1_summary
+str(recom_rate1_summary)
 
-recom_rate1_summary <- recom_rate1_summary %>% 
+recom_rate1_summary_zone1 <- recom_rate1_summary %>%
+  filter(zone_name == "zone1")
+recom_rate1_summary_zone2 <- recom_rate1_summary %>%
+  filter(zone_name == "zone2")  
+
+recom_rate1_summary_zone1
+recom_rate1_summary_zone2
+
+recom_rate1_summary_zone1 <-recom_rate1_summary_zone1 %>%
   dplyr::mutate(
-    approx_n_rec = 
+    approx_n_rec =
       dplyr::case_when(
-        difference_n == min(recom_rate1_summary$difference_n) ~ "best_match",
-        difference_n == min(recom_rate1_summary$difference_n[recom_rate1_summary$difference_n!=min(recom_rate1_summary$difference_n)] ) ~ "rate1",
-        #difference_n == max(recom_rate1_summary$difference_n[recom_rate1_summary$difference_n!=max(recom_rate1_summary$difference_n)] ) ~ "rate2", #use this if you have 4 rates best match rate 1 -3
-        difference_n == max(recom_rate1_summary$difference_n) ~ "rate2",
-        TRUE ~ as.character(Rate)))
+        difference_n == min(recom_rate1_summary_zone1$difference_n) ~ "best_match",
+        difference_n == min(recom_rate1_summary_zone1$difference_n[recom_rate1_summary_zone1$difference_n !=
+                                                                     min(recom_rate1_summary_zone1$difference_n)]) ~ "rate1",
+        #difference_p == max(recom_rate1_summary_zone1$difference_n[recom_rate1_summary_zone1$difference_n !=
+        #                                                             max(recom_rate1_summary_zone1$difference_n)]) ~ "rate2",
+        #use this if you have 4 rates best match rate 1 -3
+        #difference_n == max(recom_rate1_summary_zone1$difference_n) ~ "rate3",
+        difference_n == max(recom_rate1_summary_zone1$difference_n) ~ "rate2",
+        TRUE ~ as.character(Rate)
+      )
+  )
+
+recom_rate1_summary_zone2 <-recom_rate1_summary_zone2 %>%
+  dplyr::mutate(
+    approx_n_rec =
+      dplyr::case_when(
+        difference_n == min(recom_rate1_summary_zone2$difference_n) ~ "best_match",
+        difference_n == min(recom_rate1_summary_zone2$difference_n[recom_rate1_summary_zone2$difference_n !=
+                                                                     min(recom_rate1_summary_zone2$difference_n)]) ~ "rate1",
+        #difference_p == max(recom_rate1_summary_zone2$difference_n[recom_rate1_summary_zone2$difference_n !=
+        #                                                             max(recom_rate1_summary_zone2$difference_n)]) ~ "rate2",
+        #use this if you have 4 rates best match rate 1 -3
+        #difference_n == max(recom_rate1_summary_zone2$difference_n) ~ "rate3",
+        difference_n == max(recom_rate1_summary_zone2$difference_n) ~ "rate2",
+        TRUE ~ as.character(Rate)
+      )
+  )
+
+recom_rate1_summary_zone1
+recom_rate1_summary_zone2
+# put them back togther
+recom_rate1_summary <- rbind(recom_rate1_summary_zone1, recom_rate1_summary_zone2)
+rm(recom_rate1_summary_zone1, recom_rate1_summary_zone2)
+recom_rate1_summary
 
 ###################################################################
-recom_rate1_summary
+str(recom_rate1_summary)
 
 
 #what is the recommed rate for p?
@@ -183,7 +226,7 @@ names(Rec_rate_p)
 
 
 recom_rate1 <- left_join(recom_rate1, Rec_rate_p, by ="Zone_ID")
-
+head(recom_rate1)
   
   ## is the rec higher or lower than the rec
 recom_rate1 <- recom_rate1 %>% 
@@ -200,18 +243,32 @@ recom_rate1 <- recom_rate1 %>%
 #   mutate(
 #     rec_rate_high_low_p = rec_rate_p -  Total_sum_P_content)
 
+#what is the recommed rate for p?
+Rec_rate_n <- recom_rate1_summary %>%  filter(approx_n_rec == "best_match") %>% 
+  dplyr::select( Zone_ID, N_content) %>% 
+  rename( rec_rate_n = N_content)
+
+Rec_rate_n
+## add this to df with all the yield data 
+names(recom_rate1)
+names(Rec_rate_n)
+
+
+
 #what is the recommed rate for n?
 Rec_rate_n <- dplyr::distinct(recom_rate1_summary,Rate, .keep_all = TRUE) %>% 
   filter(approx_n_rec == "best_match") %>% 
   dplyr::select(Rate)
 
-Rec_rate_n
+Rec_rate_n_value <- as.character(Rec_rate_n[1])
+Rec_rate_n_value
 recom_rate1
 ## add this to df
 recom_rate1 <- recom_rate1 %>% 
-  mutate(rec_rate_n = Rec_rate_n[1])
-
+  mutate(rec_rate_n = as.double(Rec_rate_n_value))
+  #mutate(rec_rate_n = Rec_rate_n[1])
 names(recom_rate1)
+str(recom_rate1)
 
 ## is the GSP higher or lower than the rec rate
 recom_rate1 <- recom_rate1 %>% 
@@ -225,7 +282,7 @@ recom_rate1 <- recom_rate1 %>%
 str(recom_rate1$rec_rate_high_low_n)
 str(recom_rate1$rec_rate_high_low_p)
 
-
+str(recom_rate1)
 
 #################################################################################################
 ######### !!!!! User input needed here !!!!#####################################################
@@ -239,6 +296,7 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
   summarise(count= n()) %>% 
   arrange(Zone_ID, Rate )
 
+str(recom_rate1)
 
 #for n
 # recom_rate1 %>%  group_by(rec_rate_high_low_n, Rate, Zone_ID) %>% 
@@ -262,12 +320,23 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(0,27,55) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(160,80) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(27,55,110) & zone_name == "zone2")
+  filter(Rate %in% c(160,80) & zone_name == "zone2")
+
+str(zone_1_filter)
+str(zone_2_filter)
+unique(zone_1_filter$Rate)
+unique(zone_2_filter$Rate)
+# zone_1_filter <- data.frame(zone_1_filter)
+# zone_2_filter <- data.frame(zone_2_filter)
+# rownames(zone_1_filter) <- NULL
+# rownames(zone_2_filter) <- NULL
 
 recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
 #rm(zone_1_filter, zone_2_filter)
+unique(recom_rate1$Rate)
+
 
 # this is a check
 recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>% 
@@ -363,9 +432,15 @@ grand_mean_recom_rate_L_se <- rbind(
   grand_mean_std_error_zone1_rec_rate_low,
   grand_mean_std_error_zone2_rec_rate_low)
 
-grand_mean_recom_rate_H_L_se <- full_join(grand_mean_recom_rate_H_se,
-                                           grand_mean_recom_rate_L_se
-                                           )
+#grand_mean_recom_rate_H_se we dont have this comparsion
+grand_mean_recom_rate_L_se
+
+# grand_mean_recom_rate_H_L_se <- full_join(grand_mean_recom_rate_H_se,
+#                                            grand_mean_recom_rate_L_se
+#                                            )
+
+grand_mean_recom_rate_H_L_se <- grand_mean_recom_rate_L_se
+
 
 #### !!! select what comaprision are needed
 ## we have no lower comparision so I need to empty these clm
@@ -375,8 +450,10 @@ grand_mean_recom_rate_H_L_se <- full_join(grand_mean_recom_rate_H_se,
 grand_mean_recom_rate_H_L_se <- grand_mean_recom_rate_H_L_se %>% 
   mutate(
     #higher than recom rate comp
-    grand_mean_rec_rate_high_p = grand_mean_rec_rate_high_p,
-         se_comp_rec_rate_high_p = se_comp_rec_rate_high_p,
+    # grand_mean_rec_rate_high_p = grand_mean_rec_rate_high_p,
+    #      se_comp_rec_rate_high_p = se_comp_rec_rate_high_p,
+    grand_mean_rec_rate_high_p = NA,
+    se_comp_rec_rate_high_p = NA,
     #lower than recom rate comp
          grand_mean_rec_rate_low_p = grand_mean_rec_rate_low_p,
          se_comp_rec_rate_low_p = se_comp_rec_rate_low_p)
@@ -409,7 +486,8 @@ rec_rate_p_vs_low_High_wide <- rec_rate_p_vs_low_High_wide %>%
   mutate(
          rec_rate_p_vs_lower = rec_rate_p - lower_than_rec_rate_p,
          #rec_rate_p_vs_lower = NA,
-         rec_rate_p_vs_higher = rec_rate_p  - higher_than_rec_rate_p
+         #rec_rate_p_vs_higher = rec_rate_p  - higher_than_rec_rate_p
+         rec_rate_p_vs_higher = NA
          )
 rec_rate_p_vs_low_High_wide
 
@@ -420,6 +498,8 @@ grand_mean_recom_rate_H_L_se
 rec_rate_p_vs_low_High_wide <- left_join(rec_rate_p_vs_low_High_wide, 
                                          grand_mean_recom_rate_H_L_se)
 
+
+str(rec_rate_p_vs_low_High_wide)
 #####
 
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_wide %>%
@@ -451,7 +531,7 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
     Zone_ID,
     comparison,
     yld_response,
-    higher_than_rec_rate_p,
+    #higher_than_rec_rate_p ,
     lower_than_rec_rate_p,
     rec_rate_p,
     rec_rate_p_vs_lower,
@@ -464,7 +544,8 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
       comparison == "yld_resposne_rec_v_low"  ~ "rec_p_v_lower",
       comparison == "yld_resposne_rec_v_high" ~ "rec_p_v_higher"
     )) 
-#%>%   mutate(lower_than_rec_rate_p = NA)
+rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>% 
+   mutate(higher_than_rec_rate_p = NA)
 
 rec_rate_p_vs_low_High_summary
 
@@ -514,13 +595,13 @@ function_paired_ttest_rec_rate_low_high <- function(recom_rate1, zone_x, comp){
   return(data.frame(zone_x_rec_rate_p_vs_x_res_sig))
 }
 
-function(recom_rate1, zone_x, comp)
+#function(recom_rate1, zone_x, comp)
   
 assign(paste0("rec_rate_p_vs_lower_", "zone_", "1"),function_paired_ttest_rec_rate_low_high(recom_rate1, 1, "lower"))
 assign(paste0("rec_rate_p_vs_lower_","zone_", "2"),function_paired_ttest_rec_rate_low_high(recom_rate1, 2, "lower"))
 
-assign(paste0("rec_rate_p_vs_higher_", "zone_", "1"),function_paired_ttest_rec_rate_low_high(recom_rate1, 1, "higher"))
-assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_rate_low_high(recom_rate1, 2, "higher"))
+#assign(paste0("rec_rate_p_vs_higher_", "zone_", "1"),function_paired_ttest_rec_rate_low_high(recom_rate1, 1, "higher"))
+#assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_rate_low_high(recom_rate1, 2, "higher"))
 
 
 #what ran?
@@ -540,14 +621,14 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
   arrange(rec_rate_high_low_p)
 
 ### !!! user input required
-rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
-                                    rec_rate_p_vs_lower_zone_2,
-                                    
-                                    rec_rate_p_vs_higher_zone_1,
-                                    rec_rate_p_vs_higher_zone_2
-)
+# rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
+#                                     rec_rate_p_vs_lower_zone_2,
+#                                     
+#                                     rec_rate_p_vs_higher_zone_1,
+#                                     rec_rate_p_vs_higher_zone_2
+# )
 
-
+rec_rate_p_low_vs_high_all <- rec_rate_p_vs_lower_zone_1
 
 
 ## turn rec rate_vs_low_High_rate_summary to narrow format
@@ -626,12 +707,14 @@ label_rec_rates <- tidyr::pivot_wider(
 label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
 label_rec_rates <-label_rec_rates %>% rename(
-                           higher_than_rec_rate_p_label = higher_than_rec_rate_p,
+                           #higher_than_rec_rate_p_label = higher_than_rec_rate_p,
                            lower_than_rec_rate_p_label = lower_than_rec_rate_p,
                            rec_rate_p_label = rec_rate_p)
 
 
-label_rec_rates
+str(label_rec_rates)
+str(rec_rate_p_vs_low_High_summary)
+
 
 rec_rate_p_vs_low_High_summary <- full_join(rec_rate_p_vs_low_High_summary, label_rec_rates)
 View(rec_rate_p_vs_low_High_summary)
