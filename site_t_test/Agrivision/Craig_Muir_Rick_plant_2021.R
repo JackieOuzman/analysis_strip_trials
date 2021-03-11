@@ -351,6 +351,12 @@ Grower_rate_label
 Starter_label
 Topdress_label
 
+for_plotting_strips <- strips %>% 
+  group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
+  summarise_all(mean)
+
+
+
 function_strip_plot <- function(for_plotting){
 
 for_plotting$rate_as_factor <- as.factor(for_plotting$Rate)  
@@ -412,7 +418,7 @@ whole_strip <- ggplot(for_plotting, aes(SegmentID , YldMassDry, group = rate_as_
   annotate("text", x = zone2_range, y= 0,label =label_zone2)#+
 
 return(whole_strip)}
-assign(("plot_whole_strip"), function_strip_plot(for_plotting))
+assign(("plot_whole_strip"), function_strip_plot(for_plotting_strips))
 
 plot_whole_strip
 
@@ -497,8 +503,12 @@ all_results <- rename(all_results, Details = Strip_Rate)
 
 all_results_1 <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
 
+
 function_tabel_yield <- function(all_results, Zone_labels){
 #function_tabel_yield <- function(all_results){
+  #remove duplication 
+  all_results <- dplyr::distinct(all_results, Rate, zone, .keep_all = TRUE)
+  
   all_results <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
 mean_zone_av_output_display <-all_results %>% 
   mutate(Significant = case_when(Significant == "significant" ~ "*",
