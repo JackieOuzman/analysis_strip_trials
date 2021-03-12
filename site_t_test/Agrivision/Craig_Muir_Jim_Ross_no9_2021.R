@@ -31,7 +31,7 @@ load.libraries(libs)
 #############################################################################################################
 #######################         set up file directory                               ########################
 Trial_type <- "P"  # "N" "P"
-Number_of_strips <-   "strip3" # "strip2" "strip3"
+Number_of_strips <-   "strip4" # "strip2" "strip3"
 
 baseDir <- file.path("W:","value_soil_testing_prj", "Yield_data", "2020","processing",  "spatial_output" , Trial_type, Number_of_strips)
 outputDir <- file.path("W:","value_soil_testing_prj", "Yield_data", "2020","processing", "r_outputs")
@@ -40,17 +40,17 @@ list.files(baseDir, full.names = FALSE)
 ###########################################################################################################
 ## I would be good to work on this step to run all the files in the directory at once.
 
-input_file <-"Andrew_Parsons_Jampot_east_SegID_Zone.csv"
+input_file <-"Jim_Ross_no9_SegID_Zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
-name_Paddock <- "Jampot East"
+name_Paddock <- "Jim Ross"
 name_Paddock
 
 ################################################################################################################
 #######################         Read in the yield data                               ########################### 
 
 function_1_import_data <- function(input_file){
-  strips <- read_csv(paste0(baseDir, "/",input_file),col_types = cols(GSP = col_character()))
+  strips <- read_csv(paste0(baseDir, "/",input_file))
   strips <- strips %>% 
     mutate(name_Paddock= name_Paddock,
            input_file = name_Paddock)
@@ -61,7 +61,6 @@ assign("strips", function_1_import_data(input_file))
 
 ###############################################################################################################
 #############    This analysis doesnt include the Alt GSP strip   so i will remove it now  ####################
-
 
 strips <-   strips %>% 
   dplyr::filter((GSP !="Alt GSP") %>% 
@@ -112,12 +111,10 @@ assign("strips", function_2_tidy_clm(strips))
 #also can't make this a function because I want to return multiple R objcets
 
 unique(strips$Rate)
-unique(strips$GSP)
 
 Rates_labels <- data.frame(Rate = unique(strips$Rate)) %>% 
   arrange(Rate) %>% 
-  #mutate(rate_name_order = c("low","medium" , "high", "very_high")) 
-  mutate(rate_name_order = c("low","medium" , "high")) 
+  mutate(rate_name_order = c("low","medium" , "high", "very_high")) 
 
 #what the rate of the GR?
 GSP_rate <- strips %>% 
@@ -134,7 +131,7 @@ Rates_labels <- Rates_labels %>%
 Rates_labels <- Rates_labels %>%
   mutate(rate_name = case_when(
     rate_name == "low" ~ "rate1",
-    rate_name == "high" ~ "rate2",
+    rate_name == "medium" ~ "rate2",
     rate_name == "very_high" ~ "rate3",
     TRUE ~ rate_name
   ))
@@ -221,24 +218,24 @@ assign(paste0("zone_", "1", "rate_", "2"), function_paired_ttest(strips, 1, 2))
 assign(paste0("zone_", "2", "rate_", "1"), function_paired_ttest(strips, 2, 1))
 assign(paste0("zone_", "2", "rate_", "2"), function_paired_ttest(strips, 2, 2))
 
-# assign(paste0("zone_", "1", "rate_", "3"), function_paired_ttest(strips, 1, 3))
-# assign(paste0("zone_", "2", "rate_", "3"), function_paired_ttest(strips, 2, 3))
+assign(paste0("zone_", "1", "rate_", "3"), function_paired_ttest(strips, 1, 3))
+assign(paste0("zone_", "2", "rate_", "3"), function_paired_ttest(strips, 2, 3))
 ################################################################################################################
 ## function to join everything  togther
 #join these togther
 function_all_results <- function(zone_1rate_1,
                                  zone_1rate_2,
                                  zone_2rate_1,
-                                 zone_2rate_2
-                                 # zone_1rate_3,
-                                 # zone_2rate_3
+                                 zone_2rate_2,
+                                 zone_1rate_3,
+                                 zone_2rate_3
                                  ){
 results_ttest <- bind_rows(zone_1rate_1,
                            zone_1rate_2,
                            zone_2rate_1,
-                           zone_2rate_2)
-                           # zone_1rate_3,
-                           # zone_2rate_3)
+                           zone_2rate_2,
+                           zone_1rate_3,
+                           zone_2rate_3)
 
 #what is the mean yield value for the zone by strip
 mean_zone1 <-  filter(strips,
@@ -275,9 +272,9 @@ return(results_ttest)}
 assign(("all_results"), function_all_results(zone_1rate_1,
                                             zone_1rate_2,
                                             zone_2rate_1,
-                                            zone_2rate_2
-                                            # zone_1rate_3,
-                                            # zone_2rate_3
+                                            zone_2rate_2,
+                                            zone_1rate_3,
+                                            zone_2rate_3
                                             ))
 rm(zone_1rate_1,
    zone_1rate_2,
@@ -288,9 +285,24 @@ rm(zone_1rate_1,
 ## step 1 complie the results avearge of segment per zone
 names(strips)
 
-for_plotting <- filter(strips, !is.na(zone_name)) %>% 
-        group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
-        summarise_all(mean)
+# for_plotting <- filter(strips, !is.na(zone_name)) %>% 
+#         group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
+#         summarise_all(mean)
+
+for_plotting <-
+  #filter(strips, !is.na(zone_name)) %>%
+  strips %>%
+  group_by(Rate,
+           Zone,
+           rate_name,
+           zone_name,
+           zone_name2,
+           name_Paddock,
+           SegmentID,
+  ) %>%
+  summarise_all(mean)
+
+
 
 function_zone_plots <- function(for_plotting, zone_x){
 
@@ -729,7 +741,15 @@ for_ricks_tables_summary <- for_ricks_tables_summary %>%
 
 for_ricks_tables_summary
 
+assigned_names1 <- distinct(all_results_1,rate_name_order, .keep_all = TRUE) %>% 
+  dplyr::select(rate_name_order, Details)
+assigned_names2 <- pivot_wider(assigned_names1,
+                               names_from = rate_name_order, 
+                               names_prefix = "rate_",
+                               values_from = Details)
+assigned_names2
 
+for_ricks_tables_summary <- cbind(for_ricks_tables_summary, assigned_names2)
   
 for_ricks_tables_summary
 
@@ -865,7 +885,6 @@ for_ricks_tables_summary <- for_ricks_tables_summary %>%
          Strip_Type = unique(strips$Strip_Type),
          input_file = input_file)
 
-
 assigned_names1 <- distinct(all_results_1,rate_name_order, .keep_all = TRUE) %>% 
   dplyr::select(rate_name_order, Details)
 assigned_names2 <- pivot_wider(assigned_names1,
@@ -875,7 +894,6 @@ assigned_names2 <- pivot_wider(assigned_names1,
 assigned_names2
 
 for_ricks_tables_summary <- cbind(for_ricks_tables_summary, assigned_names2)
-for_ricks_tables_summary
 
 ###################################################################################################################################
 ## what are we saving or have saved 
@@ -1090,8 +1108,8 @@ GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate, Zone_ID, zone_name) %>%
          half_GPS_rate = Rate*.5)
 
 ## filter out one rate so we only have 3
-# GR_vs_low_High_rate <- GR_vs_low_High_rate %>% 
-#   filter(Rate != 96)
+GR_vs_low_High_rate <- GR_vs_low_High_rate %>% 
+  filter(Rate != 0)
 
 
 
@@ -1315,9 +1333,10 @@ GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
 GR_vs_low_High_rate_summary
 assigned_names2
 GR_vs_low_High_rate_summary <- cbind(GR_vs_low_High_rate_summary,assigned_names2)
-GR_vs_low_High_rate_summary
-
 #######################################################
+### add this code in line 1310 ###
+#######################################################
+
 GR_vs_low_High_rate <- data.frame(GR_vs_low_High_rate)
 
 label_GR_v_rates <- GR_vs_low_High_rate %>%  group_by(GSP_high_low,
@@ -1325,8 +1344,6 @@ label_GR_v_rates <- GR_vs_low_High_rate %>%  group_by(GSP_high_low,
                                                       #Strip_Rate,
                                                       Zone_ID) %>%
   summarise(count = n())
-
-
 label_GR_v_rates <- ungroup(label_GR_v_rates) %>% 
   dplyr::select( GSP_high_low, Rate, Zone_ID)
 
@@ -1354,4 +1371,10 @@ name_CSP_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processin
                             dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 
 write.csv(GR_vs_low_High_rate_summary, name_CSP_low_high)
+
+
+
+
+
+
 
