@@ -514,9 +514,9 @@ all_results_1 <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
 function_tabel_yield <- function(all_results, Zone_labels){
 #function_tabel_yield <- function(all_results){
   all_results <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
-mean_zone_av_output_display <-all_results %>% 
-  mutate(Significant = case_when(Significant == "significant" ~ "*",
-                                 TRUE ~ "" ))
+  mean_zone_av_output_display <-all_results %>% 
+    mutate(Significant = case_when(Significant == "significant"  & rounded > 0.1 ~ "*",
+                                   TRUE ~ "" ))
 mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 1))
 mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
                                       Yld = paste0(yield, Significant))
