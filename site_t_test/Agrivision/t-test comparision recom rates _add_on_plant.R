@@ -461,7 +461,7 @@ grand_mean_recom_rate_H_L_se <- grand_mean_recom_rate_H_L_se %>%
          se_comp_rec_rate_low_p = se_comp_rec_rate_low_p)
 
 grand_mean_recom_rate_H_L_se
-View(grand_mean_recom_rate_H_L_se)
+#View(grand_mean_recom_rate_H_L_se)
              
 
 ## I need to generate mean yield value for the zone and Rate
@@ -502,7 +502,7 @@ rec_rate_p_vs_low_High_wide <- left_join(rec_rate_p_vs_low_High_wide,
 
 
 str(rec_rate_p_vs_low_High_wide)
-View(rec_rate_p_vs_low_High_wide)
+#View(rec_rate_p_vs_low_High_wide)
 #####
 
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_wide %>%
@@ -551,7 +551,7 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
 #   mutate(higher_than_rec_rate_p = NA)
 
 rec_rate_p_vs_low_High_summary
-View(rec_rate_p_vs_low_High_summary)
+#View(rec_rate_p_vs_low_High_summary)
 
 
 ### Extra t test #######################################################################################################################
@@ -568,25 +568,15 @@ function_paired_ttest_rec_rate_low_high <- function(recom_rate1, zone_x, comp){
     filter(rec_rate_high_low_p == "rec_rate_p" | rec_rate_high_low_p == paste0(comp,"_than_rec_rate_p"))
   
   
-  #average the yld per segment and rate
-  zone_x_rec_r_p_vs_x_av <- group_by(zone_x_rec_r_p_vs_x, 
-                                     SegmentID, Rate, Zone,Zone_ID, 
-                                     rate_name, zone_name , rec_rate_high_low_p) %>% 
-    summarise_all(mean, na.rm= TRUE)
-  str(zone_x_rec_r_p_vs_x_av)
-  #ensure that the dataset is duplictaed
-  list_SegmentID_values_rec_rate_l <- zone_x_rec_r_p_vs_x_av$SegmentID[duplicated(zone_x_rec_r_p_vs_x$SegmentID)] #this returns a list of values I want to keep
-  list_SegmentID_values_rec_rate_l
-  zone_x_rec_r_p_vs_x_av <- zone_x_rec_r_p_vs_x_av %>% filter(SegmentID %in% list_SegmentID_values_rec_rate_l)
-  str(zone_x_rec_r_p_vs_x_av)
+  
   zone_x_rec_rate_p_vs_x_res <- t.test(YldMassDry ~ rec_rate_high_low_p, 
-                                       data = zone_x_rec_r_p_vs_x_av, paired = FALSE,  var.equal = FALSE)
+                                       data = zone_x_rec_r_p_vs_x, paired = FALSE,  var.equal = FALSE)
   
   #####test results
   # Report values from the t.test
   zone_x_rec_rate_p_vs_x_res_sig <-
     data.frame(P_value = as.double(zone_x_rec_rate_p_vs_x_res$p.value),
-               Mean_diff = (zone_x_rec_rate_p_vs_x_res$estimate)) %>%
+               Mean_diff = zone_x_rec_rate_p_vs_x_res$estimate[1] - zone_x_rec_rate_p_vs_x_res$estimate[2])%>%
     mutate(
       comparison = paste0("rec_p_v_", comp),
       zone = paste0("zone", zone_x),

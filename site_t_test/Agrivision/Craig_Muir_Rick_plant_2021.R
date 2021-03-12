@@ -187,26 +187,22 @@ zone_x_rateXvsGR <- filter(strips,
                           zone_name == paste0("zone", zone_x)) %>%
                     filter(rate_name == paste0("rate", rate_x) | rate_name == "Grower_rate")
 
-#average the yld per segment and rate
-zone_x_rateXvsGR_av <- group_by(zone_x_rateXvsGR, SegmentID, Rate, Zone, rate_name, zone_name ) %>% 
-  summarise_all(mean, na.rm= TRUE)
-#ensure that the dataset is duplictaed
-list_SegmentID_values <- zone_x_rateXvsGR_av$SegmentID[duplicated(zone_x_rateXvsGR_av$SegmentID)] #this returns a list of values I want to keep
-zone_x_rateXvsGR_av <- zone_x_rateXvsGR_av %>% filter(SegmentID %in% list_SegmentID_values)
-# run paired ttest
-zone_x_rateXvsGR_res <- t.test(YldMassDry ~ Rate, data = zone_x_rateXvsGR_av, paired = FALSE,  var.equal = FALSE)
+
+zone_x_rateXvsGR_res <- t.test(YldMassDry ~ Rate, data = zone_x_rateXvsGR, paired = FALSE,  var.equal = FALSE)
 
 #####test results
 # Report values from the t.test
 zone_x_rateXvsGR_res_sig <-
   data.frame(P_value = as.double(zone_x_rateXvsGR_res$p.value),
-             Mean_diff = (zone_x_rateXvsGR_res$estimate)) %>%
+             Mean_diff = zone_x_rateXvsGR_res$estimate[1] - zone_x_rateXvsGR_res$estimate[2]
+  )%>%
   mutate(
     rate_name = paste0("rate", rate_x),
     zone = paste0("zone", zone_x),
     rounded = abs(round(Mean_diff, 2)),
     Significant = case_when(P_value < 0.05 ~ "significant",
-                            TRUE ~ "not significant"))
+                            TRUE ~ "not significant")
+  )
 zone_x_rateXvsGR_res_sig 
 
 
@@ -285,9 +281,9 @@ rm(zone_1rate_1,
 ## step 1 complie the results avearge of segment per zone
 names(strips)
 
-for_plotting <- filter(strips, !is.na(zone_name)) %>% 
-        group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
-        summarise_all(mean)
+for_plotting <- filter(strips, !is.na(zone_name)) #%>% 
+        # group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
+        # summarise_all(mean)
 
 function_zone_plots <- function(for_plotting, zone_x){
 
@@ -352,8 +348,8 @@ Starter_label
 Topdress_label
 
 for_plotting_strips <- strips %>% 
-  group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
-  summarise_all(mean)
+   group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
+   summarise_all(mean)
 
 
 
@@ -762,20 +758,15 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
     filter(zone_name == paste0("zone", zone_x)) %>%
     filter(rate_name_order == "low" | rate_name_order == "high")
   
-  #average the yld per segment and rate
-  zone_x_high_vs_low_av <- group_by(zone_x_high_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
-    summarise_all(mean, na.rm= TRUE)
-  #ensure that the dataset is duplictaed
-  list_SegmentID_values_hvl <- zone_x_high_vs_low_av$SegmentID[duplicated(zone_x_high_vs_low$SegmentID)] #this returns a list of values I want to keep
-  zone_x_high_vs_low_av <- zone_x_high_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_hvl)
+  
   # run paired ttest
-  zone_x_high_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_low_av, paired = FALSE,  var.equal = FALSE)
+  zone_x_high_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_low, paired = FALSE,  var.equal = FALSE)
   
   #####test results
   # Report values from the t.test
   zone_x_high_vs_low_res_sig <-
     data.frame(P_value = as.double(zone_x_high_vs_low_res$p.value),
-               Mean_diff = (zone_x_high_vs_low_res$estimate)) %>%
+               Mean_diff = zone_x_high_vs_low_res$estimate[1] - zone_x_high_vs_low_res$estimate[2])%>%
     mutate(
       comparison = "high_v_low",
       zone = paste0("zone", zone_x),
@@ -790,20 +781,15 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
     filter(zone_name == paste0("zone", zone_x)) %>%
     filter(rate_name_order == "medium" | rate_name_order == "high")
   
-  #average the yld per segment and rate
-  zone_x_high_vs_medium_av <- group_by(zone_x_high_vs_medium, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
-    summarise_all(mean, na.rm= TRUE)
-  #ensure that the dataset is duplictaed
-  list_SegmentID_values_hvm <- zone_x_high_vs_medium_av$SegmentID[duplicated(zone_x_high_vs_medium$SegmentID)] #this returns a list of values I want to keep
-  zone_x_high_vs_medium_av <- zone_x_high_vs_medium_av %>% filter(SegmentID %in% list_SegmentID_values_hvm)
+  
   # run paired ttest
-  zone_x_high_vs_medium_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_medium_av, paired = FALSE,  var.equal = FALSE)
+  zone_x_high_vs_medium_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_medium, paired = FALSE,  var.equal = FALSE)
   
   #####test results
   # Report values from the t.test
   zone_x_high_vs_medium_res_sig <-
     data.frame(P_value = as.double(zone_x_high_vs_medium_res$p.value),
-               Mean_diff = (zone_x_high_vs_medium_res$estimate)) %>%
+               Mean_diff = zone_x_high_vs_medium_res$estimate[1] - zone_x_high_vs_medium_res$estimate[2])%>%
     mutate(
       comparison = "high_v_medium",
       zone = paste0("zone", zone_x),
@@ -818,20 +804,15 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
     filter(zone_name == paste0("zone", zone_x)) %>%
     filter(rate_name_order == "medium" | rate_name_order == "low")
   
-  #average the yld per segment and rate
-  zone_x_medium_vs_low_av <- group_by(zone_x_medium_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
-    summarise_all(mean, na.rm= TRUE)
-  #ensure that the dataset is duplictaed
-  list_SegmentID_values_mvl <- zone_x_medium_vs_low_av$SegmentID[duplicated(zone_x_medium_vs_low$SegmentID)] #this returns a list of values I want to keep
-  zone_x_medium_vs_low_av <- zone_x_medium_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_mvl)
+  
   # run paired ttest
-  zone_x_medium_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_medium_vs_low_av, paired = FALSE,  var.equal = FALSE)
+  zone_x_medium_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_medium_vs_low, paired = FALSE,  var.equal = FALSE)
   
   #####test results
   # Report values from the t.test
   zone_x_medium_vs_low_res_sig <-
     data.frame(P_value = as.double(zone_x_medium_vs_low_res$p.value),
-               Mean_diff = (zone_x_medium_vs_low_res$estimate)) %>%
+               Mean_diff = zone_x_medium_vs_low_res$estimate[1] - zone_x_medium_vs_low_res$estimate[2])%>%
     mutate(
       comparison = "medium_v_low",
       zone = paste0("zone", zone_x),
@@ -1003,19 +984,19 @@ function_paired_ttest_GSP <- function(strips_alt_analysis, zone_x){
     filter(GSP == "GSP" | GSP == "Alt GSP")
   
   #average the yld per segment and GSP
-  zone_x_GSP_vs_AltGSP_av <- group_by(zone_x_GSP_vs_AltGSP, SegmentID, GSP, Zone, zone_name ) %>% 
-    summarise_all(mean, na.rm= TRUE)
-  #ensure that the dataset is duplictaed
-  list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP$SegmentID)] #this returns a list of values I want to keep
-  zone_x_GSP_vs_AltGSP_av <- zone_x_GSP_vs_AltGSP_av %>% filter(SegmentID %in% list_SegmentID_values_GSP)
+  # zone_x_GSP_vs_AltGSP_av <- group_by(zone_x_GSP_vs_AltGSP, SegmentID, GSP, Zone, zone_name ) %>% 
+  #   summarise_all(mean, na.rm= TRUE)
+  # #ensure that the dataset is duplictaed
+  # list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP$SegmentID)] #this returns a list of values I want to keep
+  # zone_x_GSP_vs_AltGSP_av <- zone_x_GSP_vs_AltGSP_av %>% filter(SegmentID %in% list_SegmentID_values_GSP)
   # run paired ttest
-  zone_x_GSP_vs_AltGSP_res <- t.test(YldMassDry ~ GSP, data = zone_x_GSP_vs_AltGSP_av, paired = FALSE,  var.equal = FALSE)
+  zone_x_GSP_vs_AltGSP_res <- t.test(YldMassDry ~ GSP, data = zone_x_GSP_vs_AltGSP, paired = FALSE,  var.equal = FALSE)
   
   #####test results
   # Report values from the t.test
   zone_x_GSP_vs_AltGSP_res_sig <-
     data.frame(P_value = as.double(zone_x_GSP_vs_AltGSP_res$p.value),
-               Mean_diff = (zone_x_GSP_vs_AltGSP_res$estimate)) %>%
+               Mean_diff = zone_x_GSP_vs_AltGSP_res$estimate[1] - zone_x_GSP_vs_AltGSP_res$estimate[2])%>%
     mutate(
       comparison = "GSP_v_AltGSP",
       zone = paste0("zone", zone_x),
@@ -1222,20 +1203,15 @@ function_paired_ttest_GR_low_high <- function(GR_vs_low_High_rate, zone_x){
     filter(zone_name == paste0("zone", zone_x)) %>%
     filter(GSP_high_low == "the_GSP" | GSP_high_low == "lower_than_GSP")
   
-  #average the yld per segment and rate
-  zone_x_GSP_vs_low_av <- group_by(zone_x_GSP_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , GSP_high_low) %>% 
-    summarise_all(mean, na.rm= TRUE)
-  #ensure that the dataset is duplictaed
-  list_SegmentID_values_GSP_l <- zone_x_GSP_vs_low_av$SegmentID[duplicated(zone_x_GSP_vs_low$SegmentID)] #this returns a list of values I want to keep
-  zone_x_GSP_vs_low_av <- zone_x_GSP_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_GSP_l)
+  
   # run paired ttest
-  zone_x_GSP_vs_low_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_low_av, paired = FALSE,  var.equal = FALSE)
+  zone_x_GSP_vs_low_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_low, paired = FALSE,  var.equal = FALSE)
   
   #####test results
   # Report values from the t.test
   zone_x_GSP_vs_low_res_sig <-
     data.frame(P_value = as.double(zone_x_GSP_vs_low_res$p.value),
-               Mean_diff = (zone_x_GSP_vs_low_res$estimate)) %>%
+               Mean_diff = zone_x_GSP_vs_low_res$estimate[1] - zone_x_GSP_vs_low_res$estimate[2])%>%
     mutate(
       comparison = "GSP_v_low",
       zone = paste0("zone", zone_x),
@@ -1250,20 +1226,14 @@ function_paired_ttest_GR_low_high <- function(GR_vs_low_High_rate, zone_x){
     filter(zone_name == paste0("zone", zone_x)) %>%
     filter(GSP_high_low == "the_GSP" | GSP_high_low == "higher_than_GSP")
   
-  #average the yld per segment and rate
-  zone_x_GSP_vs_high_av <- group_by(zone_x_GSP_vs_high, SegmentID, Rate, Zone, rate_name, zone_name , GSP_high_low) %>% 
-    summarise_all(mean, na.rm= TRUE)
-  #ensure that the dataset is duplictaed
-  list_SegmentID_values_GSP_h <- zone_x_GSP_vs_high_av$SegmentID[duplicated(zone_x_GSP_vs_high$SegmentID)] #this returns a list of values I want to keep
-  zone_x_GSP_vs_high_av <- zone_x_GSP_vs_high_av %>% filter(SegmentID %in% list_SegmentID_values_GSP_h)
-  # run paired ttest
-  zone_x_GSP_vs_high_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_high_av, paired = FALSE,  var.equal = FALSE)
+    # run paired ttest
+  zone_x_GSP_vs_high_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_high, paired = FALSE,  var.equal = FALSE)
   
   #####test results
   # Report values from the t.test
   zone_x_GSP_vs_high_res_sig <-
     data.frame(P_value = as.double(zone_x_GSP_vs_high_res$p.value),
-               Mean_diff = (zone_x_GSP_vs_high_res$estimate)) %>%
+               Mean_diff = zone_x_GSP_vs_high_res$estimate[1] - zone_x_GSP_vs_high_res$estimate[2])%>%
     mutate(
       comparison = "GSP_v_high",
       zone = paste0("zone", zone_x),
@@ -1369,3 +1339,4 @@ name_CSP_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processin
                             dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 
 write.csv(GR_vs_low_High_rate_summary, name_CSP_low_high)
+
