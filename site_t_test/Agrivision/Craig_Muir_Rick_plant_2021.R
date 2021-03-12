@@ -285,9 +285,22 @@ rm(zone_1rate_1,
 ## step 1 complie the results avearge of segment per zone
 names(strips)
 
-for_plotting <- filter(strips, !is.na(zone_name)) %>% 
-        group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
-        summarise_all(mean)
+# for_plotting <- filter(strips, !is.na(zone_name)) %>% 
+#         group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
+#         summarise_all(mean)
+
+for_plotting <-
+  #filter(strips, !is.na(zone_name)) %>%
+  strips %>%
+  group_by(Rate,
+           Zone,
+           rate_name,
+           zone_name,
+           zone_name2,
+           name_Paddock,
+           SegmentID,
+  ) %>%
+  summarise_all(mean)
 
 function_zone_plots <- function(for_plotting, zone_x){
 
@@ -499,6 +512,8 @@ all_results_1 <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
 
 function_tabel_yield <- function(all_results, Zone_labels){
 #function_tabel_yield <- function(all_results){
+  
+  all_results <- dplyr::distinct(all_results, Rate, zone, .keep_all = TRUE)
   all_results <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
 mean_zone_av_output_display <-all_results %>% 
   mutate(Significant = case_when(Significant == "significant" ~ "*",
