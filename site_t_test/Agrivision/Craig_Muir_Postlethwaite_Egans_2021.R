@@ -135,7 +135,7 @@ Rates_labels <- Rates_labels %>%
     rate_name == "very_high" ~ "rate3",
     TRUE ~ rate_name
   ))
-
+Rates_labels
 ### need to add in the zone ID here
 
 strips <- left_join(strips, Rates_labels, by= "Rate")
@@ -285,9 +285,23 @@ rm(zone_1rate_1,
 ## step 1 complie the results avearge of segment per zone
 names(strips)
 
-for_plotting <- filter(strips, !is.na(zone_name)) %>% 
-        group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
-        summarise_all(mean)
+# for_plotting <- filter(strips, !is.na(zone_name)) %>% 
+#         group_by(Rate, Zone, rate_name, zone_name, zone_name2, name_Paddock,SegmentID, ) %>% 
+#         summarise_all(mean)
+
+
+for_plotting <-
+  #filter(strips, !is.na(zone_name)) %>%
+  strips %>%
+  group_by(Rate,
+           Zone,
+           rate_name,
+           zone_name,
+           zone_name2,
+           name_Paddock,
+           SegmentID,
+  ) %>%
+  summarise_all(mean)
 
 function_zone_plots <- function(for_plotting, zone_x){
 
