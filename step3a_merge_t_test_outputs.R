@@ -68,16 +68,13 @@ dataset <- dataset %>%
   distinct(ID_analysis_zone_temp, .keep_all = TRUE)
 
 ### add in sig and yield resposne
-names(dataset)
-unique(dataset$Significant)
+
 dataset <- dataset %>% 
   mutate(Significant_practical = case_when(Significant == "significant"  & rounded > 0.1 ~ "significant",
                                            Significant == "not significant" ~ "not significant",
                                            is.na(Significant) ~ "NA" ,
                                            TRUE ~ "not significant"))
-names(dataset)
-check <- dataset %>%  dplyr::select("Significant", "rounded", "Significant_practical")
-check
+
 ### saved the merged dataframe in 2 spots
 outputDir
 write.csv(dataset,paste0(outputDir, "/t_test_merged_3a.csv") )
