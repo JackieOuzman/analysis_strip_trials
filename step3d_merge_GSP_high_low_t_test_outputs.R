@@ -55,6 +55,7 @@ clm_headings <- c(
   "se_comp_GSP_high",
   "Significant",
   "P_value",
+  "rounded",
   "paddock_ID",
   "Strip_Type",
   "input_file",
@@ -95,6 +96,13 @@ names(dataset)
 dataset <- dataset %>% 
   mutate(ID_analysis_zone_temp = paste0(Zone_ID, "_", comparison )) %>% 
   distinct(ID_analysis_zone_temp, .keep_all = TRUE)
+
+
+dataset <- dataset %>% 
+  mutate(Significant_practical = case_when(Significant == "significant"  & rounded > 0.1 ~ "significant",
+                                           Significant == "not significant" ~ "not significant",
+                                           is.na(Significant) ~ "NA" ,
+                                           TRUE ~ "not significant"))
 
 
 ### saved the merged dataframe

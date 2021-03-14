@@ -51,6 +51,7 @@ clm_headings <- c(
   "medium_vs_low",
   "Significant",
   "P_value",
+  "rounded",
   "paddock_ID",
   "Strip_Type",
   "input_file",
