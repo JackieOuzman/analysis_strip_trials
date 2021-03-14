@@ -662,7 +662,8 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
     se_comp_rec_rate_high_p,
     se_comp_rec_rate_low_p,
     Significant,
-    P_value
+    P_value,
+    rounded
   )
 
 ## add in a few clms that help later
