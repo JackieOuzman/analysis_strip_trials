@@ -877,7 +877,7 @@ for_ricks_tables_summary <- for_ricks_tables_summary %>%
                 low,medium,high, 
                 high_vs_low,high_vs_medium,medium_vs_low,
                 Significant,
-                yld_response,P_value )
+                yld_response,P_value, rounded )
 
 ## add in a few clms that help later
 for_ricks_tables_summary <- for_ricks_tables_summary %>% 
@@ -1319,7 +1319,8 @@ GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
     se_comp_GSP_low,
     se_comp_GSP_high,
     Significant,
-    P_value
+    P_value,
+    rounded
   )
 
 ## add in a few clms that help later
