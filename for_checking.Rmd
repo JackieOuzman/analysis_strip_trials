@@ -389,7 +389,7 @@ GSPvsAltGSP_plot <- GSP_AltGSP_t_test %>%
       paddock_ID == Paddock_selected_site3 |
       paddock_ID == Paddock_selected_site4
   ) %>%
-  ggplot( mapping = aes(x=Significant ))+
+  ggplot( mapping = aes(x=Significant_practical ))+
   geom_bar() +
   facet_grid(.~ Strip_Type)+
   theme_bw()+
@@ -435,7 +435,7 @@ GSP_AltGSP_t_test_display <- GSP_AltGSP_t_test_display %>%
                 `Paddock tested`,
                 #`yield response` = yld_response, 
                 `Mean yield difference` = rounded, 
-                Significant 
+                `Significant practical` = Significant_practical
                 ) 
 GSP_AltGSP_t_test_display <- GSP_AltGSP_t_test_display %>% 
   arrange(`Zone ID`)
@@ -535,7 +535,7 @@ high_low_comp$comparison <-
 
 
 high_low_plot <-
-  ggplot(high_low_comp, mapping = aes(x = yld_response, fill = Significant)) +
+  ggplot(high_low_comp, mapping = aes(x = yld_response, fill = Significant_practical)) +
   geom_bar() +
   facet_grid(Strip_Type ~ comparison)+ 
   theme_bw() +
@@ -583,7 +583,7 @@ high_v_low_comp_results <- high_low_comp_t %>%
                 Farmer,
                 `Paddock tested`,
                 "yield response" = yld_response,
-                Significant) 
+                `Significant practical` = Significant_practical) 
 high_v_low_comp_results <- high_v_low_comp_results %>% 
   arrange(`Zone ID`)
 
@@ -605,7 +605,7 @@ high_v_med_comp_results <- high_low_comp_t %>%
                 Farmer,
                 `Paddock tested`,
                 "yield response" = yld_response,
-                Significant) 
+                `Significant practical` = Significant_practical) 
 high_v_med_comp_results <- high_v_med_comp_results %>% 
   arrange(`Zone ID`)
 
@@ -624,7 +624,7 @@ med_v_low_comp_results <- high_low_comp_t %>%
                 Farmer,
                 `Paddock tested`,
                 "yield response" = yld_response,
-                Significant) 
+                `Significant practical` = Significant_practical) 
 med_v_low_comp_results <- med_v_low_comp_results %>% 
   arrange(`Zone ID`)
 
@@ -680,7 +680,7 @@ GR_comparison <- GR_comparison %>%
   )
 
 GR_comparison_plot <-
-  ggplot(GR_comparison, mapping = aes(x = yld_response, fill = Significant)) +
+  ggplot(GR_comparison, mapping = aes(x = yld_response, fill = Significant_practical)) +
   geom_bar() +
   facet_grid(Strip_Type ~ comparison)+ 
   #labeller(Strip_Type = label_wrap_gen(width = 16 ),
@@ -736,7 +736,7 @@ GR_comparison_higher_results <- GR_comparison %>%
                 Farmer,
                 `Paddock tested`,
                 "yield response" = yld_response,
-                Significant) 
+                `Significant practical` = Significant_practical) 
 
 
 GR_comparison_higher_results <- GR_comparison_higher_results %>% 
@@ -782,7 +782,7 @@ GR_comparison_lower_results <- GR_comparison %>%
                 Farmer,
                 `Paddock tested`,
                 "yield response" = yld_response,
-                Significant) 
+                `Significant practical` = Significant_practical) 
 
 
 GR_comparison_lower_results <- GR_comparison_lower_results %>% 
@@ -880,7 +880,7 @@ Rec_rate_comparison <- Rec_rate_comparison %>%
   )
 
 Rec_rate_comparison_plot <-
-  ggplot(Rec_rate_comparison, mapping = aes(x = yld_response, fill = Significant)) +
+  ggplot(Rec_rate_comparison, mapping = aes(x = yld_response, fill = Significant_practical)) +
   geom_bar() +
   facet_grid(Strip_Type ~ comparison)+ 
   #labeller(Strip_Type = label_wrap_gen(width = 16 ),
@@ -934,7 +934,7 @@ Rec_rate_comparison_table_higher_results <- Rec_rate_comparison %>%
                 Farmer,
                 `Paddock tested`,
                 "yield response" = yld_response,
-                Significant) 
+                `Significant practical` = Significant_practical) 
 
 
 Rec_rate_comparison_table_higher_results <- Rec_rate_comparison_table_higher_results %>% 
@@ -985,7 +985,7 @@ Rec_rate_comparison_table_lower_results <- Rec_rate_comparison %>%
                 Farmer,
                 `Paddock tested`,
                 "yield response" = yld_response,
-                Significant) %>% 
+                `Significant practical` = Significant_practical) %>% 
   arrange(`Zone ID`)
 
 
