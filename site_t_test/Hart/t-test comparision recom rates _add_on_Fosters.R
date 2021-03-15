@@ -320,9 +320,9 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(0,100) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(80,160) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(0,100) & zone_name == "zone2")
+  filter(Rate %in% c(80,160) & zone_name == "zone2")
 
 
 recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
@@ -414,26 +414,28 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
   filter(rec_rate_high_low_p != "rec_rate_p") %>% 
   arrange(rec_rate_high_low_p)
 
-## higher than P rate comparision
- grand_mean_recom_rate_H_se <- rbind(
-   grand_mean_std_error_zone1_rec_rate_high,
-   grand_mean_std_error_zone2_rec_rate_high
- )
+# ## higher than P rate comparision
+#  grand_mean_recom_rate_H_se <- rbind(
+#    grand_mean_std_error_zone1_rec_rate_high,
+#    grand_mean_std_error_zone2_rec_rate_high
+#  )
 #grand_mean_recom_rate_H_se <- grand_mean_std_error_zone2_rec_rate_high
 
 ## lower than P rate comparision                                         
-# grand_mean_recom_rate_L_se <- rbind(
-#   grand_mean_std_error_zone1_rec_rate_low,
-#   grand_mean_std_error_zone2_rec_rate_low)
+ grand_mean_recom_rate_L_se <- rbind(
+   grand_mean_std_error_zone1_rec_rate_low,
+   grand_mean_std_error_zone2_rec_rate_low)
 
-grand_mean_recom_rate_H_se 
-grand_mean_recom_rate_L_se #we dont have this comparsion
+grand_mean_recom_rate_H_se #we dont have this comparsion
+grand_mean_recom_rate_L_se 
 
-grand_mean_recom_rate_H_L_se <- full_join(grand_mean_recom_rate_H_se,
-                                           grand_mean_recom_rate_L_se
-                                           )
+# grand_mean_recom_rate_H_L_se <- full_join(grand_mean_recom_rate_H_se,
+#                                            grand_mean_recom_rate_L_se
+#                                            )
 
-grand_mean_recom_rate_H_L_se <- grand_mean_recom_rate_H_se
+#grand_mean_recom_rate_H_L_se <- grand_mean_recom_rate_H_se
+grand_mean_recom_rate_H_L_se <- grand_mean_recom_rate_L_se
+
 grand_mean_recom_rate_H_L_se
 
 #### !!! select what comaprision are needed
@@ -444,16 +446,16 @@ grand_mean_recom_rate_H_L_se
 grand_mean_recom_rate_H_L_se <- grand_mean_recom_rate_H_L_se %>% 
   mutate(
     #higher than recom rate comp
-     grand_mean_rec_rate_high_p = grand_mean_rec_rate_high_p,
-     se_comp_rec_rate_high_p = se_comp_rec_rate_high_p,
-    #grand_mean_rec_rate_high_p = NA,
-    #se_comp_rec_rate_high_p = NA,
+     #grand_mean_rec_rate_high_p = grand_mean_rec_rate_high_p,
+     #se_comp_rec_rate_high_p = se_comp_rec_rate_high_p,
+    grand_mean_rec_rate_high_p = NA,
+    se_comp_rec_rate_high_p = NA,
     
     #lower than recom rate comp
-    grand_mean_rec_rate_low_p = NA,
-    se_comp_rec_rate_low_p = NA)
-         #grand_mean_rec_rate_low_p = grand_mean_rec_rate_low_p,
-         #se_comp_rec_rate_low_p = se_comp_rec_rate_low_p)
+    #grand_mean_rec_rate_low_p = NA,
+    #se_comp_rec_rate_low_p = NA)
+         grand_mean_rec_rate_low_p = grand_mean_rec_rate_low_p,
+         se_comp_rec_rate_low_p = se_comp_rec_rate_low_p)
 
 grand_mean_recom_rate_H_L_se
 #View(grand_mean_recom_rate_H_L_se)
@@ -481,10 +483,10 @@ names(rec_rate_p_vs_low_High_wide)
 ## differences in yld clms
 rec_rate_p_vs_low_High_wide <- rec_rate_p_vs_low_High_wide %>% 
   mutate(
-         #rec_rate_p_vs_lower = rec_rate_p - lower_than_rec_rate_p,
-         rec_rate_p_vs_lower = NA,
-         rec_rate_p_vs_higher = rec_rate_p  - higher_than_rec_rate_p
-         #rec_rate_p_vs_higher = NA
+         rec_rate_p_vs_lower = rec_rate_p - lower_than_rec_rate_p,
+         #rec_rate_p_vs_lower = NA,
+         #rec_rate_p_vs_higher = rec_rate_p  - higher_than_rec_rate_p
+         rec_rate_p_vs_higher = NA
          )
 rec_rate_p_vs_low_High_wide
 
@@ -530,8 +532,8 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
     Zone_ID,
     comparison,
     yld_response,
-    higher_than_rec_rate_p ,
-    #lower_than_rec_rate_p,
+    #higher_than_rec_rate_p ,
+    lower_than_rec_rate_p,
     rec_rate_p,
     rec_rate_p_vs_lower,
     rec_rate_p_vs_higher,
@@ -544,7 +546,7 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
       comparison == "yld_resposne_rec_v_high" ~ "rec_p_v_higher"
     )) 
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>% 
-   mutate(lower_than_rec_rate_p = NA)
+   mutate(higher_than_rec_rate_p = NA)
 
 rec_rate_p_vs_low_High_summary
 #View(rec_rate_p_vs_low_High_summary)
@@ -604,11 +606,11 @@ assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_ra
 
 
 #what ran?
-rec_rate_p_vs_lower_zone_1
+rec_rate_p_vs_lower_zone_1 #this is the only one that ran
 rec_rate_p_vs_lower_zone_2
 
 rec_rate_p_vs_higher_zone_1
-rec_rate_p_vs_higher_zone_2
+rec_rate_p_vs_higher_zone_2 # not enough data ?
 
 # this is a check what comaprison I have what was I expecting to run?
 recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>% 
@@ -620,12 +622,14 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
   arrange(rec_rate_high_low_p)
 
 ### !!! user input required
-rec_rate_p_low_vs_high_all <- rbind(#rec_rate_p_vs_lower_zone_1,
-                                    #rec_rate_p_vs_lower_zone_2,
+# rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
+#                                     #rec_rate_p_vs_lower_zone_2,
+# 
+#                                     #rec_rate_p_vs_higher_zone_1,
+#                                     #rec_rate_p_vs_higher_zone_2
+# )
 
-                                    rec_rate_p_vs_higher_zone_1,
-                                    rec_rate_p_vs_higher_zone_2
-)
+rec_rate_p_low_vs_high_all <- rec_rate_p_vs_lower_zone_1
 
 
 
@@ -707,8 +711,8 @@ label_rec_rates <- tidyr::pivot_wider(
 label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
 label_rec_rates <-label_rec_rates %>% rename(
-                           higher_than_rec_rate_p_label = higher_than_rec_rate_p,
-                           #lower_than_rec_rate_p_label = lower_than_rec_rate_p,
+                           #higher_than_rec_rate_p_label = higher_than_rec_rate_p,
+                           lower_than_rec_rate_p_label = lower_than_rec_rate_p,
                            rec_rate_p_label = rec_rate_p)
 
 
@@ -716,13 +720,14 @@ str(label_rec_rates)
 str(rec_rate_p_vs_low_High_summary)
 
 
-rec_rate_p_vs_low_High_summary <- full_join(rec_rate_p_vs_low_High_summary, label_rec_rates)
+rec_rate_p_vs_low_High_summary <- full_join(rec_rate_p_vs_low_High_summary, label_rec_rates, by = "Zone_ID")
+
 names(rec_rate_p_vs_low_High_summary)
 #remove duplication 
 rec_rate_p_vs_low_High_summary <- dplyr::distinct(rec_rate_p_vs_low_High_summary, 
                                                   Zone_ID, comparison, .keep_all = TRUE)
 
-
+View(rec_rate_p_vs_low_High_summary)
 #save the output
 name_rec_rate_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_", 
                                  dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
