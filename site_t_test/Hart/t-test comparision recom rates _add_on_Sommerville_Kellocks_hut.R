@@ -549,7 +549,7 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
     dplyr::mutate(lower_than_rec_rate_p = NA)
 
 rec_rate_p_vs_low_High_summary
-#View(rec_rate_p_vs_low_High_summary)
+View(rec_rate_p_vs_low_High_summary)
 
 
 ### Extra t test #######################################################################################################################
@@ -606,11 +606,11 @@ assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_ra
 
 
 #what ran?
-rec_rate_p_vs_lower_zone_1 #this is the only one that ran
-rec_rate_p_vs_lower_zone_2
+rec_rate_p_vs_lower_zone_1 # no comp 
+rec_rate_p_vs_lower_zone_2# no comp
 
 rec_rate_p_vs_higher_zone_1
-rec_rate_p_vs_higher_zone_2 # not enough data ?
+rec_rate_p_vs_higher_zone_2 # 
 
 # this is a check what comaprison I have what was I expecting to run?
 recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>% 
@@ -712,7 +712,7 @@ label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
 label_rec_rates <-label_rec_rates %>% rename(
                            higher_than_rec_rate_p_label = higher_than_rec_rate_p,
-                           lower_than_rec_rate_p_label = lower_than_rec_rate_p,
+                           #lower_than_rec_rate_p_label = lower_than_rec_rate_p,
                            rec_rate_p_label = rec_rate_p)
 
 
