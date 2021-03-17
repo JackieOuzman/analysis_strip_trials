@@ -40,10 +40,10 @@ list.files(baseDir, full.names = FALSE)
 ###########################################################################################################
 ## I would be good to work on this step to run all the files in the directory at once.
 
-input_file <-"Ottens_Pdk17_Yld_SegID_Zones.csv"
+input_file <-"Barn_Yld_SegID_zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
-name_Paddock <- "Ottens Pdk17"
+name_Paddock <- "Sommerville Barn"
 name_Paddock
 
 ################################################################################################################
@@ -58,7 +58,7 @@ function_1_import_data <- function(input_file){
   return(strips)}
 
 assign("strips", function_1_import_data(input_file))
-
+unique(strips$Zone)
 ###############################################################################################################
 #############    This analysis doesnt include the Alt GSP strip   so i will remove it now  ####################
 
@@ -76,9 +76,9 @@ names(strips)
 function_2_tidy_clm <- function(strips) {
   
   strips <- if (c("Yld_Mass_D") %in% names(strips) == TRUE) {
-    rename(strips, YldMassDry = DryYield)
+    rename(strips, YldMassDry = VRYIELDVOL)
   } else {
-    rename(strips, YldMassDry = DryYield)
+    rename(strips, YldMassDry = VRYIELDVOL)
   }
   
   strips <- filter(strips,!is.na(Rate))
