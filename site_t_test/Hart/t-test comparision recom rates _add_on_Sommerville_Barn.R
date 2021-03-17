@@ -230,7 +230,7 @@ head(recom_rate1)
   
   ## is the rec higher or lower than the rec
 recom_rate1 <- recom_rate1 %>% 
-  mutate(
+  dplyr::mutate(
     rec_rate_high_low_p = case_when(
       rec_rate_p -  Total_sum_P_content > 0 ~  "lower_than_rec_rate_p",
       rec_rate_p -  Total_sum_P_content < 0 ~  "higher_than_rec_rate_p",
@@ -265,14 +265,14 @@ Rec_rate_n_value
 recom_rate1
 ## add this to df
 recom_rate1 <- recom_rate1 %>% 
-  mutate(rec_rate_n = as.double(Rec_rate_n_value))
+  dplyr::mutate(rec_rate_n = as.double(Rec_rate_n_value))
   #mutate(rec_rate_n = Rec_rate_n[1])
 names(recom_rate1)
 str(recom_rate1)
 
 ## is the GSP higher or lower than the rec rate
 recom_rate1 <- recom_rate1 %>% 
-  mutate(
+  dplyr::mutate(
     rec_rate_high_low_n = case_when(
       rec_rate_n -  Total_sum_N_content > 0 ~  "lower_than_rec_rate_n",
       rec_rate_n -  Total_sum_N_content < 0 ~  "higher_than_rec_rate_n",
@@ -315,14 +315,14 @@ str(recom_rate1)
 recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>% 
   summarise(count= n()) %>% 
   filter(rec_rate_high_low_p  == "rec_rate_p" ) %>% 
-  mutate(double_rec_rate = Rate*2,
+  dplyr::mutate(double_rec_rate = Rate*2,
          half_rec_rate = Rate*.5)
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(0,100,200) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(0,130) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(100,200) & zone_name == "zone2")
+  filter(Rate %in% c(0, 130,260) & zone_name == "zone2")
 
 
 recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
@@ -340,7 +340,7 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 # first I need to make a new clm for the comparsions
 recom_rate1 <- recom_rate1 %>% 
-  mutate(
+  dplyr::mutate(
     comparison_rec_rate_high_p = case_when(
       rec_rate_high_low_p == "rec_rate_p"           ~   "rec_rate_high_p",
       rec_rate_high_low_p == "higher_than_rec_rate_p" ~ "rec_rate_high_p",
@@ -444,7 +444,7 @@ grand_mean_recom_rate_H_L_se
  
 
 grand_mean_recom_rate_H_L_se <- grand_mean_recom_rate_H_L_se %>% 
-  mutate(
+  dplyr::mutate(
     #higher than recom rate comp
      grand_mean_rec_rate_high_p = grand_mean_rec_rate_high_p,
      se_comp_rec_rate_high_p = se_comp_rec_rate_high_p,
@@ -482,7 +482,7 @@ names(rec_rate_p_vs_low_High_wide)
 #### !!! select what comaprision are needed
 ## differences in yld clms
 rec_rate_p_vs_low_High_wide <- rec_rate_p_vs_low_High_wide %>% 
-  mutate(
+  dplyr::mutate(
          rec_rate_p_vs_lower = rec_rate_p - lower_than_rec_rate_p,
          #rec_rate_p_vs_lower = NA,
          rec_rate_p_vs_higher = rec_rate_p  - higher_than_rec_rate_p
@@ -503,7 +503,7 @@ str(rec_rate_p_vs_low_High_wide)
 #####
 
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_wide %>%
-  mutate(
+  dplyr::mutate(
      yld_resposne_rec_v_low =  case_when(
        rec_rate_p_vs_lower > 0 + se_comp_rec_rate_low_p ~ "positive",
        rec_rate_p_vs_lower < 0 - se_comp_rec_rate_low_p ~ "negative",
@@ -540,13 +540,13 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
     se_comp_rec_rate_low_p ,
     se_comp_rec_rate_high_p 
   ) %>% 
-  mutate(
+  dplyr::mutate(
     comparison = case_when(
       comparison == "yld_resposne_rec_v_low"  ~ "rec_p_v_lower",
       comparison == "yld_resposne_rec_v_high" ~ "rec_p_v_higher"
     )) 
 # rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>% 
-#    mutate(higher_than_rec_rate_p = NA)
+#    dplyr::mutate(higher_than_rec_rate_p = NA)
 
 rec_rate_p_vs_low_High_summary
 #View(rec_rate_p_vs_low_High_summary)
@@ -585,7 +585,7 @@ function_paired_ttest_rec_rate_low_high <- function(recom_rate1, zone_x, comp){
   zone_x_rec_rate_p_vs_x_res_sig <-
     data.frame(P_value = as.double(zone_x_rec_rate_p_vs_x_res$p.value),
                Mean_diff = (zone_x_rec_rate_p_vs_x_res$estimate)) %>%
-    mutate(
+    dplyr::mutate(
       comparison = paste0("rec_p_v_", comp),
       zone = paste0("zone", zone_x),
       rounded = abs(round(Mean_diff, 2)),
@@ -622,11 +622,11 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
   arrange(rec_rate_high_low_p)
 
 ### !!! user input required
-rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
+rec_rate_p_low_vs_high_all <- rbind(#rec_rate_p_vs_lower_zone_1,
                                     rec_rate_p_vs_lower_zone_2,
 
-                                    rec_rate_p_vs_higher_zone_1#,
-                                    #rec_rate_p_vs_higher_zone_2
+                                    rec_rate_p_vs_higher_zone_1,
+                                    rec_rate_p_vs_higher_zone_2
 )
 
 #rec_rate_p_low_vs_high_all <- rec_rate_p_vs_lower_zone_1
@@ -672,7 +672,7 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
 
 ## add in a few clms that help later
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>% 
-  mutate(paddock_ID = unique(strips$Paddock_ID),
+  dplyr::mutate(paddock_ID = unique(strips$Paddock_ID),
          Strip_Type = unique(strips$Strip_Type),
          input_file = input_file)
 
@@ -732,7 +732,7 @@ rec_rate_p_vs_low_High_summary <- dplyr::distinct(rec_rate_p_vs_low_High_summary
 
 
 rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>% 
-  mutate(
+  dplyr::mutate(
     yld_response = case_when(
       comparison == "rec_p_v_higher" &
         higher_than_rec_rate_p != "NA" ~ yld_response,
