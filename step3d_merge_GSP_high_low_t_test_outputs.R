@@ -100,11 +100,10 @@ dataset <- dataset %>%
 
 dataset <- dataset %>% 
   mutate(Significant_practical = case_when(Significant == "significant"  & rounded > 0.1 ~ "significant",
+                                           Significant == "significant"  & rounded < 0.1 ~ "not significant",
                                            Significant == "not significant" ~ "not significant",
                                            is.na(Significant) ~ "NA" ,
-                                           TRUE ~ "not significant"))
-
-
+                                           TRUE ~ "NA"))
 ### saved the merged dataframe
 
 
