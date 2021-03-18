@@ -625,7 +625,7 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
                                     rec_rate_p_vs_lower_zone_2,
 
-                                    rec_rate_p_vs_higher_zone_1,
+                                    rec_rate_p_vs_higher_zone_1#,
                                     #rec_rate_p_vs_higher_zone_2
 )
 
