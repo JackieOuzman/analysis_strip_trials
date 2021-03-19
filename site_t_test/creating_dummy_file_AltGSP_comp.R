@@ -32,13 +32,15 @@ dummy_alt_file <- dummy_alt_file %>%
     yld_response	= "NA",
     `Alt GSP` = "NA",
     GSP	= "NA",
+    P_value = "NA",
     GSP_vs_Alt_GSP	= "NA",
     se_comp_GSP_AltGSP	= "NA",
     P_value	= "NA",
     Mean_diff	= "NA",
     rounded	= "NA",
     Significant	= "NA",
-    comparison	= "NA"
+    comparison	= "NA",
+    comparison.y = "NA"
   )
 
 dummy_alt_file

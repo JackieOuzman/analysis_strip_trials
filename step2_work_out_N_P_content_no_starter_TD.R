@@ -16,9 +16,9 @@ library(readxl)
 #####################################################################################################
 ##############  what was the total amount of N or P applied per strip?  ############################
 ####################################################################################################
-fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-03-17.csv")
+fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-03-19.csv")
 
-
+#step1_spatial_data_no_yld_2021-03-19
 
 fert_app <- fert_app %>% 
   dplyr::select(Paddock_ID:Strip_Type, ID_Rate_GSP_type, av_rain)
