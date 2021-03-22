@@ -40,7 +40,7 @@ list.files(baseDir, full.names = FALSE)
 ###########################################################################################################
 ## I would be good to work on this step to run all the files in the directory at once.
 
-input_file <-"Slater_Yld_SegID_zone.csv"
+input_file <-"Stefan_Slater_Yld_Seg_ID_zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
 name_Paddock <- "Stefan Slater"
