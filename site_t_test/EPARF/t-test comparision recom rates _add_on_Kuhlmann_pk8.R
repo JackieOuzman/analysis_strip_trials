@@ -56,7 +56,7 @@ str(recom_rateDB)
 recom_rate1 <- left_join( rec_rates, recom_rateDB)
 recom_rate1 <- data.frame(recom_rate1)
 str(recom_rate1)
-
+#View(recom_rate1)
 
 ## bring in the fert rates applied cal
 fert_app_all_steps <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_all_steps.csv")
@@ -320,9 +320,9 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(35,70) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(50,100) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(0,17.5,35) & zone_name == "zone2")
+  filter(Rate %in% c(50,100) & zone_name == "zone2")
 
 
 recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
@@ -485,8 +485,8 @@ rec_rate_p_vs_low_High_wide <- rec_rate_p_vs_low_High_wide %>%
   mutate(
          rec_rate_p_vs_lower = rec_rate_p - lower_than_rec_rate_p,
          #rec_rate_p_vs_lower = NA,
-         rec_rate_p_vs_higher = rec_rate_p  - higher_than_rec_rate_p
-         #rec_rate_p_vs_higher = NA
+         #rec_rate_p_vs_higher = rec_rate_p  - higher_than_rec_rate_p
+         rec_rate_p_vs_higher = NA
          )
 rec_rate_p_vs_low_High_wide
 
@@ -532,7 +532,7 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
     Zone_ID,
     comparison,
     yld_response,
-    higher_than_rec_rate_p ,
+    #higher_than_rec_rate_p ,
     lower_than_rec_rate_p,
     rec_rate_p,
     rec_rate_p_vs_lower,
@@ -545,8 +545,8 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
       comparison == "yld_resposne_rec_v_low"  ~ "rec_p_v_lower",
       comparison == "yld_resposne_rec_v_high" ~ "rec_p_v_higher"
     )) 
-# rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>% 
-#    mutate(higher_than_rec_rate_p = NA)
+ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>% 
+    mutate(higher_than_rec_rate_p = NA)
 
 rec_rate_p_vs_low_High_summary
 #View(rec_rate_p_vs_low_High_summary)
@@ -610,7 +610,7 @@ rec_rate_p_vs_lower_zone_1 #
 rec_rate_p_vs_lower_zone_2 
 
 rec_rate_p_vs_higher_zone_1#not run
-rec_rate_p_vs_higher_zone_2 #
+rec_rate_p_vs_higher_zone_2#not run
 
 # this is a check what comaprison I have what was I expecting to run?
 recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>% 
@@ -623,10 +623,10 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 ### !!! user input required
 rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
-                                    rec_rate_p_vs_lower_zone_2,
+                                    rec_rate_p_vs_lower_zone_2
 
                                     #rec_rate_p_vs_higher_zone_1,
-                                    rec_rate_p_vs_higher_zone_2
+                                    #rec_rate_p_vs_higher_zone_2
 )
 
 #rec_rate_p_low_vs_high_all <- rec_rate_p_vs_lower_zone_1
