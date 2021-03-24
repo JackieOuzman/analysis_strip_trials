@@ -710,8 +710,10 @@ label_rec_rates <- tidyr::pivot_wider(
 )
 label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
+## !! user input
+
 label_rec_rates <-label_rec_rates %>% rename(
-                           higher_than_rec_rate_p_label = higher_than_rec_rate_p,
+                           #higher_than_rec_rate_p_label = higher_than_rec_rate_p,
                            lower_than_rec_rate_p_label = lower_than_rec_rate_p,
                            rec_rate_p_label = rec_rate_p)
 

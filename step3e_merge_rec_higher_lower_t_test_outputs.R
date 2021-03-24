@@ -33,10 +33,11 @@ outputDir <-
     "merged_comparision_output"
   )
 baseDir
-file_list <- paste0(baseDir, "/",list.files(baseDir, ".csv", full.names = FALSE))
-file_list
+file_list_N <- paste0(baseDir, "/",list.files(baseDir, "N Strip.csv", full.names = FALSE))
+file_list_N
 
-
+file_list_P <- paste0(baseDir, "/",list.files(baseDir, "P Strip.csv", full.names = FALSE))
+file_list_P
 
 #list of clm headings that I want
 clm_headings <- c(
@@ -66,6 +67,17 @@ clm_headings <- c(
   "lower_than_rec_rate_p_label",
   "rec_rate_p_label",
   "zone"
+  # "higher_than_rec_rate_n",
+  # "lower_than_rec_rate_n",
+  # "rec_rate_n",
+  # "rec_rate_n_vs_higher",
+  # "rec_rate_n_vs_lower",
+  # "se_comp_rec_rate_high_n",
+  # "se_comp_rec_rate_low_n",
+  # "higher_than_rec_rate_n_label",
+  # "lower_than_rec_rate_n_label",
+  # "rec_rate_n_label"
+  
   
 )
 
@@ -74,6 +86,7 @@ clm_headings <- c(
 
 setwd(baseDir)
 file_list <- list.files()
+file_list
 for (file in file_list){
   
   # if the merged dataset doesn't exist, create it
@@ -143,11 +156,14 @@ dataset_2 <- read.csv(file2)
 dataset_2[clm_headings[!(clm_headings %in% colnames(dataset_2))]] = 'NA'
 names(dataset_2)
 
-dataset_3 <- read.csv(file3)
-dataset_3[clm_headings[!(clm_headings %in% colnames(dataset_3))]] = 'NA'
-names(dataset_3)
+
+test<-rbind(dataset_1, dataset_2)
+
+# dataset_3 <- read.csv(file3)
+# dataset_3[clm_headings[!(clm_headings %in% colnames(dataset_3))]] = 'NA'
+# names(dataset_3)
 
 #I was missing a clm added now
-dataset_6 <- read.csv(file6)
-dataset_6[clm_headings[!(clm_headings %in% colnames(dataset_6))]] = 'NA'
-names(dataset_6)
+# dataset_6 <- read.csv(file6)
+# dataset_6[clm_headings[!(clm_headings %in% colnames(dataset_6))]] = 'NA'
+# names(dataset_6)

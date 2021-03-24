@@ -760,7 +760,7 @@ View(rec_rate_n_vs_low_High_summary)
 name_rec_rate_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_N_", 
                                  dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 name_rec_rate_low_high
-write.csv(rec_rate_N_vs_low_High_summary, name_rec_rate_low_high)  
+write.csv(rec_rate_n_vs_low_High_summary, name_rec_rate_low_high)  
 
 
-##!!! note that we now have an extra clm with the type of trial
+##!!! note that we now have an extra clm with the type of trial and heaps of n
