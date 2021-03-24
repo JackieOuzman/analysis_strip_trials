@@ -43,7 +43,7 @@ list.files(baseDir, full.names = FALSE)
 input_file <-"Kuhlmann_pdk26_P_Yld_SegID_zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
-name_Paddock <- "Kuhlmann paddock 26"
+name_Paddock <- "Kuhlmann paddock 26 P"
 name_Paddock
 
 ################################################################################################################
@@ -538,7 +538,7 @@ function_tabel_yield <- function(all_results, Zone_labels){
   mean_zone_av_output_display <-all_results %>% 
     mutate(Significant = case_when(Significant == "significant"  & rounded > 0.1 ~ "*",
                                    TRUE ~ "" ))
-mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 1))
+mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 2))
 mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
                                       Yld = paste0(yield, Significant))
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, Zone, Details, Yld)
