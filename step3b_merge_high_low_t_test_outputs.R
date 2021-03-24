@@ -85,7 +85,7 @@ for (file in file_list){
 names(dataset)
 
 dataset <- dataset %>% 
-  mutate(ID_analysis_zone_temp = paste0(Zone_ID, "_", comparison )) %>% 
+  mutate(ID_analysis_zone_temp = paste0(Zone_ID, "_", comparison, "_", Strip_Type )) %>% 
   distinct(ID_analysis_zone_temp, .keep_all = TRUE)
 
 dataset <- dataset %>% 
