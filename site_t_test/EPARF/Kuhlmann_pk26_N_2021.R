@@ -536,7 +536,7 @@ function_tabel_yield <- function(all_results, Zone_labels){
 #function_tabel_yield <- function(all_results){
   all_results <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
   mean_zone_av_output_display <-all_results %>% 
-    mutate(Significant = case_when(Significant == "significant"  & rounded > 0.1 ~ "*",
+    mutate(Significant = case_when(Significant == "significant"  & rounded > 0.2 ~ "*",
                                    TRUE ~ "" ))
 mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 2))
 mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
@@ -604,7 +604,7 @@ all_results_1 <- all_results_1 %>%
          input_file = input_file)
 
 #save the output
-write.csv(all_results_1, paste0(outputDir, "/grower_results/results_grower_N", 
+write.csv(all_results_1, paste0(outputDir, "/grower_results/results_grower_", 
                               distinct(all_results_1,paddock_ID_Type),
                               "_",
                               input_file))
@@ -617,7 +617,7 @@ ggsave( filename =
                 distinct(all_results_1,paddock_ID_Type),
                 "_",
                 stringr::str_replace(input_file, ".csv", ""),
-          "_N_collection.png"), device = "png", 
+          "_collection.png"), device = "png", 
         width = 35, height = 20, units = "cm", collection)
 
 
@@ -920,7 +920,7 @@ for_ricks_tables_summary
 
 
 #save the output
-name <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_N_", 
+name <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_", 
 dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 name
 
@@ -1386,7 +1386,7 @@ GR_vs_low_High_rate_summary <- full_join(GR_vs_low_High_rate_summary, label_GR_v
 
 
 #save the output
-name_CSP_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_N_", 
+name_CSP_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_", 
                             dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 
 write.csv(GR_vs_low_High_rate_summary, name_CSP_low_high)
