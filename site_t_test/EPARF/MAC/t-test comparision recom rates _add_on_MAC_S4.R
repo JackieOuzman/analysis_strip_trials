@@ -71,7 +71,7 @@ str(recom_rate1)
 
 recom_rate1 <- left_join(recom_rate1, fert_app_all_steps)
 str(recom_rate1)
-View(recom_rate1)
+#View(recom_rate1)
 ###############################################################################################################
 ## what are the comparision I want to make
 
@@ -320,9 +320,9 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(0,80,160) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(0,35,70) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(0,80) & zone_name == "zone2")
+  filter(Rate %in% c(35,70) & zone_name == "zone2")
 
 
 recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
@@ -426,7 +426,7 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
    grand_mean_std_error_zone1_rec_rate_low,
    grand_mean_std_error_zone2_rec_rate_low)
 
-grand_mean_recom_rate_H_se #we dont have this comparsion
+grand_mean_recom_rate_H_se #
 grand_mean_recom_rate_L_se 
 
  grand_mean_recom_rate_H_L_se <- full_join(grand_mean_recom_rate_H_se,
@@ -607,10 +607,10 @@ assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_ra
 
 #what ran?
 rec_rate_p_vs_lower_zone_1 #
-rec_rate_p_vs_lower_zone_2 #not run
+rec_rate_p_vs_lower_zone_2 #
 
 rec_rate_p_vs_higher_zone_1
-rec_rate_p_vs_higher_zone_2 # not enough data ?
+rec_rate_p_vs_higher_zone_2 # not run
 
 # this is a check what comaprison I have what was I expecting to run?
 recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>% 
@@ -623,11 +623,11 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 ### !!! user input required
 rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
-                                    #rec_rate_p_vs_lower_zone_2,
+                                    rec_rate_p_vs_lower_zone_2,
 
-                                    rec_rate_p_vs_higher_zone_1,
-                                    rec_rate_p_vs_higher_zone_2
-)
+                                    rec_rate_p_vs_higher_zone_1)#,
+                                    #rec_rate_p_vs_higher_zone_2
+#)
 
 #rec_rate_p_low_vs_high_all <- rec_rate_p_vs_lower_zone_1
 
@@ -710,6 +710,8 @@ label_rec_rates <- tidyr::pivot_wider(
 )
 label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
+
+## !! make sure this runs
 label_rec_rates <-label_rec_rates %>% rename(
                            higher_than_rec_rate_p_label = higher_than_rec_rate_p,
                            lower_than_rec_rate_p_label = lower_than_rec_rate_p,
