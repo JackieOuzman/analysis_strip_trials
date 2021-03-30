@@ -16,7 +16,11 @@ library(readxl)
 #####################################################################################################
 ##############  what was the total amount of N or P applied per strip?  ############################
 ####################################################################################################
-fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-03-25.csv")
+
+
+#fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-03-25.csv")
+## If run today use this code:
+fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
 
 #step1_spatial_data_no_yld_2021-03-19
 
@@ -134,7 +138,8 @@ fert_app <- fert_app %>%
         product_fert1 == "urea" ~ 0.46, 
         product_fert1 == "ssp" ~ 0.0, 
         product_fert1 == "granulock" ~ 0.1, 
-        product_fert1 == "granulock z" ~ 0.1, 
+        product_fert1 == "granulock z" ~ 0.1,
+        product_fert1 == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert1 == "map zn" ~ 0.1, 
         product_fert1 == "zincguard d2" ~ 0.164,
         product_fert1 == "SOA" ~ 0.21, 
@@ -162,6 +167,7 @@ fert_app <- fert_app %>%
         product_fert2 == "ssp" ~ 0.0, 
         product_fert2 == "granulock" ~ 0.1, 
         product_fert2 == "granulock z" ~ 0.1, 
+        product_fert2 == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert2 == "map zn" ~ 0.1, 
         product_fert2 == "zincguard d2" ~ 0.164,
         product_fert2 == "SOA" ~ 0.21, 
@@ -189,6 +195,7 @@ fert_app <- fert_app %>%
         product_fert3 == "ssp" ~ 0.0, 
         product_fert3 == "granulock" ~ 0.1, 
         product_fert3 == "granulock z" ~ 0.1, 
+        product_fert3 == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert3 == "map zn" ~ 0.1, 
         product_fert3 == "zincguard d2" ~ 0.164,
         product_fert3 == "SOA" ~ 0.21, 
@@ -255,6 +262,7 @@ fert_app <- fert_app %>%
         product_fert1 == "ssp" ~ 0.088, 
         product_fert1 == "granulock" ~ 0.175, 
         product_fert1 == "granulock z" ~ 0.218, 
+        product_fert1 == "granuloc z" ~ 0.218, # I assume this is a typo?
         product_fert1 == "map zn" ~ 0.22, 
         product_fert1 == "zincguard d2" ~ 0.193,
         product_fert1 == "soa" ~ 0.0, 
@@ -280,7 +288,8 @@ fert_app <- fert_app %>%
         product_fert2 == "urea" ~ 0.0, 
         product_fert2 == "ssp" ~ 0.088, 
         product_fert2 == "granulock" ~ 0.175, 
-        product_fert2 == "granulockz" ~ 0.218, 
+        product_fert2 == "granulockz" ~ 0.218,
+        product_fert2 == "granuloc z" ~ 0.218, # I assume this is a typo?
         product_fert2 == "map zn" ~ 0.22, 
         product_fert2 == "zincguard d2" ~ 0.193,
         product_fert2 == "soa" ~ 0.0, 
@@ -306,7 +315,8 @@ fert_app <- fert_app %>%
         product_fert3 == "urea" ~ 0.0, 
         product_fert3 == "ssp" ~ 0.088, 
         product_fert3 == "granulock" ~ 0.175, 
-        product_fert3 == "granulockz" ~ 0.218, 
+        product_fert3 == "granulockz" ~ 0.218,
+        product_fert3 == "granuloc z" ~ 0.218, # I assume this is a typo?
         product_fert3 == "map zn" ~ 0.22, 
         product_fert3 == "zincguard d2" ~ 0.193,
         product_fert3 == "soa" ~ 0.0, 
