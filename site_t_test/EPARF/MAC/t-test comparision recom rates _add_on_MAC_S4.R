@@ -13,7 +13,7 @@ rm(list = ls()[!ls() %in% c("strips",
                             )])
 
 
-recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_Feb24.xlsx")
+recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_March23 2021.xlsx")
 ##########################################################################################################################################
 ### Extra analysis for ricks tables GSP vs low high comparision 
 recom_rateDB <- recom_rateDB %>% 
@@ -71,7 +71,7 @@ str(recom_rate1)
 
 recom_rate1 <- left_join(recom_rate1, fert_app_all_steps)
 str(recom_rate1)
-
+View(recom_rate1)
 ###############################################################################################################
 ## what are the comparision I want to make
 
