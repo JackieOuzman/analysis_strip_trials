@@ -466,7 +466,7 @@ paddock_ID <- c(paddock_ID_1, paddock_ID_2)
 
 function_tabel_soil_testing <- function( paddock_ID_1, paddock_ID_2){
 
-harm_database <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_Feb18.xlsx")
+harm_database <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_March23 2021.xlsx")
 
 #fix up some names
 harm_database<-
@@ -533,21 +533,22 @@ all_results <- rename(all_results, Details = Strip_Rate)
 all_results_1 <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
 
 function_tabel_yield <- function(all_results, Zone_labels){
-#function_tabel_yield <- function(all_results){
+  #function_tabel_yield <- function(all_results){
   all_results <- left_join(all_results, Zone_labels, by= c("zone"= "zone_name"))
   mean_zone_av_output_display <-all_results %>% 
     mutate(Significant = case_when(Significant == "significant"  & rounded > 0.1 ~ "*",
                                    TRUE ~ "" ))
-mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 1))
-mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
-                                      Yld = paste0(yield, Significant))
-mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, Zone, Details, Yld)
-mean_zone_av_output_display <- tidyr::spread(mean_zone_av_output_display, Zone, Yld)
-mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
-#mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,2)] #record the clms
-
-return(mean_zone_av_output_display)
+  mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 2))
+  mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
+                                        Yld = paste0(yield, Significant))
+  mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, Zone, Details, Yld)
+  mean_zone_av_output_display <- tidyr::spread(mean_zone_av_output_display, Zone, Yld)
+  mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
+  #mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,2)] #record the clms
+  
+  return(mean_zone_av_output_display)
 }
+
 
 assign(("tabel_yield"), function_tabel_yield(all_results, Zone_labels))
 
