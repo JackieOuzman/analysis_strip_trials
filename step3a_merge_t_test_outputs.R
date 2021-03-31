@@ -63,9 +63,9 @@ for (file in file_list){
 
 names(dataset)
 
-dataset <- dataset %>% 
-  mutate(ID_analysis_zone_temp = paste0("Zone_",Zone_ID, "_Rate_", Rate,"_paddock_", paddock_ID_Type, "-", Strip_Type )) %>% 
-  distinct(ID_analysis_zone_temp, .keep_all = TRUE)
+# dataset <- dataset %>% 
+#   mutate(ID_analysis_zone_temp = paste0("Zone_",Zone_ID, "_Rate_", Rate,"_paddock_", paddock_ID_Type, "-", Strip_Type )) %>% 
+#   distinct(ID_analysis_zone_temp, .keep_all = TRUE)
 
 ### add in sig and yield resposne
 
