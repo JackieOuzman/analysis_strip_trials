@@ -534,7 +534,7 @@ function_tabel_yield <- function(all_results, Zone_labels){
   mean_zone_av_output_display <-all_results %>% 
     mutate(Significant = case_when(Significant == "significant"  & rounded > 0.1 ~ "*",
                                    TRUE ~ "" ))
-mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 1))
+mean_zone_av_output_display <- mean_zone_av_output_display %>% mutate_if(is.numeric, ~round(., 2))
 mean_zone_av_output_display <- mutate(mean_zone_av_output_display,
                                       Yld = paste0(yield, Significant))
 mean_zone_av_output_display <- dplyr::select(mean_zone_av_output_display, Rate, Zone, Details, Yld)
@@ -1379,7 +1379,7 @@ GR_vs_low_High_rate_summary <- full_join(GR_vs_low_High_rate_summary, label_GR_v
 
 
 
-
+View(GR_vs_low_High_rate_summary)
 
 #save the output
 name_CSP_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_", 

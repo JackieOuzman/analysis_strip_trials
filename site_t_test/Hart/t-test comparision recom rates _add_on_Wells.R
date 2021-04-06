@@ -606,7 +606,7 @@ assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_ra
 
 
 #what ran?
-rec_rate_p_vs_lower_zone_1 #this is the only one that ran
+rec_rate_p_vs_lower_zone_1 
 rec_rate_p_vs_lower_zone_2
 
 rec_rate_p_vs_higher_zone_1
