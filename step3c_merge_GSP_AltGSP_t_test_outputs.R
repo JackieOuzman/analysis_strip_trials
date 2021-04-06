@@ -7,7 +7,7 @@
 
 library(tidyverse)
 
-
+rm(dataset, temp_dataset, baseDir, file, file_list, outputDir)
 
 
 

@@ -6,6 +6,7 @@
 
 
 library(tidyverse)
+rm(dataset, temp_dataset, baseDir, file, file_list, outputDir)
 
 ## yield results
 ## need to be merged into a single file
