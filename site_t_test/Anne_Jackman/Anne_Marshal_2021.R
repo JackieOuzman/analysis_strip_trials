@@ -43,7 +43,7 @@ list.files(baseDir, full.names = FALSE)
 input_file <-"Corner_Yld_SegID_zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
-name_Paddock <- "Anne Jackman Corner"
+name_Paddock <- "Anne Jackman Cormer"
 name_Paddock
 
 ################################################################################################################
