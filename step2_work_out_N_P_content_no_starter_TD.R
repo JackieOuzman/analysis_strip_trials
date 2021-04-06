@@ -155,6 +155,8 @@ fert_app <- fert_app %>%
         product_fert1 == "map/soa 14:15:0:9" ~ .14,
         product_fert1 == "29:10:s7%:zn(1%)" ~ .29, 
         product_fert1 == "phosphoric acid" ~ 0.0, 
+        product_fert1 == "dap / urea 28-13-0-1" ~ 0.28, 
+        
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -183,6 +185,7 @@ fert_app <- fert_app %>%
         product_fert2 == "map/soa 14:15:0:9" ~ .14,
         product_fert2 == "29:10:s7%:zn(1%)" ~ .29,
         product_fert2 == "phosphoric acid" ~ 0.0,
+        product_fert2 == "dap / urea 28-13-0-1" ~ 0.28,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -211,6 +214,7 @@ fert_app <- fert_app %>%
         product_fert3 == "map/soa 14:15:0:9" ~ .14,
         product_fert3 == "29:10:s7%:zn(1%)" ~ .29, 
         product_fert3 == "phosphoric acid" ~ 0.0,
+        product_fert3 == "dap / urea 28-13-0-1" ~ 0.28,
         TRUE ~ 0))
 #rate * content for trial
 
@@ -276,7 +280,8 @@ fert_app <- fert_app %>%
         product_fert1 == "prime msz" ~ .18,
         product_fert1 == "map/soa 14:15:0:9" ~ .15,
         product_fert1 == "29:10:s7%:zn(1%)" ~ .10,
-        product_fert1 == "phosphoric acid" ~ 1.0, 
+        product_fert1 == "phosphoric acid" ~ 1.0,
+        product_fert1 == "dap / urea 28-13-0-1" ~ 0.13,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -303,7 +308,8 @@ fert_app <- fert_app %>%
         product_fert2 == "prime msz" ~ .18,
         product_fert2 == "map/soa 14:15:0:9" ~ .15,
         product_fert2 == "29:10:s7%:zn(1%)" ~ .10,
-        product_fert2 == "phosphoric acid" ~ 1.0, 
+        product_fert2 == "phosphoric acid" ~ 1.0,
+        product_fert2 == "dap / urea 28-13-0-1" ~ 0.13,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -331,7 +337,7 @@ fert_app <- fert_app %>%
         product_fert3 == "map/soa 14:15:0:9" ~ .15,
         product_fert3 == "29:10:s7%:zn(1%)" ~ .10,
         product_fert3 == "phosphoric acid" ~ 1.0, 
-        
+        product_fert3 == "dap / urea 28-13-0-1" ~ 0.13,
         TRUE ~ 0))
 
 #rate * content for trial
