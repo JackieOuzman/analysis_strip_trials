@@ -18,9 +18,9 @@ library(readxl)
 ####################################################################################################
 
 
-#fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-03-25.csv")
+fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-04-06.csv")
 ## If run today use this code:
-fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
+#fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
 
 #step1_spatial_data_no_yld_2021-03-19
 
@@ -156,7 +156,7 @@ fert_app <- fert_app %>%
         product_fert1 == "29:10:s7%:zn(1%)" ~ .29, 
         product_fert1 == "phosphoric acid" ~ 0.0, 
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.28, 
-        
+        product_fert1 == "granulock zs 24-11-0-6" ~ 0.24,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -186,6 +186,7 @@ fert_app <- fert_app %>%
         product_fert2 == "29:10:s7%:zn(1%)" ~ .29,
         product_fert2 == "phosphoric acid" ~ 0.0,
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.28,
+        product_fert2 == "granulock zs 24-11-0-6" ~ 0.24,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -215,6 +216,7 @@ fert_app <- fert_app %>%
         product_fert3 == "29:10:s7%:zn(1%)" ~ .29, 
         product_fert3 == "phosphoric acid" ~ 0.0,
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.28,
+        product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,
         TRUE ~ 0))
 #rate * content for trial
 
@@ -282,6 +284,7 @@ fert_app <- fert_app %>%
         product_fert1 == "29:10:s7%:zn(1%)" ~ .10,
         product_fert1 == "phosphoric acid" ~ 1.0,
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.13,
+        product_fert1 == "granulock zs 24-11-0-6" ~ 0.11,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -310,6 +313,7 @@ fert_app <- fert_app %>%
         product_fert2 == "29:10:s7%:zn(1%)" ~ .10,
         product_fert2 == "phosphoric acid" ~ 1.0,
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.13,
+        product_fert2 == "granulock zs 24-11-0-6" ~ 0.11,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -338,6 +342,7 @@ fert_app <- fert_app %>%
         product_fert3 == "29:10:s7%:zn(1%)" ~ .10,
         product_fert3 == "phosphoric acid" ~ 1.0, 
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.13,
+        product_fert3 == "granulock zs 24-11-0-6" ~ 0.11,
         TRUE ~ 0))
 
 #rate * content for trial
