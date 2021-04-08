@@ -157,6 +157,8 @@ fert_app <- fert_app %>%
         product_fert1 == "phosphoric acid" ~ 0.0, 
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.28, 
         product_fert1 == "granulock zs 24-11-0-6" ~ 0.24,
+        product_fert1 == "soa/urea" ~ 0.385,
+        
         
         TRUE ~ 0))
 fert_app <- fert_app %>%
@@ -188,6 +190,7 @@ fert_app <- fert_app %>%
         product_fert2 == "phosphoric acid" ~ 0.0,
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.28,
         product_fert2 == "granulock zs 24-11-0-6" ~ 0.24,
+        product_fert2 == "soa/urea" ~ 0.385,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -218,6 +221,7 @@ fert_app <- fert_app %>%
         product_fert3 == "phosphoric acid" ~ 0.0,
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.28,
         product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,
+        product_fert3 == "soa/urea" ~ 0.385,
         TRUE ~ 0))
 #rate * content for trial
 
