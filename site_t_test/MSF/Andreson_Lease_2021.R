@@ -705,7 +705,7 @@ ggsave( filename =
                 "_",
                 stringr::str_replace(input_file, ".csv", ""),
           "_collectionPg1.png"), device = "png", 
-        width = 35, height = 20, units = "cm", collection)
+        width = 35, height = 20, units = "cm", collection1)
 
 collection2
 ggsave( filename = 
@@ -714,7 +714,7 @@ ggsave( filename =
                  "_",
                  stringr::str_replace(input_file, ".csv", ""),
                  "_collectionPg2.png"), device = "png", 
-        width = 35, height = 20, units = "cm", collection)
+        width = 35, height = 20, units = "cm", collection2)
 
 #######################################################################################################################################
 ################                        Extra analysis for Ricks tables this is added to below t test      ############################

@@ -464,14 +464,16 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 # ## higher than P rate comparision
   grand_mean_recom_rate_H_se <- rbind(
     grand_mean_std_error_zone1_rec_rate_high,
-    grand_mean_std_error_zone2_rec_rate_high
+    grand_mean_std_error_zone2_rec_rate_high,
+    grand_mean_std_error_zone3_rec_rate_high
   )
 #grand_mean_recom_rate_H_se <- grand_mean_std_error_zone2_rec_rate_high
 
 ## lower than P rate comparision                                         
  grand_mean_recom_rate_L_se <- rbind(
    grand_mean_std_error_zone1_rec_rate_low,
-   grand_mean_std_error_zone2_rec_rate_low)
+   grand_mean_std_error_zone2_rec_rate_low,
+   grand_mean_std_error_zone3_rec_rate_low)
 
 grand_mean_recom_rate_H_se #
 grand_mean_recom_rate_L_se 
