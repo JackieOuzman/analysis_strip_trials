@@ -110,11 +110,11 @@ assign("strips", function_2_tidy_clm(strips))
 unique(strips$Rate)
 str(strips$Rate)
 
-strips <- strips %>%
-  mutate(Rate = case_when(
-    Rate == 40 ~ 17.9,
-    Rate == 20 ~ 10.2,
-    Rate == 0 ~ 2.5))
+# strips <- strips %>%
+#   mutate(Rate = case_when(
+#     Rate == 40 ~ 17.9,
+#     Rate == 20 ~ 10.2,
+#     Rate == 0 ~ 2.5))
 
 unique(strips$Rate)
 
@@ -1320,7 +1320,7 @@ GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate, Zone_ID, zone_name) %>%
 
 ## filter out one rate so we only have 3
 GR_vs_low_High_rate <- GR_vs_low_High_rate %>%
-  filter(Rate == c(2.5,17.9)) # this is what we will keep
+  filter(Rate == c(0,20)) # this is what we will keep 2.5,17.9
 
 str(GR_vs_low_High_rate$Rate)
 GR_vs_low_High_rate$Rate <- as.double(GR_vs_low_High_rate$Rate)
