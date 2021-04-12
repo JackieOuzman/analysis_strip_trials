@@ -64,7 +64,8 @@ fert_app_all_steps <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/proces
 
 fert_app_all_steps <- fert_app_all_steps %>% 
   dplyr::filter(Paddock_ID == substr(paddock_ID_1, start = 1, stop = 5)|
-                Paddock_ID == substr(paddock_ID_2, start = 1, stop = 5)) %>% 
+                Paddock_ID == substr(paddock_ID_2, start = 1, stop = 5)|
+                Paddock_ID == substr(paddock_ID_3, start = 1, stop = 5)) %>% 
   dplyr::select( Paddock_ID, Rate, Strip_Rate, Total_sum_P_content, Total_sum_N_content)
 
 str(fert_app_all_steps)
