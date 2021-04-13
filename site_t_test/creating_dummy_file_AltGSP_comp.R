@@ -49,3 +49,4 @@ name_gsp <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outpu
                    dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 name_gsp
 write.csv(dummy_alt_file, name_gsp)
+

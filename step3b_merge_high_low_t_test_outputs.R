@@ -59,7 +59,8 @@ clm_headings <- c(
   "rate_low",
   "rate_medium",
   "rate_high",
-  "rate_very_high"
+  "rate_very_high",
+  "rate_very_low"
 )
 
 
@@ -102,4 +103,53 @@ write.csv(dataset,paste0(outputDir, "/hign_low_t_test_merged_3b.csv") )
 
 
 
+### Note working for micheal paddocks?? 52411
 
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31721_N Strip.csv" 
+#MM paddocks
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52411_N Strip.csv"
+file3 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52413_P Strip.csv"
+file4 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52454_P Strip.csv"
+file5 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52472_N Strip.csv" 
+file6 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52493_P Strip.csv" 
+file7 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52494_N Strip.csv"
+file8 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_524102_N Strip.csv"
+
+dataset_1 <- read.csv(file1)
+dataset_1[clm_headings[!(clm_headings %in% colnames(dataset_1))]] = 'NA'
+names(dataset_1)
+
+
+dataset_2 <- read.csv(file2)
+dataset_2[clm_headings[!(clm_headings %in% colnames(dataset_2))]] = 'NA'
+names(dataset_2)
+
+
+test<-rbind(dataset_1, dataset_2)
+
+dataset_3 <- read.csv(file3)
+dataset_3[clm_headings[!(clm_headings %in% colnames(dataset_3))]] = 'NA'
+names(dataset_3)  
+test<-rbind(test, dataset_3)
+
+
+dataset_4 <- read.csv(file4)
+dataset_4[clm_headings[!(clm_headings %in% colnames(dataset_4))]] = 'NA'
+names(dataset_4)  
+test<-rbind(test, dataset_4)
+
+dataset_5 <- read.csv(file5)
+dataset_5[clm_headings[!(clm_headings %in% colnames(dataset_5))]] = 'NA'
+names(dataset_5)  
+test<-rbind(test, dataset_5)
+
+dataset_6 <- read.csv(file6)
+dataset_6[clm_headings[!(clm_headings %in% colnames(dataset_6))]] = 'NA'
+names(dataset_6)  
+test<-rbind(test, dataset_6)
+
+dataset_7 <- read.csv(file7)
+dataset_7[clm_headings[!(clm_headings %in% colnames(dataset_7))]] = 'NA'
+names(test)
+names(dataset_7)  
+test<-rbind(test, dataset_7)

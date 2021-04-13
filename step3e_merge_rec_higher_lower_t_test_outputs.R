@@ -66,7 +66,8 @@ clm_headings_P <- c(
   "higher_than_rec_rate_p_label",
   "lower_than_rec_rate_p_label",
   "rec_rate_p_label",
-  "zone"
+  "zone",
+  "rate_very_low"
   # "higher_than_rec_rate_n",
   # "lower_than_rec_rate_n",
   # "rec_rate_n",
@@ -171,7 +172,8 @@ clm_headings_N <- c(
   "se_comp_rec_rate_low_n",
   "higher_than_rec_rate_n_label",
   "lower_than_rec_rate_n_label",
-  "rec_rate_n_label"
+  "rec_rate_n_label",
+  "rate_very_low"
 )
 
 setwd(baseDir_N)
