@@ -320,9 +320,9 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(0,35,70) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(20,35) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(35,70) & zone_name == "zone2")
+  filter(Rate %in% c(35,55) & zone_name == "zone2")
 
 
 recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
@@ -605,7 +605,7 @@ assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_ra
 
 
 #what ran?
-rec_rate_p_vs_lower_zone_1 #
+rec_rate_p_vs_lower_zone_1 # nope
 rec_rate_p_vs_lower_zone_2 #
 
 rec_rate_p_vs_higher_zone_1 # 
@@ -621,7 +621,7 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
   arrange(rec_rate_high_low_p)
 
 ### !!! user input required
-rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
+rec_rate_p_low_vs_high_all <- rbind(#rec_rate_p_vs_lower_zone_1,
                                     rec_rate_p_vs_lower_zone_2,
 
                                     rec_rate_p_vs_higher_zone_1)
