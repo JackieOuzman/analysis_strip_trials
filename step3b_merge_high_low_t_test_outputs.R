@@ -98,14 +98,14 @@ dataset <- dataset %>%
                                            TRUE ~ "NA"))
 
 ### saved the merged dataframe
-#outputDir
+outputDir
 write.csv(dataset,paste0(outputDir, "/hign_low_t_test_merged_3b.csv") )
 
 
 
 ### Note working for micheal paddocks?? 52411
 
-file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31721_N Strip.csv" 
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31222_N Strip.csv" 
 #MM paddocks
 file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52411_N Strip.csv"
 file3 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52413_P Strip.csv"
@@ -153,3 +153,9 @@ dataset_7[clm_headings[!(clm_headings %in% colnames(dataset_7))]] = 'NA'
 names(test)
 names(dataset_7)  
 test<-rbind(test, dataset_7)
+
+dataset_8 <- read.csv(file8)
+dataset_8[clm_headings[!(clm_headings %in% colnames(dataset_8))]] = 'NA'
+names(test)
+names(dataset_8)  
+test<-rbind(test, dataset_8)

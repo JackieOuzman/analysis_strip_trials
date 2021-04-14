@@ -18,9 +18,9 @@ library(readxl)
 ####################################################################################################
 
 
-fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-04-06.csv")
+#fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-04-06.csv")
 ## If run today use this code:
-#fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
+fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
 
 #step1_spatial_data_no_yld_2021-03-19
 
