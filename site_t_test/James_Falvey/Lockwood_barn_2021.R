@@ -40,10 +40,10 @@ list.files(baseDir, full.names = FALSE)
 ###########################################################################################################
 ## I would be good to work on this step to run all the files in the directory at once.
 
-input_file <-"MiddleWest_Yld_SegID_Zone.csv"
+input_file <-"Lockwood_Barn_Yld_SegID_Zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
-name_Paddock <- "Ashley Amourgis - Peel - Middle west"
+name_Paddock <- "Ferrier - Lockwood barn"
 name_Paddock
 
 ################################################################################################################
@@ -244,8 +244,8 @@ zone_1rate_2
 zone_2rate_1
 zone_2rate_2
 
-zone_1rate_3
-zone_2rate_3
+zone_1rate_3 #nope
+zone_2rate_3 #nope
 
 ################################################################################################################
 ## function to join everything  togther
@@ -1056,8 +1056,12 @@ write.csv(for_ricks_tables_summary, name)
  assign(paste0("GSP", "zone_", "1"), function_paired_ttest_GSP(strips_alt_analysis, 1))
  assign(paste0("GSP","zone_", "2"), function_paired_ttest_GSP(strips_alt_analysis, 2))
  
- GSP_all <- rbind(GSPzone_1, GSPzone_2)
- #GSP_all <- GSPzone_1
+ #what ran?
+ GSPzone_1 #nope
+ GSPzone_2
+ 
+ #GSP_all <- rbind(GSPzone_1, GSPzone_2)
+ GSP_all <- GSPzone_2
  GSP_all <- left_join(GSP_all, Zone_labels, by=c("zone" = "zone_name"))
  
  str(strips_alt_analysis_summary)
@@ -1077,6 +1081,11 @@ write.csv(for_ricks_tables_summary, name)
  
  ## save output
  View(strips_alt_analysis_summary)
+ 
+ #Only keep the one that ran
+ strips_alt_analysis_summary <- strips_alt_analysis_summary %>% 
+   filter(Zone_ID == 312141)
+ 
  name_gsp <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP/GSP_AltGSP_comp_", 
                 dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
  name_gsp
