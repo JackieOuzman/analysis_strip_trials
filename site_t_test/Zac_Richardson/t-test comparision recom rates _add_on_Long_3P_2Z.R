@@ -61,9 +61,16 @@ str(recom_rate1)
 ## bring in the fert rates applied cal
 fert_app_all_steps <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_all_steps.csv")
 
+#!!! this trial has N and P so I need to just select the P 
+names(fert_app_all_steps)
 fert_app_all_steps <- fert_app_all_steps %>% 
-  dplyr::filter(Paddock_ID == substr(paddock_ID_1, start = 1, stop = 5)|
-                Paddock_ID == substr(paddock_ID_2, start = 1, stop = 5)) %>% 
+  filter(Strip_Type == "P Strip")
+
+fert_app_all_steps <- fert_app_all_steps %>% 
+  # dplyr::filter(Paddock_ID == substr(paddock_ID_1, start = 1, stop = 5)|
+  #                 Paddock_ID == substr(paddock_ID_2, start = 1, stop = 5))
+  dplyr::filter(Paddock_ID == substr(paddock_ID_1, start = 1, stop = 6)|
+                Paddock_ID == substr(paddock_ID_2, start = 1, stop = 6)) %>% 
   dplyr::select( Paddock_ID, Rate, Strip_Rate, Total_sum_P_content, Total_sum_N_content)
 
 str(fert_app_all_steps)
@@ -320,9 +327,9 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(25,50,100) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(0,60,120) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(25,50,100) & zone_name == "zone2")
+  filter(Rate %in% c(0,60) & zone_name == "zone2")
 
 
 recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
@@ -606,7 +613,7 @@ assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_ra
 
 #what ran?
 rec_rate_p_vs_lower_zone_1 # 
-rec_rate_p_vs_lower_zone_2 #
+rec_rate_p_vs_lower_zone_2 # nope
 
 rec_rate_p_vs_higher_zone_1 # 
 rec_rate_p_vs_higher_zone_2 #
@@ -622,7 +629,7 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 ### !!! user input required
 rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
-                                    rec_rate_p_vs_lower_zone_2,
+                                    #rec_rate_p_vs_lower_zone_2,
 
                                     rec_rate_p_vs_higher_zone_1,
                                     rec_rate_p_vs_higher_zone_2)
