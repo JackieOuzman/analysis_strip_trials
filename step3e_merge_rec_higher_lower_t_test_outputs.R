@@ -198,7 +198,7 @@ for (file in file_list){
 }
 
 
-View(dataset)
+#View(dataset)
 names(dataset)
 
 dataset <- dataset %>% 
