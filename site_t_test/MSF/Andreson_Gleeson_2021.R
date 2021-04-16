@@ -727,7 +727,7 @@ note_on_graph <- paste0("The table reports mean values and * denotes significant
 
 
 
-collection2 <-
+collection1 <-
   grid.arrange(
     plot_zone1,
     plot_zone2,
@@ -796,8 +796,8 @@ ggsave( filename =
          paste0(outputDir,  "/png/",
                 distinct(all_results_1,paddock_ID_Type),
                 "_",
-                stringr::str_replace(input_file, "Pg1.csv", ""),
-          "_collection.png"), device = "png", 
+                stringr::str_replace(input_file, ".csv", ""),
+          "_collectionPg1.png"), device = "png", 
         width = 35, height = 20, units = "cm", collection)
 
 collection2
@@ -806,7 +806,7 @@ ggsave( filename =
                  distinct(all_results_1,paddock_ID_Type),
                  "_",
                  stringr::str_replace(input_file, "Pg2.csv", ""),
-                 "_collection.png"), device = "png", 
+                 "_collectionPg2.png"), device = "png", 
         width = 35, height = 20, units = "cm", collection)
 
 
