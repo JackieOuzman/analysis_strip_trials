@@ -36,8 +36,11 @@ baseDir
 file_list <- paste0(baseDir, "/",list.files(baseDir, ".csv", full.names = FALSE))
 file_list
 
-# test <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_33121_P Strip.csv")
-# names(test)
+#try making a dummy file first
+#create a empty df
+dataset <- data.frame(matrix(ncol = 26, nrow = 0))
+
+
 
 #list of clm headings that I want
 clm_headings <- c(
@@ -65,11 +68,15 @@ clm_headings <- c(
   "rate_very_high",
   "higher_than_GSP_label" ,
   "lower_than_GSP_label" ,
-  "the_GSP_label"  
+  "the_GSP_label"  ,
+  "rate_very_low",
+  "Mean_diff",
+  "zone"
 )
 
 
-
+# clm headings from above
+colnames(dataset) <- clm_headings
 
 setwd(baseDir)
 file_list <- list.files()
@@ -108,4 +115,59 @@ dataset <- dataset %>%
 
 
 write.csv(dataset,paste0(outputDir, "/GSP_low_high_comparision_t_test_merged_3d.csv") )
+
+
+
+### Note working for micheal paddocks?? 52411
+
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_31215_N Strip.csv" 
+#MM paddocks
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_52411_N Strip.csv"
+file3 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_52413_P Strip.csv"
+file4 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_52454_P Strip.csv"
+file5 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_52472_N Strip.csv" 
+file6 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52493_P Strip.csv" 
+file7 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_52494_N Strip.csv"
+file8 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_524102_N Strip.csv"
+
+dataset_1 <- read.csv(file1)
+dataset_1[clm_headings[!(clm_headings %in% colnames(dataset_1))]] = 'NA'
+names(dataset_1)
+
+
+dataset_2 <- read.csv(file2)
+dataset_2a <- read.csv(file2)
+dataset_2a[clm_headings[!(clm_headings %in% colnames(dataset_2a))]] = 'NA'
+names(dataset_2)
+names(dataset_2a)
+
+test<-rbind(dataset_1, dataset_2)
+
+dataset_3 <- read.csv(file3)
+dataset_3[clm_headings[!(clm_headings %in% colnames(dataset_3))]] = 'NA'
+names(dataset_3)  
+test<-rbind(test, dataset_3)
+
+
+dataset_4 <- read.csv(file4)
+dataset_4[clm_headings[!(clm_headings %in% colnames(dataset_4))]] = 'NA'
+names(dataset_4)  
+test<-rbind(test, dataset_4)
+
+dataset_5 <- read.csv(file5)
+dataset_5[clm_headings[!(clm_headings %in% colnames(dataset_5))]] = 'NA'
+names(dataset_5)  
+test<-rbind(test, dataset_5)
+
+dataset_6 <- read.csv(file6)
+dataset_6[clm_headings[!(clm_headings %in% colnames(dataset_6))]] = 'NA'
+names(dataset_6)  
+test<-rbind(test, dataset_6)
+
+dataset_7 <- read.csv(file7)
+dataset_7[clm_headings[!(clm_headings %in% colnames(dataset_7))]] = 'NA'
+names(test)
+names(dataset_7)  
+test<-rbind(test, dataset_7)
+
 

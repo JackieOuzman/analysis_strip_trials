@@ -18,9 +18,9 @@ library(readxl)
 ####################################################################################################
 
 
-fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-04-06.csv")
+#fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-04-06.csv")
 ## If run today use this code:
-#fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
+fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
 
 #step1_spatial_data_no_yld_2021-03-19
 
@@ -85,12 +85,17 @@ fert_app$product_fert3 <- casefold(fert_app$product_fert3, upper=FALSE)
 fert_app <- fert_app %>%
   dplyr::mutate(
     rate_fert1 = str_replace(rate_fert1, "kg/ha", ""),
+    rate_fert1 = str_replace(rate_fert1, "kg/h", ""),
     rate_fert1 = str_replace(rate_fert1, "l/ha", ""),
     rate_fert1 = str_replace(rate_fert1, "L/ha", ""),
+    
     rate_fert2 = str_replace(rate_fert2, "kg/ha", ""),
+    rate_fert2 = str_replace(rate_fert2, "kg/h", ""),
     rate_fert2 = str_replace(rate_fert2, "l/ha", ""),
     rate_fert2 = str_replace(rate_fert2, "L/ha", ""),
+    
     rate_fert3 = str_replace(rate_fert3, "kg/ha", ""),
+    rate_fert3 = str_replace(rate_fert3, "kg/h", ""),
     rate_fert3 = str_replace(rate_fert3, "l/ha", ""),
     rate_fert3 = str_replace(rate_fert3, "L/ha", "")
   
@@ -157,6 +162,12 @@ fert_app <- fert_app %>%
         product_fert1 == "phosphoric acid" ~ 0.0, 
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.28, 
         product_fert1 == "granulock zs 24-11-0-6" ~ 0.24,
+        product_fert1 == "soa/urea" ~ 0.385,
+        product_fert1 == "urea / map 27:12" ~ 0.27,
+        product_fert1 == "urea/soa 60/40" ~ 0.354,
+        
+        
+        
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -187,6 +198,9 @@ fert_app <- fert_app %>%
         product_fert2 == "phosphoric acid" ~ 0.0,
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.28,
         product_fert2 == "granulock zs 24-11-0-6" ~ 0.24,
+        product_fert2 == "soa/urea" ~ 0.385,
+        product_fert2 == "urea / map 27:12" ~ 0.27,
+        product_fert2 == "urea/soa 60/40" ~ 0.354,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -217,6 +231,9 @@ fert_app <- fert_app %>%
         product_fert3 == "phosphoric acid" ~ 0.0,
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.28,
         product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,
+        product_fert3 == "soa/urea" ~ 0.385,
+        product_fert3 == "urea / map 27:12" ~ 0.27,
+        product_fert3 == "urea/soa 60/40" ~ 0.354,
         TRUE ~ 0))
 #rate * content for trial
 
@@ -285,6 +302,7 @@ fert_app <- fert_app %>%
         product_fert1 == "phosphoric acid" ~ 1.0,
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert1 == "granulock zs 24-11-0-6" ~ 0.11,
+        product_fert1 == "urea / map 27:12" ~ 0.12,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -314,6 +332,7 @@ fert_app <- fert_app %>%
         product_fert2 == "phosphoric acid" ~ 1.0,
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert2 == "granulock zs 24-11-0-6" ~ 0.11,
+        product_fert2 == "urea / map 27:12" ~ 0.12,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -343,6 +362,7 @@ fert_app <- fert_app %>%
         product_fert3 == "phosphoric acid" ~ 1.0, 
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert3 == "granulock zs 24-11-0-6" ~ 0.11,
+        product_fert3 == "urea / map 27:12" ~ 0.12,
         TRUE ~ 0))
 
 #rate * content for trial

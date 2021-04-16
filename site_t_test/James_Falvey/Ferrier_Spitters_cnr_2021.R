@@ -40,10 +40,10 @@ list.files(baseDir, full.names = FALSE)
 ###########################################################################################################
 ## I would be good to work on this step to run all the files in the directory at once.
 
-input_file <-"Gleesons_Yld_SegID_Zone.csv"
+input_file <-"SpittlesCorner_Yld_SegID_Zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
-name_Paddock <- "Anderson - Gleesons"
+name_Paddock <- "Lehamann - Spittles Corner"
 name_Paddock
 
 ################################################################################################################
@@ -105,19 +105,7 @@ function_2_tidy_clm <- function(strips) {
 
 assign("strips", function_2_tidy_clm(strips))
 ##################################################################################################################
-###!!!!   This is for MSF very complicated strips set up 
-## I will changes the rate label to N contnet.
-unique(strips$Rate)
-str(strips$Rate)
 
-strips <- strips %>% 
-  mutate(Rate = case_when(
-    Rate == 400 ~ 9.6,
-    Rate == 800 ~ 19.2,
-    Rate == 8050 ~ 42.2,
-    Rate == 80150 ~ 88.2))
-    
-unique(strips$Rate)
 
 
 
@@ -154,9 +142,9 @@ Rates_labels <- Rates_labels %>%
 #and again to get the other names 
 Rates_labels <- Rates_labels %>%
   mutate(rate_name = case_when(
-    #rate_name == "low" ~ "rate1",
-    rate_name == "medium" ~ "rate1",
-    rate_name == "high" ~ "rate2",
+    rate_name == "low" ~ "rate1",
+    rate_name == "medium" ~ "rate2",
+    #rate_name == "high" ~ "rate2",
     rate_name == "very_high" ~ "rate3",
     TRUE ~ rate_name
   ))
@@ -174,7 +162,7 @@ names(strips)
 x <- Rates_labels[1,1]
 y <- Rates_labels[2,1]
 z <- Rates_labels[3,1]
-zz <- Rates_labels[4,1]
+#zz <- Rates_labels[4,1]
 
 
 str(strips)
@@ -194,7 +182,9 @@ Zone_labels <- strips %>%
   distinct(Zone, .keep_all = TRUE) %>%
   filter(!is.na(Zone)) %>%
   arrange(Zone) %>% #this should work with text
-  mutate(zone_name = c("zone1","zone2", "zone3", "zone4" )) %>%
+  #mutate(zone_name = c("zone1","zone2", "zone3", "zone4" )) %>%
+  #mutate(zone_name = c("zone1","zone2", "zone3" )) %>%
+  mutate(zone_name = c("zone1","zone2" )) %>%
   dplyr::select(Zone, zone_name, Zone_ID)
 
 Zone_labels
@@ -250,38 +240,38 @@ return(data.frame(zone_x_rateXvsGR_res_sig))
 
 assign(paste0("zone_", "1", "rate_", "1"), function_paired_ttest(strips, 1, 1))
 assign(paste0("zone_", "1", "rate_", "2"), function_paired_ttest(strips, 1, 2))
+assign(paste0("zone_", "1", "rate_", "3"), function_paired_ttest(strips, 1, 3))
+
 assign(paste0("zone_", "2", "rate_", "1"), function_paired_ttest(strips, 2, 1))
 assign(paste0("zone_", "2", "rate_", "2"), function_paired_ttest(strips, 2, 2))
-
-assign(paste0("zone_", "1", "rate_", "3"), function_paired_ttest(strips, 1, 3))
 assign(paste0("zone_", "2", "rate_", "3"), function_paired_ttest(strips, 2, 3))
 
 
-assign(paste0("zone_", "3", "rate_", "1"), function_paired_ttest(strips, 1, 1))
-assign(paste0("zone_", "3", "rate_", "2"), function_paired_ttest(strips, 1, 2))
-assign(paste0("zone_", "4", "rate_", "1"), function_paired_ttest(strips, 2, 1))
-assign(paste0("zone_", "4", "rate_", "2"), function_paired_ttest(strips, 2, 2))
-
-assign(paste0("zone_", "3", "rate_", "3"), function_paired_ttest(strips, 1, 3))
-assign(paste0("zone_", "4", "rate_", "3"), function_paired_ttest(strips, 2, 3))
+# assign(paste0("zone_", "3", "rate_", "1"), function_paired_ttest(strips, 1, 1))
+# assign(paste0("zone_", "3", "rate_", "2"), function_paired_ttest(strips, 1, 2))
+# assign(paste0("zone_", "3", "rate_", "3"), function_paired_ttest(strips, 1, 3))
+# 
+# assign(paste0("zone_", "4", "rate_", "1"), function_paired_ttest(strips, 2, 1))
+# assign(paste0("zone_", "4", "rate_", "2"), function_paired_ttest(strips, 2, 2))
+# assign(paste0("zone_", "4", "rate_", "3"), function_paired_ttest(strips, 2, 3))
 
 
 #what ran?
 zone_1rate_1
 zone_1rate_2
-zone_1rate_3
+zone_1rate_3 
 
 zone_2rate_1
 zone_2rate_2
-zone_2rate_3
+zone_2rate_3 
 
-zone_3rate_1
-zone_3rate_2
-zone_3rate_3
+zone_3rate_1 #nope
+zone_3rate_2 #nope
+zone_3rate_3 #nope
 
-zone_4rate_1
-zone_4rate_2
-zone_4rate_3
+zone_4rate_1 #nope
+zone_4rate_2 #nope
+zone_4rate_3 #nope
 ################################################################################################################
 ## function to join everything  togther
 #join these togther
@@ -291,15 +281,15 @@ function_all_results <- function(zone_1rate_1,
                                  
                                  zone_2rate_1,
                                  zone_2rate_2,
-                                 zone_2rate_3,
+                                 zone_2rate_3)
                                  
-                                 zone_3rate_1,
-                                 zone_3rate_2,
-                                 zone_3rate_3,
+                                 # zone_3rate_1,
+                                 # zone_3rate_2)
+                                 #zone_3rate_3)
                                  
-                                 zone_4rate_1,
-                                 zone_4rate_2,
-                                 zone_4rate_3)
+                                 # zone_4rate_1,
+                                 # zone_4rate_2,
+                                 # zone_4rate_3)
                                  
                                  {
 results_ttest <- bind_rows(zone_1rate_1,
@@ -308,15 +298,15 @@ results_ttest <- bind_rows(zone_1rate_1,
                            
                            zone_2rate_1,
                            zone_2rate_2,
-                           zone_2rate_3,
+                           zone_2rate_3)
+
+                           #zone_3rate_1,
+                           #zone_3rate_2)
+                           #zone_3rate_3)
                            
-                           zone_3rate_1,
-                           zone_3rate_2,
-                           zone_3rate_3,
-                           
-                           zone_4rate_1,
-                           zone_4rate_2,
-                           zone_4rate_3)
+                           # zone_4rate_1,
+                           # zone_4rate_2,
+                           # zone_4rate_3)
 
 #what is the mean yield value for the zone by strip
 mean_zone1 <-  filter(strips,
@@ -344,32 +334,33 @@ mean_zone2 <-  filter(strips,
   )  %>%
   mutate(zone = "zone2")
 
-mean_zone3 <-  filter(strips,
-                      zone_name == "zone3") %>%
-  group_by(Rate) %>%
-  summarise(
-    yield = mean(YldMassDry, na.rm = TRUE),
-    n = n(),
-    sd = sd(YldMassDry),
-    se = sd / sqrt(n),
-    PtCount_tally = sum(PtCount)
-  )  %>%
-  mutate(zone = "zone3")
+# mean_zone3 <-  filter(strips,
+#                       zone_name == "zone3") %>%
+#   group_by(Rate) %>%
+#   summarise(
+#     yield = mean(YldMassDry, na.rm = TRUE),
+#     n = n(),
+#     sd = sd(YldMassDry),
+#     se = sd / sqrt(n),
+#     PtCount_tally = sum(PtCount)
+#   )  %>%
+#   mutate(zone = "zone3")
 
-mean_zone4 <-  filter(strips,
-                      zone_name == "zone4") %>%
-  group_by(Rate) %>%
-  summarise(
-    yield = mean(YldMassDry, na.rm = TRUE),
-    n = n(),
-    sd = sd(YldMassDry),
-    se = sd / sqrt(n),
-    PtCount_tally = sum(PtCount)
-  )  %>%
-  mutate(zone = "zone4")
+# mean_zone4 <-  filter(strips,
+#                       zone_name == "zone4") %>%
+#   group_by(Rate) %>%
+#   summarise(
+#     yield = mean(YldMassDry, na.rm = TRUE),
+#     n = n(),
+#     sd = sd(YldMassDry),
+#     se = sd / sqrt(n),
+#     PtCount_tally = sum(PtCount)
+#   )  %>%
+#   mutate(zone = "zone4")
 
-
-mean_zone <- bind_rows(mean_zone1, mean_zone2, mean_zone3, mean_zone4)
+mean_zone <- bind_rows(mean_zone1, mean_zone2)
+# mean_zone <- bind_rows(mean_zone1, mean_zone2, mean_zone3)
+#mean_zone <- bind_rows(mean_zone1, mean_zone2, mean_zone3, mean_zone4)
 #mean_zone <- mean_zone1
 mean_zone <- left_join(mean_zone,Rates_labels)
 
@@ -382,15 +373,15 @@ assign(("all_results"), function_all_results(zone_1rate_1,
                                              
                                              zone_2rate_1,
                                              zone_2rate_2,
-                                             zone_2rate_3,
+                                             zone_2rate_3))
+       
+                                             #zone_3rate_1,
+                                             #zone_3rate_2))
+                                             #zone_3rate_3))
                                              
-                                             zone_3rate_1,
-                                             zone_3rate_2,
-                                             zone_3rate_3,
-                                             
-                                             zone_4rate_1,
-                                             zone_4rate_2,
-                                             zone_4rate_3))
+                                             # zone_4rate_1,
+                                             # zone_4rate_2,
+                                             # zone_4rate_3))
 rm(zone_1rate_1,
    zone_1rate_2,
    zone_1rate_3,
@@ -510,29 +501,29 @@ zone2_max <- filter(for_plotting, zone_name == "zone2") %>% summarise(max_zone =
 zone2_max <- zone2_max[[7]] 
 zone2_max <- zone2_max[[1]] 
 
-zone3_min <- filter(for_plotting, zone_name == "zone3") %>% summarise(min_zone = min(SegmentID))
-zone3_min <- zone3_min[[7]]
-zone3_min <- zone3_min[[1]]
-zone3_max <- filter(for_plotting, zone_name == "zone3") %>% summarise(max_zone = max(SegmentID))
-zone3_max <- zone3_max[[7]]  
-zone3_max <- zone3_max[[1]]
+# zone3_min <- filter(for_plotting, zone_name == "zone3") %>% summarise(min_zone = min(SegmentID))
+# zone3_min <- zone3_min[[7]]
+# zone3_min <- zone3_min[[1]]
+# zone3_max <- filter(for_plotting, zone_name == "zone3") %>% summarise(max_zone = max(SegmentID))
+# zone3_max <- zone3_max[[7]]  
+# zone3_max <- zone3_max[[1]]
 
-zone4_min <- filter(for_plotting, zone_name == "zone4") %>% summarise(min_zone = min(SegmentID))
-zone4_min <- zone4_min[[7]]
-zone4_min <- zone4_min[[1]]
-zone4_max <- filter(for_plotting, zone_name == "zone4") %>% summarise(max_zone = max(SegmentID))
-zone4_max <- zone4_max[[7]]  
-zone4_max <- zone4_max[[1]]
+# zone4_min <- filter(for_plotting, zone_name == "zone4") %>% summarise(min_zone = min(SegmentID))
+# zone4_min <- zone4_min[[7]]
+# zone4_min <- zone4_min[[1]]
+# zone4_max <- filter(for_plotting, zone_name == "zone4") %>% summarise(max_zone = max(SegmentID))
+# zone4_max <- zone4_max[[7]]  
+# zone4_max <- zone4_max[[1]]
 
 zone1_range <- ((zone1_max - zone1_min)/2)+zone1_min
 zone2_range <- ((zone2_max - zone2_min)/2)+zone2_min
-zone3_range <- ((zone3_max - zone3_min)/2)+zone3_min
-zone4_range <- ((zone4_max - zone4_min)/2)+zone4_min
+#zone3_range <- ((zone3_max - zone3_min)/2)+zone3_min
+#zone4_range <- ((zone4_max - zone4_min)/2)+zone4_min
 
 zone1_range
 zone2_range
-zone3_range
-zone4_range
+#zone3_range
+#zone4_range
 
 max_yld <- max(for_plotting$YldMassDry, na.rm = TRUE)
 min_yld <- min(for_plotting$YldMassDry, na.rm = TRUE)
@@ -551,15 +542,15 @@ label_zone2 <- ungroup(for_plotting) %>%
   filter( zone_name == "zone2") %>% 
   distinct(Zone)
 
-label_zone3 <- ungroup(for_plotting) %>% 
-  dplyr::select(Zone, zone_name) %>%
-  filter( zone_name == "zone3") %>% 
-  distinct(Zone)
+# label_zone3 <- ungroup(for_plotting) %>% 
+#   dplyr::select(Zone, zone_name) %>%
+#   filter( zone_name == "zone3") %>% 
+#   distinct(Zone)
 
-label_zone4 <- ungroup(for_plotting) %>% 
-  dplyr::select(Zone, zone_name) %>%
-  filter( zone_name == "zone4") %>% 
-  distinct(Zone)
+# label_zone4 <- ungroup(for_plotting) %>% 
+#   dplyr::select(Zone, zone_name) %>%
+#   filter( zone_name == "zone4") %>% 
+#   distinct(Zone)
 
 whole_strip <- ggplot(for_plotting, aes(SegmentID , YldMassDry, group = rate_as_factor))+
   geom_line(size=1, alpha=0.4, aes( color = rate_as_factor ))+
@@ -582,15 +573,15 @@ whole_strip <- ggplot(for_plotting, aes(SegmentID , YldMassDry, group = rate_as_
   
   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = max_yld, #zone 2
            alpha = .2)+
-  annotate("text", x = zone2_range, y= 0,label =label_zone2)+
+  annotate("text", x = zone2_range, y= 0,label =label_zone2)#+
 
-  annotate("rect", xmin = zone3_min, xmax = zone3_max, ymin = 0, ymax = max_yld, #Zone 3
-         alpha = .2)  +
-  annotate("text", x = zone3_range, y= 0,label = label_zone3)+
+  # annotate("rect", xmin = zone3_min, xmax = zone3_max, ymin = 0, ymax = max_yld, #Zone 3
+  #        alpha = .2)  +
+  # annotate("text", x = zone3_range, y= 0,label = label_zone3)#+
   
-  annotate("rect", xmin = zone4_min, xmax = zone4_max, ymin = 0, ymax = max_yld, #Zone 4
-           alpha = .2)  +
-  annotate("text", x = zone4_range, y= 0,label = label_zone4)#+
+  # annotate("rect", xmin = zone4_min, xmax = zone4_max, ymin = 0, ymax = max_yld, #Zone 4
+  #          alpha = .2)  +
+  # annotate("text", x = zone4_range, y= 0,label = label_zone4)#+
 
 return(whole_strip)}
 assign(("plot_whole_strip"), function_strip_plot(for_plotting))
@@ -608,13 +599,16 @@ paddock_ID <- data.frame(distinct(strips,Zone_ID)) %>%
    filter(!is.na(Zone_ID))
 paddock_ID_1 <- paddock_ID[1,1]
 paddock_ID_2 <- paddock_ID[2,1]
-paddock_ID_3 <- paddock_ID[3,1]
-paddock_ID_4 <- paddock_ID[4,1]
-paddock_ID <- c(paddock_ID_1, paddock_ID_2, paddock_ID_3, paddock_ID_4)
+#paddock_ID_3 <- paddock_ID[3,1]
+#paddock_ID_4 <- paddock_ID[4,1]
 
-function_tabel_soil_testing <- function( paddock_ID_1, paddock_ID_2, paddock_ID_3, paddock_ID_4){
+#paddock_ID <- c(paddock_ID_1, paddock_ID_2, paddock_ID_3, paddock_ID_4)
+# paddock_ID <- c(paddock_ID_1, paddock_ID_2, paddock_ID_3)
+paddock_ID <- c(paddock_ID_1, paddock_ID_2)
 
-harm_database <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_March31 2021.xlsx")
+#function_tabel_soil_testing <- function( paddock_ID_1, paddock_ID_2, paddock_ID_3){
+function_tabel_soil_testing <- function( paddock_ID_1, paddock_ID_2){
+harm_database <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_April7 2021.xlsx")
 
 #fix up some names
 names(harm_database)
@@ -637,9 +631,8 @@ harm_database <-filter(harm_database, Paddock_code != "NA")
 #extract the paddock I want 
 site <- filter(harm_database,
                Paddock_code == paddock_ID_1 |
-                 Paddock_code == paddock_ID_2|
-                 Paddock_code == paddock_ID_3|
-               Paddock_code == paddock_ID_4) %>% 
+                 Paddock_code == paddock_ID_2) %>% 
+                 #Paddock_code == paddock_ID_3)%>% 
   dplyr::select(5, 6: 11)
 
 #remove the text
@@ -662,8 +655,8 @@ site <- site %>% mutate_if(is.character,~replace(.,.== "9999", 'Replacement'))
 site
 return(site)
 }
-assign(("site"), function_tabel_soil_testing( paddock_ID_1, paddock_ID_2, paddock_ID_3, paddock_ID_4))
-
+# assign(("site"), function_tabel_soil_testing( paddock_ID_1, paddock_ID_2, paddock_ID_3))
+assign(("site"), function_tabel_soil_testing( paddock_ID_1, paddock_ID_2))
 
 ##############################################################################################################
 # table 2 yield  results
@@ -706,8 +699,10 @@ mean_zone_av_output_display <- tidyr::pivot_wider(mean_zone_av_output_display,
                                                   values_from = Yld)
 
 
-mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,5,6,2)] #record the clms
+#mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,5,2)] #record the clms
+#mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,5,6,2)] #record the clms
 #mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,2)] #record the clms
+mean_zone_av_output_display <- mean_zone_av_output_display[c(1,3,4,2)] #record the clms
 
 return(mean_zone_av_output_display)
 }
@@ -746,24 +741,24 @@ collection1 <-
     )
   )
 
-collection2 <-
-  grid.arrange(
-    plot_zone3,
-    plot_zone4,
-    table2,
-    table1,
-    plot_whole_strip,
-    nrow = 5,
-    ncol = 2,
-    layout_matrix = cbind(c(1, 1, 3, 5, 5), c(2, 2, 4, 5, 5)),
-    bottom = textGrob(
-      note_on_graph,
-      gp = gpar(fontface = 3, fontsize = 9),
-      #hjust = 2,
-      #hjust = 0,
-      #x = 1
-    )
-  )
+# collection2 <-
+#   grid.arrange(
+#     plot_zone1,
+#     plot_zone3,
+#     table2,
+#     table1,
+#     plot_whole_strip,
+#     nrow = 5,
+#     ncol = 2,
+#     layout_matrix = cbind(c(1, 1, 3, 5, 5), c(2, 2, 4, 5, 5)),
+#     bottom = textGrob(
+#       note_on_graph,
+#       gp = gpar(fontface = 3, fontsize = 9),
+#       #hjust = 2,
+#       #hjust = 0,
+#       #x = 1
+#     )
+#   )
 
 
 
@@ -796,28 +791,18 @@ ggsave( filename =
          paste0(outputDir,  "/png/",
                 distinct(all_results_1,paddock_ID_Type),
                 "_",
-<<<<<<< HEAD
-                stringr::str_replace(input_file, ".csv", ""),
-          "_collectionPg1.png"), device = "png", 
-        width = 35, height = 20, units = "cm", collection)
-=======
                 stringr::str_replace(input_file, "Pg1.csv", ""),
-          "_collectionPg1.png"), device = "png", 
+          "_collection.png"), device = "png", 
         width = 35, height = 20, units = "cm", collection1)
->>>>>>> 8d045265a8ba384f8c6d47b9e08fc5ef161df315
 
-collection2
-ggsave( filename = 
-          paste0(outputDir,  "/png/",
-                 distinct(all_results_1,paddock_ID_Type),
-                 "_",
-                 stringr::str_replace(input_file, "Pg2.csv", ""),
-                 "_collectionPg2.png"), device = "png", 
-<<<<<<< HEAD
-        width = 35, height = 20, units = "cm", collection)
-=======
-        width = 35, height = 20, units = "cm", collection2)
->>>>>>> 8d045265a8ba384f8c6d47b9e08fc5ef161df315
+# collection2
+# ggsave( filename = 
+#           paste0(outputDir,  "/png/",
+#                  distinct(all_results_1,paddock_ID_Type),
+#                  "_",
+#                  stringr::str_replace(input_file, "Pg2.csv", ""),
+#                  "_collectionPg2.png"), device = "png", 
+#         width = 35, height = 20, units = "cm", collection2)
 
 
 #######################################################################################################################################
@@ -982,7 +967,7 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
   zone_x_high_vs_low_av <- group_by(zone_x_high_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
     summarise_all(mean, na.rm= TRUE)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_hvl <- zone_x_high_vs_low_av$SegmentID[duplicated(zone_x_high_vs_low$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_hvl <- zone_x_high_vs_low_av$SegmentID[duplicated(zone_x_high_vs_low_av$SegmentID)] #this returns a list of values I want to keep
   zone_x_high_vs_low_av <- zone_x_high_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_hvl)
   # run paired ttest
   zone_x_high_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_low_av, paired = TRUE)
@@ -1010,7 +995,7 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
   zone_x_high_vs_medium_av <- group_by(zone_x_high_vs_medium, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
     summarise_all(mean, na.rm= TRUE)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_hvm <- zone_x_high_vs_medium_av$SegmentID[duplicated(zone_x_high_vs_medium$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_hvm <- zone_x_high_vs_medium_av$SegmentID[duplicated(zone_x_high_vs_medium_av$SegmentID)] #this returns a list of values I want to keep
   zone_x_high_vs_medium_av <- zone_x_high_vs_medium_av %>% filter(SegmentID %in% list_SegmentID_values_hvm)
   # run paired ttest
   zone_x_high_vs_medium_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_medium_av, paired = TRUE)
@@ -1038,7 +1023,7 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
   zone_x_medium_vs_low_av <- group_by(zone_x_medium_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
     summarise_all(mean, na.rm= TRUE)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_mvl <- zone_x_medium_vs_low_av$SegmentID[duplicated(zone_x_medium_vs_low$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_mvl <- zone_x_medium_vs_low_av$SegmentID[duplicated(zone_x_medium_vs_low_av$SegmentID)] #this returns a list of values I want to keep
   zone_x_medium_vs_low_av <- zone_x_medium_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_mvl)
   # run paired ttest
   zone_x_medium_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_medium_vs_low_av, paired = TRUE)
@@ -1067,13 +1052,14 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
 }
 assign(paste0("rate_order_", "zone_", "1"), function_paired_ttest_rate_order(strips, 1))
 assign(paste0("rate_order_","zone_", "2"), function_paired_ttest_rate_order(strips, 2))
-assign(paste0("rate_order_","zone_", "3"), function_paired_ttest_rate_order(strips, 3))
-assign(paste0("rate_order_","zone_", "4"), function_paired_ttest_rate_order(strips, 4))
+#assign(paste0("rate_order_","zone_", "3"), function_paired_ttest_rate_order(strips, 3))
+#assign(paste0("rate_order_","zone_", "4"), function_paired_ttest_rate_order(strips, 4))
 
-
-
-rate_order_all <- rbind(rate_order_zone_1, rate_order_zone_2,
-                        rate_order_zone_3, rate_order_zone_4)
+rate_order_all <- rbind(rate_order_zone_1, rate_order_zone_2)
+# rate_order_all <- rbind(rate_order_zone_1, rate_order_zone_2,
+#                         rate_order_zone_3)
+# rate_order_all <- rbind(rate_order_zone_1, rate_order_zone_2,
+#                         rate_order_zone_3, rate_order_zone_4)
 #rate_order_all <- rate_order_zone_1 
 rate_order_all <- left_join(rate_order_all, Zone_labels, by = c("zone"=  "zone_name"))
 
@@ -1132,151 +1118,156 @@ write.csv(for_ricks_tables_summary, name)
 #########################################################################################################
 ####  ALt GSP analysis ######################################
 
- # assign("strips_alt_analysis", function_1_import_data(input_file))
- # assign("strips_alt_analysis", function_2_tidy_clm(strips_alt_analysis))
+  assign("strips_alt_analysis", function_1_import_data(input_file))
+  assign("strips_alt_analysis", function_2_tidy_clm(strips_alt_analysis))
  # 
  # ### need to add in the zone ID here
- # strips_alt_analysis <- left_join(strips_alt_analysis, Rates_labels, by= "Rate")
- # strips_alt_analysis <- left_join(strips_alt_analysis, Zone_labels, by= "Zone")
+  strips_alt_analysis <- left_join(strips_alt_analysis, Rates_labels, by= "Rate")
+  strips_alt_analysis <- left_join(strips_alt_analysis, Zone_labels, by= "Zone")
  # 
- # names(strips_alt_analysis)
- # ### select the clm
- # strips_alt_analysis <- strips_alt_analysis %>% 
- #   dplyr::select(Zone_ID = Zone_ID.y, SegmentID, YldMassDry, GSP, zone_name, Zone )
+  names(strips_alt_analysis)
+  ### select the clm
+  strips_alt_analysis <- strips_alt_analysis %>% 
+    dplyr::select(Zone_ID = Zone_ID.y, SegmentID, YldMassDry, GSP, zone_name, Zone )
  # 
- # ## filter data just the zones and the GSP and Alt GSP strips
- # strips_alt_analysis <-  strips_alt_analysis %>% 
- #   filter(Zone_ID != "NA") %>% 
- #   filter(GSP != "NA")
- # 
- # 
- # 
- # str(strips_alt_analysis)
- # strips_alt_analysis <- strips_alt_analysis %>%
- #   mutate(comparison_GSP_AltGSP = case_when(GSP == "GSP" ~ "GSP_AltGSP",
- #                                            TRUE ~ "other"))
- # 
- # assign(paste0("grand_mean_std_error_", "GSP_AltGSP"), function_grand_mean_std_error(strips_alt_analysis,"GSP_AltGSP"))
- # grand_mean_se_GSP_AltGSP <- grand_mean_std_error_GSP_AltGSP
- # 
- # ## I need to generate mean yield value for the zone and Rate
- # 
- # strips_alt_analysis_2 <- strips_alt_analysis %>% 
- #   group_by( Zone_ID, GSP) %>% 
- #   summarise(zone_yld = mean(YldMassDry, na.rm = TRUE))
+  ## filter data just the zones and the GSP and Alt GSP strips
+  strips_alt_analysis <-  strips_alt_analysis %>% 
+    filter(Zone_ID != "NA") %>% 
+    filter(GSP != "NA")
  # 
  # 
  # 
- # strips_alt_analysis_wide <- tidyr::pivot_wider(strips_alt_analysis_2, 
- #                                             id_cols = c( Zone_ID),
- #                                             names_from =GSP,
- #                                             values_from = zone_yld
- # )
+  str(strips_alt_analysis)
+  strips_alt_analysis <- strips_alt_analysis %>%
+    mutate(comparison_GSP_AltGSP = case_when(GSP == "GSP" ~ "GSP_AltGSP",
+                                             TRUE ~ "other"))
  # 
- # str(strips_alt_analysis_wide)
- # ## differences in yld clms
- # strips_alt_analysis_wide <- strips_alt_analysis_wide %>% 
- #   mutate(GSP_vs_Alt_GSP = GSP - `Alt GSP`)
- # str(strips_alt_analysis_wide)
+  assign(paste0("grand_mean_std_error_", "GSP_AltGSP"), function_grand_mean_std_error(strips_alt_analysis,"GSP_AltGSP"))
+  grand_mean_se_GSP_AltGSP <- grand_mean_std_error_GSP_AltGSP
  # 
- # strips_alt_analysis_wide <- ungroup(strips_alt_analysis_wide)
+  ## I need to generate mean yield value for the zone and Rate
+  
+  strips_alt_analysis_2 <- strips_alt_analysis %>% 
+    group_by( Zone_ID, GSP) %>% 
+    summarise(zone_yld = mean(YldMassDry, na.rm = TRUE))
+  
+  
+  
+  strips_alt_analysis_wide <- tidyr::pivot_wider(strips_alt_analysis_2, 
+                                              id_cols = c( Zone_ID),
+                                              names_from =GSP,
+                                              values_from = zone_yld
+  )
  # 
- # strips_alt_analysis_wide
- # grand_mean_se_GSP_AltGSP
+  str(strips_alt_analysis_wide)
+  ## differences in yld clms
+  strips_alt_analysis_wide <- strips_alt_analysis_wide %>% 
+    mutate(GSP_vs_Alt_GSP = GSP - `Alt GSP`)
+  str(strips_alt_analysis_wide)
+ # 
+  strips_alt_analysis_wide <- ungroup(strips_alt_analysis_wide)
+  
+  strips_alt_analysis_wide
+  grand_mean_se_GSP_AltGSP
  # 
  # 
- # strips_alt_analysis_wide <- left_join(strips_alt_analysis_wide, grand_mean_se_GSP_AltGSP)
+  strips_alt_analysis_wide <- left_join(strips_alt_analysis_wide, grand_mean_se_GSP_AltGSP)
  # 
  # 
  # 
  # 
  # #####
- # strips_alt_analysis_summary <- strips_alt_analysis_wide %>%
- #   mutate(
- #     yld_resposne_GSP_v_Alt_GSP =  case_when(
- #       GSP_vs_Alt_GSP > 0 + se_comp_GSP_AltGSP ~ "positive",
- #       GSP_vs_Alt_GSP < 0 - se_comp_GSP_AltGSP ~ "negative",
- #       TRUE ~ "no_response"
- #     )
- #   )
+  strips_alt_analysis_summary <- strips_alt_analysis_wide %>%
+    mutate(
+      yld_resposne_GSP_v_Alt_GSP =  case_when(
+        GSP_vs_Alt_GSP > 0 + se_comp_GSP_AltGSP ~ "positive",
+        GSP_vs_Alt_GSP < 0 - se_comp_GSP_AltGSP ~ "negative",
+        TRUE ~ "no_response"
+      )
+    )
  #     
  # 
- # strips_alt_analysis_summary
+  strips_alt_analysis_summary
  # 
- # strips_alt_analysis_summary <- strips_alt_analysis_summary %>% 
- #   tidyr::pivot_longer(cols = c("yld_resposne_GSP_v_Alt_GSP"),
- #                       names_to = "comparison",
- #                       values_to = "yld_response") %>% 
- #   dplyr::select(Zone_ID, comparison, yld_response, `Alt GSP`, GSP, 
- #                 GSP_vs_Alt_GSP, 
- #                 se_comp_GSP_AltGSP) 
- # 
- # strips_alt_analysis_summary
+  strips_alt_analysis_summary <- strips_alt_analysis_summary %>% 
+    tidyr::pivot_longer(cols = c("yld_resposne_GSP_v_Alt_GSP"),
+                        names_to = "comparison",
+                        values_to = "yld_response") %>% 
+    dplyr::select(Zone_ID, comparison, yld_response, `Alt GSP`, GSP, 
+                  GSP_vs_Alt_GSP, 
+                  se_comp_GSP_AltGSP) 
+  
+  strips_alt_analysis_summary
  # 
  # #### t test extra 
  # 
- # names(strips_alt_analysis)
+  names(strips_alt_analysis)
  # 
- # function_paired_ttest_GSP <- function(strips_alt_analysis, zone_x){
+  function_paired_ttest_GSP <- function(strips_alt_analysis, zone_x){
+    
+    #select the zone data and the high vs low rates
+    zone_x_GSP_vs_AltGSP <- strips_alt_analysis %>% 
+      filter(zone_name == paste0("zone", zone_x)) %>%
+      filter(GSP == "GSP" | GSP == "Alt GSP")
  #   
- #   #select the zone data and the high vs low rates
- #   zone_x_GSP_vs_AltGSP <- strips_alt_analysis %>% 
- #     filter(zone_name == paste0("zone", zone_x)) %>%
- #     filter(GSP == "GSP" | GSP == "Alt GSP")
- #   
- #   #average the yld per segment and GSP
- #   zone_x_GSP_vs_AltGSP_av <- group_by(zone_x_GSP_vs_AltGSP, SegmentID, GSP, Zone, zone_name ) %>% 
- #     summarise_all(mean, na.rm= TRUE)
- #   #ensure that the dataset is duplictaed
- #   list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP$SegmentID)] #this returns a list of values I want to keep
- #   zone_x_GSP_vs_AltGSP_av <- zone_x_GSP_vs_AltGSP_av %>% filter(SegmentID %in% list_SegmentID_values_GSP)
- #   # run paired ttest
- #   zone_x_GSP_vs_AltGSP_res <- t.test(YldMassDry ~ GSP, data = zone_x_GSP_vs_AltGSP_av, paired = TRUE)
- #   
- #   #####test results
- #   # Report values from the t.test
- #   zone_x_GSP_vs_AltGSP_res_sig <-
- #     data.frame(P_value = as.double(zone_x_GSP_vs_AltGSP_res$p.value),
- #                Mean_diff = (zone_x_GSP_vs_AltGSP_res$estimate)) %>%
- #     mutate(
- #       comparison = "GSP_v_AltGSP",
- #       zone = paste0("zone", zone_x),
- #       rounded = abs(round(Mean_diff, 2)),
- #       Significant = case_when(P_value < 0.05 ~ "significant",
- #                               TRUE ~ "not significant"))
- #   zone_x_GSP_vs_AltGSP_res_sig 
- #   
- #   ###############################################################################################################
- #   
- # }
- # assign(paste0("GSP", "zone_", "1"), function_paired_ttest_GSP(strips_alt_analysis, 1))
- # assign(paste0("GSP","zone_", "2"), function_paired_ttest_GSP(strips_alt_analysis, 2))
- # 
- # GSP_all <- rbind(GSPzone_1, GSPzone_2)
- # #GSP_all <- GSPzone_1
- # GSP_all <- left_join(GSP_all, Zone_labels, by=c("zone" = "zone_name"))
- # 
- # str(strips_alt_analysis_summary)
- # str(GSP_all)
- # 
- # strips_alt_analysis_summary <- left_join(strips_alt_analysis_summary, GSP_all, by= "Zone_ID")
- # names(strips_alt_analysis_summary)
- # 
- # strips_alt_analysis_summary <- strips_alt_analysis_summary %>%
- #   dplyr::mutate(
- #   comparison = comparison.y,
- #     paddock_ID = unique(strips$Paddock_ID),
- #     Strip_Type = unique(strips$Strip_Type),
- #     input_file = input_file
- #   ) %>% 
- # dplyr::select(-comparison.x)
- # 
- # ## save output
- # View(strips_alt_analysis_summary)
- # name_gsp <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP/GSP_AltGSP_comp_", 
- #                dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
- # name_gsp
- # write.csv(strips_alt_analysis_summary, name_gsp)
+    #average the yld per segment and GSP
+    zone_x_GSP_vs_AltGSP_av <- group_by(zone_x_GSP_vs_AltGSP, SegmentID, GSP, Zone, zone_name ) %>% 
+      summarise_all(mean, na.rm= TRUE)
+    #ensure that the dataset is duplictaed
+    list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP$SegmentID)] #this returns a list of values I want to keep
+    zone_x_GSP_vs_AltGSP_av <- zone_x_GSP_vs_AltGSP_av %>% filter(SegmentID %in% list_SegmentID_values_GSP)
+    # run paired ttest
+    zone_x_GSP_vs_AltGSP_res <- t.test(YldMassDry ~ GSP, data = zone_x_GSP_vs_AltGSP_av, paired = TRUE)
+    
+    #####test results
+    # Report values from the t.test
+    zone_x_GSP_vs_AltGSP_res_sig <-
+      data.frame(P_value = as.double(zone_x_GSP_vs_AltGSP_res$p.value),
+                 Mean_diff = (zone_x_GSP_vs_AltGSP_res$estimate)) %>%
+      mutate(
+        comparison = "GSP_v_AltGSP",
+        zone = paste0("zone", zone_x),
+        rounded = abs(round(Mean_diff, 2)),
+        Significant = case_when(P_value < 0.05 ~ "significant",
+                                TRUE ~ "not significant"))
+    zone_x_GSP_vs_AltGSP_res_sig 
+    
+    ###############################################################################################################
+    
+  }
+  assign(paste0("GSP", "zone_", "1"), function_paired_ttest_GSP(strips_alt_analysis, 1))
+  assign(paste0("GSP","zone_", "2"), function_paired_ttest_GSP(strips_alt_analysis, 2))
+  
+  GSP_all <- rbind(GSPzone_1, GSPzone_2)
+  #GSP_all <- GSPzone_1
+  GSP_all <- left_join(GSP_all, Zone_labels, by=c("zone" = "zone_name"))
+  
+  str(strips_alt_analysis_summary)
+  str(GSP_all)
+  
+  strips_alt_analysis_summary <- left_join(strips_alt_analysis_summary, GSP_all, by= "Zone_ID")
+  names(strips_alt_analysis_summary)
+  
+  strips_alt_analysis_summary <- strips_alt_analysis_summary %>%
+    dplyr::mutate(
+    comparison = comparison.y,
+      paddock_ID = unique(strips$Paddock_ID),
+      Strip_Type = unique(strips$Strip_Type),
+      input_file = input_file
+    ) %>% 
+  dplyr::select(-comparison.x)
+  
+  ## save output
+  View(strips_alt_analysis_summary)
+  
+  #!!! zone 2 	312151 didnt run due to not enough data  - I need to remove it.
+  # strips_alt_analysis_summary <- strips_alt_analysis_summary %>% 
+  #   filter(Zone_ID == 312150)
+  
+  name_gsp <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP/GSP_AltGSP_comp_", 
+                 dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
+  name_gsp
+  write.csv(strips_alt_analysis_summary, name_gsp)
 
 ###########################################################################################################################################
 ##########################################################################################################################################
@@ -1326,9 +1317,13 @@ GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate, Zone_ID, zone_name) %>%
          half_GPS_rate = Rate*.5)
 
 ## filter out one rate so we only have 3
-GR_vs_low_High_rate <- GR_vs_low_High_rate %>%
-  filter(Rate == c(9.6,19.2))
+ GR_vs_low_High_rate <- GR_vs_low_High_rate %>%
+   filter(Rate == c(30,60,120)) # this is what we will keep 2.5,17.9
 
+ ## check
+ GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate) %>% 
+   summarise(count= n())
+ 
 str(GR_vs_low_High_rate$Rate)
 GR_vs_low_High_rate$Rate <- as.double(GR_vs_low_High_rate$Rate)
 unique(GR_vs_low_High_rate$Rate)
@@ -1379,7 +1374,7 @@ str(GR_vs_low_High_rate_wide)
 GR_vs_low_High_rate_wide <- ungroup(GR_vs_low_High_rate_wide)
 ## differences in yld clms
 GR_vs_low_High_rate_wide <- GR_vs_low_High_rate_wide %>% 
-  mutate(#GSP_vs_lower = the_GSP   - lower_than_GSP,
+  mutate(GSP_vs_lower = the_GSP   - lower_than_GSP,
          GSP_vs_higher = the_GSP  - higher_than_GSP)
 str(GR_vs_low_High_rate_wide)
 
@@ -1394,12 +1389,12 @@ GR_vs_low_High_rate_wide <- left_join(GR_vs_low_High_rate_wide, grand_mean_GSP_H
 #####
 str(GR_vs_low_High_rate_wide)
 GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_wide %>%
-  mutate( yld_resposne_GSP_v_low = "NA",
-    # yld_resposne_GSP_v_low =  case_when(
-    #   GSP_vs_lower > 0 + se_comp_GSP_low ~ "positive",
-    #   GSP_vs_lower < 0 - se_comp_GSP_low ~ "negative",
-    #   TRUE ~ "no_response"
-    # ),
+  mutate( #yld_resposne_GSP_v_low = "NA",
+     yld_resposne_GSP_v_low =  case_when(
+       GSP_vs_lower > 0 + se_comp_GSP_low ~ "positive",
+       GSP_vs_lower < 0 - se_comp_GSP_low ~ "negative",
+       TRUE ~ "no_response"
+     ),
      #yld_resposne_GSP_v_high =  "NA")
      yld_resposne_GSP_v_high =  case_when(
        GSP_vs_higher  > 0 +  se_comp_GSP_high ~ "negative",
@@ -1421,9 +1416,9 @@ GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
     comparison,
     yld_response,
     higher_than_GSP,
-    #lower_than_GSP,
+    lower_than_GSP,
     the_GSP,
-    #GSP_vs_lower,
+    GSP_vs_lower,
     GSP_vs_higher,
     se_comp_GSP_low,
     se_comp_GSP_high
@@ -1435,9 +1430,9 @@ GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
     ))
 
 #Add the mising ones with NA
- GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
- mutate(lower_than_GSP = NA,
-        GSP_vs_lower = NA)
+ # GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
+ # mutate(lower_than_GSP = NA,
+ #        GSP_vs_lower = NA)
   
 GR_vs_low_High_rate_summary
 
@@ -1449,39 +1444,42 @@ str(GR_vs_low_High_rate)
 unique(GR_vs_low_High_rate$GSP_high_low)
 #unnest clm in df
 GR_vs_low_High_rate <-GR_vs_low_High_rate %>% unnest( Rate_GSP)
-## !!! warning the low comp has been removed
 
+str(GR_vs_low_High_rate)
+#Check
+GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate, Zone) %>% 
+  summarise(count= n())
 
 function_paired_ttest_GR_low_high <- function(GR_vs_low_High_rate, zone_x){
   
   #select the zone data and the high vs low rates
-  # zone_x_GSP_vs_low <- GR_vs_low_High_rate %>% 
-  #   filter(zone_name == paste0("zone", zone_x)) %>%
-  #   filter(GSP_high_low == "the_GSP" | GSP_high_low == "lower_than_GSP")
-  # 
-  # #average the yld per segment and rate
-  # zone_x_GSP_vs_low_av <- group_by(zone_x_GSP_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , GSP_high_low) %>% 
-  #   #summarise_all(mean, na.rm= TRUE)
-  # summarise(mean = mean(YldMassDry, na.rm= TRUE))
-  # 
-  # #ensure that the dataset is duplictaed
-  # list_SegmentID_values_GSP_l <- zone_x_GSP_vs_low_av$SegmentID[duplicated(zone_x_GSP_vs_low$SegmentID)] #this returns a list of values I want to keep
-  # zone_x_GSP_vs_low_av <- zone_x_GSP_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_GSP_l)
-  # # run paired ttest
-  # zone_x_GSP_vs_low_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_low_av, paired = TRUE)
-  # 
-  # #####test results
-  # # Report values from the t.test
-  # zone_x_GSP_vs_low_res_sig <-
-  #   data.frame(P_value = as.double(zone_x_GSP_vs_low_res$p.value),
-  #              Mean_diff = (zone_x_GSP_vs_low_res$estimate)) %>%
-  #   mutate(
-  #     comparison = "GSP_v_low",
-  #     zone = paste0("zone", zone_x),
-  #     rounded = abs(round(Mean_diff, 2)),
-  #     Significant = case_when(P_value < 0.05 ~ "significant",
-  #                             TRUE ~ "not significant"))
-  # zone_x_GSP_vs_low_res_sig 
+  zone_x_GSP_vs_low <- GR_vs_low_High_rate %>%
+    filter(zone_name == paste0("zone", zone_x)) %>%
+    filter(GSP_high_low == "the_GSP" | GSP_high_low == "lower_than_GSP")
+
+  #average the yld per segment and rate
+  zone_x_GSP_vs_low_av <- group_by(zone_x_GSP_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , GSP_high_low) %>%
+    summarise_all(mean, na.rm= TRUE)
+  #summarise(mean = mean(YldMassDry, na.rm= TRUE))
+
+  #ensure that the dataset is duplictaed
+  list_SegmentID_values_GSP_l <- zone_x_GSP_vs_low_av$SegmentID[duplicated(zone_x_GSP_vs_low_av$SegmentID)] #this returns a list of values I want to keep
+  zone_x_GSP_vs_low_av <- zone_x_GSP_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_GSP_l)
+  # run paired ttest
+  zone_x_GSP_vs_low_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_low_av, paired = TRUE)
+
+  #####test results
+  # Report values from the t.test
+  zone_x_GSP_vs_low_res_sig <-
+    data.frame(P_value = as.double(zone_x_GSP_vs_low_res$p.value),
+               Mean_diff = (zone_x_GSP_vs_low_res$estimate)) %>%
+    mutate(
+      comparison = "GSP_v_low",
+      zone = paste0("zone", zone_x),
+      rounded = abs(round(Mean_diff, 2)),
+      Significant = case_when(P_value < 0.05 ~ "significant",
+                              TRUE ~ "not significant"))
+  zone_x_GSP_vs_low_res_sig
   
   ##########################################################################################################################
   #select the zone data and the GSP vs high rates
@@ -1513,29 +1511,32 @@ function_paired_ttest_GR_low_high <- function(GR_vs_low_High_rate, zone_x){
    
 
 
-   #zone_x_GSP_vs_low_res_sig
+   zone_x_GSP_vs_low_res_sig
    zone_x_GSP_vs_high_res_sig
 
 
-   # zone_x_GSP_vs_low_vs_high_res_sig <- rbind(zone_x_GSP_vs_low_res_sig,
-   #                                            zone_x_GSP_vs_high_res_sig)
+    zone_x_GSP_vs_low_vs_high_res_sig <- rbind(zone_x_GSP_vs_low_res_sig,
+                                               zone_x_GSP_vs_high_res_sig)
 
-  zone_x_GSP_vs_low_vs_high_res_sig <- zone_x_GSP_vs_high_res_sig
+  #zone_x_GSP_vs_low_vs_high_res_sig <- zone_x_GSP_vs_high_res_sig
   
   return(data.frame(zone_x_GSP_vs_low_vs_high_res_sig))
 }
 assign(paste0("GSP_low_vs_high", "zone_", "1"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 1))
 assign(paste0("GSP_low_vs_high","zone_", "2"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 2))
-assign(paste0("GSP_low_vs_high","zone_", "3"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 3))
-assign(paste0("GSP_low_vs_high","zone_", "4"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 4))
+#assign(paste0("GSP_low_vs_high","zone_", "3"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 3))
+#assign(paste0("GSP_low_vs_high","zone_", "4"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 4))
 
 GSP_low_vs_highzone_1
 GSP_low_vs_highzone_2
 GSP_low_vs_highzone_3
 GSP_low_vs_highzone_4
 
-GSP_low_vs_high_all <- rbind(GSP_low_vs_highzone_1, GSP_low_vs_highzone_2,
-                             GSP_low_vs_highzone_3, GSP_low_vs_highzone_4) 
+GSP_low_vs_high_all <- rbind(GSP_low_vs_highzone_1, GSP_low_vs_highzone_2) 
+# GSP_low_vs_high_all <- rbind(GSP_low_vs_highzone_1, GSP_low_vs_highzone_2,
+#                              GSP_low_vs_highzone_3) 
+# GSP_low_vs_high_all <- rbind(GSP_low_vs_highzone_1, GSP_low_vs_highzone_2,
+#                              GSP_low_vs_highzone_3, GSP_low_vs_highzone_4) 
 #GSP_low_vs_high_all <- GSP_low_vs_highzone_1
 GSP_low_vs_high_all <- left_join(GSP_low_vs_high_all, Zone_labels, by = c("zone"=  "zone_name"))
 
@@ -1601,7 +1602,7 @@ str(label_GR_v_rates)
 ##!! make sure this is correct
 label_GR_v_rates <-label_GR_v_rates %>% rename(
   higher_than_GSP_label = higher_than_GSP,
-  #lower_than_GSP_label = lower_than_GSP,
+  lower_than_GSP_label = lower_than_GSP,
   the_GSP_label = the_GSP)
 
 label_GR_v_rates
