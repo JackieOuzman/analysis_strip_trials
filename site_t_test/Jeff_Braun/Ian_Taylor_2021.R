@@ -134,7 +134,7 @@ Rates_labels <- Rates_labels %>%
 Rates_labels <- Rates_labels %>%
   mutate(rate_name = case_when(
     rate_name == "low" ~ "rate1",
-    #rate_name == "medium" ~ "rate2",
+    rate_name == "medium" ~ "rate2",
     rate_name == "high" ~ "rate2",
     rate_name == "very_high" ~ "rate3",
     TRUE ~ rate_name
@@ -1127,7 +1127,7 @@ GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate, Zone_ID, zone_name) %>%
 
 ## filter out one rate so we only have 3
 GR_vs_low_High_rate <- GR_vs_low_High_rate %>%
-  filter(Rate != 180)
+  filter(Rate != 0)
 
 
 
