@@ -967,7 +967,7 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
   zone_x_high_vs_low_av <- group_by(zone_x_high_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
     summarise_all(mean, na.rm= TRUE)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_hvl <- zone_x_high_vs_low_av$SegmentID[duplicated(zone_x_high_vs_low$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_hvl <- zone_x_high_vs_low_av$SegmentID[duplicated(zone_x_high_vs_low_av$SegmentID)] #this returns a list of values I want to keep
   zone_x_high_vs_low_av <- zone_x_high_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_hvl)
   # run paired ttest
   zone_x_high_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_low_av, paired = TRUE)
@@ -995,7 +995,7 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
   zone_x_high_vs_medium_av <- group_by(zone_x_high_vs_medium, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
     summarise_all(mean, na.rm= TRUE)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_hvm <- zone_x_high_vs_medium_av$SegmentID[duplicated(zone_x_high_vs_medium$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_hvm <- zone_x_high_vs_medium_av$SegmentID[duplicated(zone_x_high_vs_medium_av$SegmentID)] #this returns a list of values I want to keep
   zone_x_high_vs_medium_av <- zone_x_high_vs_medium_av %>% filter(SegmentID %in% list_SegmentID_values_hvm)
   # run paired ttest
   zone_x_high_vs_medium_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_medium_av, paired = TRUE)
@@ -1023,7 +1023,7 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
   zone_x_medium_vs_low_av <- group_by(zone_x_medium_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
     summarise_all(mean, na.rm= TRUE)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_mvl <- zone_x_medium_vs_low_av$SegmentID[duplicated(zone_x_medium_vs_low$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_mvl <- zone_x_medium_vs_low_av$SegmentID[duplicated(zone_x_medium_vs_low_av$SegmentID)] #this returns a list of values I want to keep
   zone_x_medium_vs_low_av <- zone_x_medium_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_mvl)
   # run paired ttest
   zone_x_medium_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_medium_vs_low_av, paired = TRUE)
@@ -1054,6 +1054,9 @@ assign(paste0("rate_order_", "zone_", "1"), function_paired_ttest_rate_order(str
 assign(paste0("rate_order_","zone_", "2"), function_paired_ttest_rate_order(strips, 2))
 assign(paste0("rate_order_","zone_", "3"), function_paired_ttest_rate_order(strips, 3))
 #assign(paste0("rate_order_","zone_", "4"), function_paired_ttest_rate_order(strips, 4))
+
+rate_order_zone_1
+rate_order_zone_2
 
 rate_order_all <- rbind(rate_order_zone_1, rate_order_zone_2)
 # rate_order_all <- rbind(rate_order_zone_1, rate_order_zone_2,
