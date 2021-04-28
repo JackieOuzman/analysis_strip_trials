@@ -945,12 +945,16 @@ rec_rate_n_vs_low_High_summary <- rec_rate_n_vs_low_High_summary %>%
 
 #what is the recommed rate?
 names(recom_rate1)
+#There is a typo in the strip rate clm
 
-
-label_rec_rates <- recom_rate1 %>%  group_by(rec_rate_high_low_n, 
-                                             
-                                             Rate, Strip_Rate, Zone_ID) %>% 
+label_rec_rates <- recom_rate1 %>% distinct(Rate,Zone_ID, .keep_all = TRUE) %>% 
+  group_by(rec_rate_high_low_n, Rate, Strip_Rate, Zone_ID) %>% 
   summarise(count= n())
+
+# label_rec_rates <- recom_rate1 %>%  group_by(rec_rate_high_low_n,
+#                                              
+#                                              Rate, Strip_Rate, Zone_ID) %>%
+#   summarise(count = n())
 
 
 label_rec_rates
@@ -963,6 +967,8 @@ label_rec_rates <- tidyr::pivot_wider(
   names_from = rec_rate_high_low_n,
   values_from = Strip_Rate
 )
+label_rec_rates
+
 label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
 
