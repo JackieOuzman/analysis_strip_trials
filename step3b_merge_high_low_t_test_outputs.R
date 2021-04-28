@@ -60,12 +60,18 @@ clm_headings <- c(
   "rate_medium",
   "rate_high",
   "rate_very_high",
-  "rate_very_low"
+  "rate_very_low",
+  "se_comp_high_low" ,
+  "se_comp_medium_low",
+  "se_comp_high_medium"
+  
+  
 )
 
 
 setwd(baseDir)
 file_list <- list.files()
+file_list
 for (file in file_list){
   
   # if the merged dataset doesn't exist, create it
@@ -103,17 +109,18 @@ write.csv(dataset,paste0(outputDir, "/hign_low_t_test_merged_3b.csv") )
 
 
 
-### Note working for micheal paddocks?? 52411
+### Note working for ?? 31133
+file_list
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31111_P Strip.csv" 
+#Alistair Tippett paddocks
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31115_N Strip.csv"
 
-file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31222_N Strip.csv" 
-#MM paddocks
-file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52411_N Strip.csv"
-file3 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52413_P Strip.csv"
-file4 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52454_P Strip.csv"
-file5 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52472_N Strip.csv" 
-file6 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52493_P Strip.csv" 
-file7 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_52494_N Strip.csv"
-file8 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_524102_N Strip.csv"
+file3 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31133_P Strip.csv"
+file4 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31136_N Strip.csv"
+file5 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31211_P Strip.csv" 
+file6 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31214_P Strip.csv" 
+file7 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31215_N Strip.csv"
+file8 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31216_P Strip.csv"
 
 dataset_1 <- read.csv(file1)
 dataset_1[clm_headings[!(clm_headings %in% colnames(dataset_1))]] = 'NA'
