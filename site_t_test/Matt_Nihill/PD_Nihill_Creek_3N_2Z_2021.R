@@ -40,10 +40,10 @@ list.files(baseDir, full.names = FALSE)
 ###########################################################################################################
 ## I would be good to work on this step to run all the files in the directory at once.
 
-input_file <-"Heaths_Yld_SegID_Zone.csv"
+input_file <-"PD_Nihill_House_Yld_SegID_zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
-name_Paddock <- "Melrose Ag - Heaths"
+name_Paddock <- "PD Nihill - House"
 name_Paddock
 
 ################################################################################################################
@@ -80,9 +80,9 @@ names(strips)
 function_2_tidy_clm <- function(strips) {
   
   strips <- if (c("Yld_Mass_D") %in% names(strips) == TRUE) {
-    rename(strips, YldMassDry = Yld_Mass_D)
+    rename(strips, YldMassDry = Yield)
   } else {
-    rename(strips, YldMassDry = Yld_Mass_D)
+    rename(strips, YldMassDry = Yield)
   }
   
   strips <- filter(strips,!is.na(Rate))
@@ -142,8 +142,8 @@ Rates_labels <- Rates_labels %>%
 #and again to get the other names 
 Rates_labels <- Rates_labels %>%
   mutate(rate_name = case_when(
-    #rate_name == "low" ~ "rate1",
-    rate_name == "medium" ~ "rate1",
+    rate_name == "low" ~ "rate1",
+    rate_name == "medium" ~ "rate2",
     rate_name == "high" ~ "rate2",
     #rate_name == "very_high" ~ "rate3",
     TRUE ~ rate_name
@@ -967,7 +967,7 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
   zone_x_high_vs_low_av <- group_by(zone_x_high_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
     summarise_all(mean, na.rm= TRUE)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_hvl <- zone_x_high_vs_low_av$SegmentID[duplicated(zone_x_high_vs_low$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_hvl <- zone_x_high_vs_low_av$SegmentID[duplicated(zone_x_high_vs_low_av$SegmentID)] #this returns a list of values I want to keep
   zone_x_high_vs_low_av <- zone_x_high_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_hvl)
   # run paired ttest
   zone_x_high_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_low_av, paired = TRUE)
@@ -995,7 +995,7 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
   zone_x_high_vs_medium_av <- group_by(zone_x_high_vs_medium, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
     summarise_all(mean, na.rm= TRUE)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_hvm <- zone_x_high_vs_medium_av$SegmentID[duplicated(zone_x_high_vs_medium$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_hvm <- zone_x_high_vs_medium_av$SegmentID[duplicated(zone_x_high_vs_medium_av$SegmentID)] #this returns a list of values I want to keep
   zone_x_high_vs_medium_av <- zone_x_high_vs_medium_av %>% filter(SegmentID %in% list_SegmentID_values_hvm)
   # run paired ttest
   zone_x_high_vs_medium_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_high_vs_medium_av, paired = TRUE)
@@ -1023,7 +1023,7 @@ function_paired_ttest_rate_order <- function(strips, zone_x){
   zone_x_medium_vs_low_av <- group_by(zone_x_medium_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , rate_name_order) %>% 
     summarise_all(mean, na.rm= TRUE)
   #ensure that the dataset is duplictaed
-  list_SegmentID_values_mvl <- zone_x_medium_vs_low_av$SegmentID[duplicated(zone_x_medium_vs_low$SegmentID)] #this returns a list of values I want to keep
+  list_SegmentID_values_mvl <- zone_x_medium_vs_low_av$SegmentID[duplicated(zone_x_medium_vs_low_av$SegmentID)] #this returns a list of values I want to keep
   zone_x_medium_vs_low_av <- zone_x_medium_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_mvl)
   # run paired ttest
   zone_x_medium_vs_low_res <- t.test(YldMassDry ~ rate_name_order, data = zone_x_medium_vs_low_av, paired = TRUE)
@@ -1054,6 +1054,9 @@ assign(paste0("rate_order_", "zone_", "1"), function_paired_ttest_rate_order(str
 assign(paste0("rate_order_","zone_", "2"), function_paired_ttest_rate_order(strips, 2))
 assign(paste0("rate_order_","zone_", "3"), function_paired_ttest_rate_order(strips, 3))
 #assign(paste0("rate_order_","zone_", "4"), function_paired_ttest_rate_order(strips, 4))
+
+rate_order_zone_1
+rate_order_zone_2
 
 rate_order_all <- rbind(rate_order_zone_1, rate_order_zone_2)
 # rate_order_all <- rbind(rate_order_zone_1, rate_order_zone_2,
@@ -1214,7 +1217,7 @@ write.csv(for_ricks_tables_summary, name)
     zone_x_GSP_vs_AltGSP_av <- group_by(zone_x_GSP_vs_AltGSP, SegmentID, GSP, Zone, zone_name ) %>% 
       summarise_all(mean, na.rm= TRUE)
     #ensure that the dataset is duplictaed
-    list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP$SegmentID)] #this returns a list of values I want to keep
+    list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP_av$SegmentID)] #this returns a list of values I want to keep
     zone_x_GSP_vs_AltGSP_av <- zone_x_GSP_vs_AltGSP_av %>% filter(SegmentID %in% list_SegmentID_values_GSP)
     # run paired ttest
     zone_x_GSP_vs_AltGSP_res <- t.test(YldMassDry ~ GSP, data = zone_x_GSP_vs_AltGSP_av, paired = TRUE)
@@ -1318,7 +1321,7 @@ GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate, Zone_ID, zone_name) %>%
 
 ## filter out one rate so we only have 3
  GR_vs_low_High_rate <- GR_vs_low_High_rate %>%
-   filter(Rate == c(140,220)) # this is what we will keep 2.5,17.9
+   filter(Rate == c(270,350)) # this is what we will keep 2.5,17.9
 
 str(GR_vs_low_High_rate$Rate)
 GR_vs_low_High_rate$Rate <- as.double(GR_vs_low_High_rate$Rate)
@@ -1370,8 +1373,8 @@ str(GR_vs_low_High_rate_wide)
 GR_vs_low_High_rate_wide <- ungroup(GR_vs_low_High_rate_wide)
 ## differences in yld clms
 GR_vs_low_High_rate_wide <- GR_vs_low_High_rate_wide %>% 
-  mutate(#GSP_vs_lower = the_GSP   - lower_than_GSP,
-         GSP_vs_higher = the_GSP  - higher_than_GSP)
+  mutate(GSP_vs_lower = the_GSP   - lower_than_GSP)#,
+         #GSP_vs_higher = the_GSP  - higher_than_GSP)
 str(GR_vs_low_High_rate_wide)
 
 
@@ -1385,18 +1388,18 @@ GR_vs_low_High_rate_wide <- left_join(GR_vs_low_High_rate_wide, grand_mean_GSP_H
 #####
 str(GR_vs_low_High_rate_wide)
 GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_wide %>%
-  mutate( yld_resposne_GSP_v_low = "NA",
-     # yld_resposne_GSP_v_low =  case_when(
-     #   GSP_vs_lower > 0 + se_comp_GSP_low ~ "positive",
-     #   GSP_vs_lower < 0 - se_comp_GSP_low ~ "negative",
-     #   TRUE ~ "no_response"
-     # ),
-     #yld_resposne_GSP_v_high =  "NA")
-     yld_resposne_GSP_v_high =  case_when(
-       GSP_vs_higher  > 0 +  se_comp_GSP_high ~ "negative",
-       GSP_vs_higher  < 0 -  se_comp_GSP_high ~ "positive",
+  mutate( #yld_resposne_GSP_v_low = "NA",
+     yld_resposne_GSP_v_low =  case_when(
+       GSP_vs_lower > 0 + se_comp_GSP_low ~ "positive",
+       GSP_vs_lower < 0 - se_comp_GSP_low ~ "negative",
        TRUE ~ "no_response"
-    ))
+     ),
+     yld_resposne_GSP_v_high =  "NA")
+     # yld_resposne_GSP_v_high =  case_when(
+     #   GSP_vs_higher  > 0 +  se_comp_GSP_high ~ "negative",
+     #   GSP_vs_higher  < 0 -  se_comp_GSP_high ~ "positive",
+     #   TRUE ~ "no_response"
+    #))
   
 
 View(GR_vs_low_High_rate_summary)
@@ -1411,11 +1414,11 @@ GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
     Zone_ID,
     comparison,
     yld_response,
-    higher_than_GSP,
-    #lower_than_GSP,
+    #higher_than_GSP,
+    lower_than_GSP,
     the_GSP,
-    #GSP_vs_lower,
-    GSP_vs_higher,
+    GSP_vs_lower,
+    #GSP_vs_higher,
     se_comp_GSP_low,
     se_comp_GSP_high
   ) %>% 
@@ -1427,8 +1430,8 @@ GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
 
 #Add the mising ones with NA
  GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
- mutate(lower_than_GSP = NA,
-        GSP_vs_lower = NA)
+ mutate(higher_than_GSP = NA,
+        GSP_vs_higher = NA)
   
 GR_vs_low_High_rate_summary
 
@@ -1446,79 +1449,79 @@ str(GR_vs_low_High_rate)
 function_paired_ttest_GR_low_high <- function(GR_vs_low_High_rate, zone_x){
   
   #select the zone data and the high vs low rates
-  # zone_x_GSP_vs_low <- GR_vs_low_High_rate %>%
-  #   filter(zone_name == paste0("zone", zone_x)) %>%
-  #   filter(GSP_high_low == "the_GSP" | GSP_high_low == "lower_than_GSP")
-  # 
-  # #average the yld per segment and rate
-  # zone_x_GSP_vs_low_av <- group_by(zone_x_GSP_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , GSP_high_low) %>%
-  #   summarise_all(mean, na.rm= TRUE)
-  # #summarise(mean = mean(YldMassDry, na.rm= TRUE))
-  # 
-  # #ensure that the dataset is duplictaed
-  # list_SegmentID_values_GSP_l <- zone_x_GSP_vs_low_av$SegmentID[duplicated(zone_x_GSP_vs_low$SegmentID)] #this returns a list of values I want to keep
-  # zone_x_GSP_vs_low_av <- zone_x_GSP_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_GSP_l)
-  # # run paired ttest
-  # zone_x_GSP_vs_low_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_low_av, paired = TRUE)
-  # 
-  # #####test results
-  # # Report values from the t.test
-  # zone_x_GSP_vs_low_res_sig <-
-  #   data.frame(P_value = as.double(zone_x_GSP_vs_low_res$p.value),
-  #              Mean_diff = (zone_x_GSP_vs_low_res$estimate)) %>%
-  #   mutate(
-  #     comparison = "GSP_v_low",
-  #     zone = paste0("zone", zone_x),
-  #     rounded = abs(round(Mean_diff, 2)),
-  #     Significant = case_when(P_value < 0.05 ~ "significant",
-  #                             TRUE ~ "not significant"))
-  # zone_x_GSP_vs_low_res_sig
+   zone_x_GSP_vs_low <- GR_vs_low_High_rate %>%
+     filter(zone_name == paste0("zone", zone_x)) %>%
+     filter(GSP_high_low == "the_GSP" | GSP_high_low == "lower_than_GSP")
+
+   #average the yld per segment and rate
+   zone_x_GSP_vs_low_av <- group_by(zone_x_GSP_vs_low, SegmentID, Rate, Zone, rate_name, zone_name , GSP_high_low) %>%
+     summarise_all(mean, na.rm= TRUE)
+   #summarise(mean = mean(YldMassDry, na.rm= TRUE))
+
+   #ensure that the dataset is duplictaed
+   list_SegmentID_values_GSP_l <- zone_x_GSP_vs_low_av$SegmentID[duplicated(zone_x_GSP_vs_low_av$SegmentID)] #this returns a list of values I want to keep
+   zone_x_GSP_vs_low_av <- zone_x_GSP_vs_low_av %>% filter(SegmentID %in% list_SegmentID_values_GSP_l)
+   # run paired ttest
+   zone_x_GSP_vs_low_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_low_av, paired = TRUE)
+
+   #####test results
+   # Report values from the t.test
+   zone_x_GSP_vs_low_res_sig <-
+     data.frame(P_value = as.double(zone_x_GSP_vs_low_res$p.value),
+                Mean_diff = (zone_x_GSP_vs_low_res$estimate)) %>%
+     mutate(
+       comparison = "GSP_v_low",
+       zone = paste0("zone", zone_x),
+       rounded = abs(round(Mean_diff, 2)),
+       Significant = case_when(P_value < 0.05 ~ "significant",
+                               TRUE ~ "not significant"))
+   zone_x_GSP_vs_low_res_sig
   
   ##########################################################################################################################
   #select the zone data and the GSP vs high rates
-    zone_x_GSP_vs_high <- GR_vs_low_High_rate %>%
-      filter(zone_name == paste0("zone", zone_x)) %>%
-      filter(GSP_high_low == "the_GSP" | GSP_high_low == "higher_than_GSP")
-   
-    #average the yld per segment and rate
-    zone_x_GSP_vs_high_av <- group_by(zone_x_GSP_vs_high, SegmentID, Rate, Zone, rate_name, zone_name , GSP_high_low) %>%
-      summarise_all(mean, na.rm= TRUE)
-    #ensure that the dataset is duplictaed
-    list_SegmentID_values_GSP_h <- zone_x_GSP_vs_high_av$SegmentID[duplicated(zone_x_GSP_vs_high$SegmentID)] #this returns a list of values I want to keep
-    zone_x_GSP_vs_high_av <- zone_x_GSP_vs_high_av %>% filter(SegmentID %in% list_SegmentID_values_GSP_h)
-    # run paired ttest
-    zone_x_GSP_vs_high_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_high_av, paired = TRUE)
-   
-    #####test results
-    # Report values from the t.test
-    zone_x_GSP_vs_high_res_sig <-
-      data.frame(P_value = as.double(zone_x_GSP_vs_high_res$p.value),
-                 Mean_diff = (zone_x_GSP_vs_high_res$estimate)) %>%
-      mutate(
-        comparison = "GSP_v_high",
-        zone = paste0("zone", zone_x),
-        rounded = abs(round(Mean_diff, 2)),
-        Significant = case_when(P_value < 0.05 ~ "significant",
-                                TRUE ~ "not significant"))
-    zone_x_GSP_vs_high_res_sig
+     # zone_x_GSP_vs_high <- GR_vs_low_High_rate %>%
+     #   filter(zone_name == paste0("zone", zone_x)) %>%
+     #   filter(GSP_high_low == "the_GSP" | GSP_high_low == "higher_than_GSP")
+     # 
+     # #average the yld per segment and rate
+     # zone_x_GSP_vs_high_av <- group_by(zone_x_GSP_vs_high, SegmentID, Rate, Zone, rate_name, zone_name , GSP_high_low) %>%
+     #   summarise_all(mean, na.rm= TRUE)
+     # #ensure that the dataset is duplictaed
+     # list_SegmentID_values_GSP_h <- zone_x_GSP_vs_high_av$SegmentID[duplicated(zone_x_GSP_vs_high_av$SegmentID)] #this returns a list of values I want to keep
+     # zone_x_GSP_vs_high_av <- zone_x_GSP_vs_high_av %>% filter(SegmentID %in% list_SegmentID_values_GSP_h)
+     # # run paired ttest
+     # zone_x_GSP_vs_high_res <- t.test(YldMassDry ~ GSP_high_low, data = zone_x_GSP_vs_high_av, paired = TRUE)
+     # 
+     # #####test results
+     # # Report values from the t.test
+     # zone_x_GSP_vs_high_res_sig <-
+     #   data.frame(P_value = as.double(zone_x_GSP_vs_high_res$p.value),
+     #              Mean_diff = (zone_x_GSP_vs_high_res$estimate)) %>%
+     #   mutate(
+     #     comparison = "GSP_v_high",
+     #     zone = paste0("zone", zone_x),
+     #     rounded = abs(round(Mean_diff, 2)),
+     #     Significant = case_when(P_value < 0.05 ~ "significant",
+     #                             TRUE ~ "not significant"))
+     # zone_x_GSP_vs_high_res_sig
    
 
 
    #zone_x_GSP_vs_low_res_sig
-   zone_x_GSP_vs_high_res_sig
+   # zone_x_GSP_vs_high_res_sig
 
 
     # zone_x_GSP_vs_low_vs_high_res_sig <- rbind(zone_x_GSP_vs_low_res_sig,
     #                                            zone_x_GSP_vs_high_res_sig)
 
-  zone_x_GSP_vs_low_vs_high_res_sig <- zone_x_GSP_vs_high_res_sig
+   zone_x_GSP_vs_low_vs_high_res_sig <- zone_x_GSP_vs_low_res_sig
   
   return(data.frame(zone_x_GSP_vs_low_vs_high_res_sig))
 }
 assign(paste0("GSP_low_vs_high", "zone_", "1"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 1))
 assign(paste0("GSP_low_vs_high","zone_", "2"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 2))
-#assign(paste0("GSP_low_vs_high","zone_", "3"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 3))
-#assign(paste0("GSP_low_vs_high","zone_", "4"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 4))
+assign(paste0("GSP_low_vs_high","zone_", "3"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 3))
+assign(paste0("GSP_low_vs_high","zone_", "4"), function_paired_ttest_GR_low_high(GR_vs_low_High_rate, 4))
 
 GSP_low_vs_highzone_1
 GSP_low_vs_highzone_2
@@ -1541,7 +1544,7 @@ str(GSP_low_vs_high_all)
 GR_vs_low_High_rate_summary <- left_join(GR_vs_low_High_rate_summary, GSP_low_vs_high_all, by = c("Zone_ID", "comparison"))
 
 names(GR_vs_low_High_rate_summary)
-View(GR_vs_low_High_rate_summary)
+#View(GR_vs_low_High_rate_summary)
 GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
   dplyr::select(
     Zone_ID,
@@ -1570,7 +1573,7 @@ GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>%
 GR_vs_low_High_rate_summary
 assigned_names2
 GR_vs_low_High_rate_summary <- cbind(GR_vs_low_High_rate_summary,assigned_names2)
-View(GR_vs_low_High_rate_summary)
+#View(GR_vs_low_High_rate_summary)
 
 #######################################################
 GR_vs_low_High_rate <- data.frame(GR_vs_low_High_rate)
@@ -1594,8 +1597,8 @@ label_GR_v_rates <- data.frame(label_GR_v_rates)
 str(label_GR_v_rates)
 ##!! make sure this is correct
 label_GR_v_rates <-label_GR_v_rates %>% rename(
-  higher_than_GSP_label = higher_than_GSP,
-  #lower_than_GSP_label = lower_than_GSP,
+  #higher_than_GSP_label = higher_than_GSP,
+  lower_than_GSP_label = lower_than_GSP,
   the_GSP_label = the_GSP)
 
 label_GR_v_rates
