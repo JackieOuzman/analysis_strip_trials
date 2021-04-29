@@ -29,6 +29,8 @@ all_strips <- st_read("W:/value_soil_testing_prj/Yield_data/2020/All_Strips_2020
 
 # select a few clm
 str(all_strips)
+names(all_strips)
+
 all_strips <- all_strips %>%
   dplyr::select(
     Paddock_ID,
@@ -38,9 +40,20 @@ all_strips <- all_strips %>%
     Start_Fert,
     Top_Dress,
     Strip_Type,
+    
+    organisati,
+    contact,
+    farmer,     
+    paddock,
+    source_dir,
+    
     StripCount,
     GSP_list,
-    join_field
+    join_field,
+    
+    Status,
+    Comments,
+    NoAnalysis
   )
 str(all_strips)
 all_strips <- all_strips %>% 
