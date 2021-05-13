@@ -63,7 +63,10 @@ clm_headings <- c(
   "rate_very_low",
   "se_comp_high_low" ,
   "se_comp_medium_low",
-  "se_comp_high_medium"
+  "se_comp_high_medium",
+  "zone",
+  "Mean_diff"
+  
   
   
 )
@@ -109,14 +112,16 @@ write.csv(dataset,paste0(outputDir, "/hign_low_t_test_merged_3b.csv") )
 
 
 
-### Note working for ?? 31133
+### Note working for ?? 31612
 file_list
-file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31111_P Strip.csv" 
-#Alistair Tippett paddocks
-file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31115_N Strip.csv"
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31611_P Strip.csv" 
+#Kris Dixon
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31612_N Strip.csv"
 
-file3 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31133_P Strip.csv"
-file4 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31136_N Strip.csv"
+file3 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31621_P Strip.csv"
+
+file4 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31633_P Strip.csv"
+
 file5 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31211_P Strip.csv" 
 file6 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31214_P Strip.csv" 
 file7 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_31215_N Strip.csv"
