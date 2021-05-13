@@ -1129,156 +1129,156 @@ write.csv(for_ricks_tables_summary, name)
 #########################################################################################################
 ####  ALt GSP analysis ######################################
 
- #  assign("strips_alt_analysis", function_1_import_data(input_file))
- #  assign("strips_alt_analysis", function_2_tidy_clm(strips_alt_analysis))
- # # 
- # # ### need to add in the zone ID here
- #  strips_alt_analysis <- left_join(strips_alt_analysis, Rates_labels, by= "Rate")
- #  strips_alt_analysis <- left_join(strips_alt_analysis, Zone_labels, by= "Zone")
- # # 
- #  names(strips_alt_analysis)
- #  ### select the clm
- #  strips_alt_analysis <- strips_alt_analysis %>% 
- #    dplyr::select(Zone_ID = Zone_ID.y, SegmentID, YldMassDry, GSP, zone_name, Zone )
- # # 
- #  ## filter data just the zones and the GSP and Alt GSP strips
- #  strips_alt_analysis <-  strips_alt_analysis %>% 
- #    filter(Zone_ID != "NA") %>% 
- #    filter(GSP != "NA")
- # # 
- # # 
- # # 
- #  str(strips_alt_analysis)
- #  strips_alt_analysis <- strips_alt_analysis %>%
- #    mutate(comparison_GSP_AltGSP = case_when(GSP == "GSP" ~ "GSP_AltGSP",
- #                                             TRUE ~ "other"))
- # # 
- #  assign(paste0("grand_mean_std_error_", "GSP_AltGSP"), function_grand_mean_std_error(strips_alt_analysis,"GSP_AltGSP"))
- #  grand_mean_se_GSP_AltGSP <- grand_mean_std_error_GSP_AltGSP
- # # 
- #  ## I need to generate mean yield value for the zone and Rate
- #  
- #  strips_alt_analysis_2 <- strips_alt_analysis %>% 
- #    group_by( Zone_ID, GSP) %>% 
- #    summarise(zone_yld = mean(YldMassDry, na.rm = TRUE))
- #  
- #  
- #  
- #  strips_alt_analysis_wide <- tidyr::pivot_wider(strips_alt_analysis_2, 
- #                                              id_cols = c( Zone_ID),
- #                                              names_from =GSP,
- #                                              values_from = zone_yld
- #  )
- # # 
- #  str(strips_alt_analysis_wide)
- #  ## differences in yld clms
- #  strips_alt_analysis_wide <- strips_alt_analysis_wide %>% 
- #    mutate(GSP_vs_Alt_GSP = GSP - `Alt GSP`)
- #  str(strips_alt_analysis_wide)
- # # 
- #  strips_alt_analysis_wide <- ungroup(strips_alt_analysis_wide)
- #  
- #  strips_alt_analysis_wide
- #  grand_mean_se_GSP_AltGSP
- # # 
- # # 
- #  strips_alt_analysis_wide <- left_join(strips_alt_analysis_wide, grand_mean_se_GSP_AltGSP)
- # # 
- # # 
- # # 
- # # 
- # # #####
- #  strips_alt_analysis_summary <- strips_alt_analysis_wide %>%
- #    mutate(
- #      yld_resposne_GSP_v_Alt_GSP =  case_when(
- #        GSP_vs_Alt_GSP > 0 + se_comp_GSP_AltGSP ~ "positive",
- #        GSP_vs_Alt_GSP < 0 - se_comp_GSP_AltGSP ~ "negative",
- #        TRUE ~ "no_response"
- #      )
- #    )
- # #     
- # # 
- #  strips_alt_analysis_summary
- # # 
- #  strips_alt_analysis_summary <- strips_alt_analysis_summary %>% 
- #    tidyr::pivot_longer(cols = c("yld_resposne_GSP_v_Alt_GSP"),
- #                        names_to = "comparison",
- #                        values_to = "yld_response") %>% 
- #    dplyr::select(Zone_ID, comparison, yld_response, `Alt GSP`, GSP, 
- #                  GSP_vs_Alt_GSP, 
- #                  se_comp_GSP_AltGSP) 
- #  
- #  strips_alt_analysis_summary
- # # 
- # # #### t test extra 
- # # 
- #  names(strips_alt_analysis)
- # # 
- #  function_paired_ttest_GSP <- function(strips_alt_analysis, zone_x){
- #    
- #    #select the zone data and the high vs low rates
- #    zone_x_GSP_vs_AltGSP <- strips_alt_analysis %>% 
- #      filter(zone_name == paste0("zone", zone_x)) %>%
- #      filter(GSP == "GSP" | GSP == "Alt GSP")
- # #   
- #    #average the yld per segment and GSP
- #    zone_x_GSP_vs_AltGSP_av <- group_by(zone_x_GSP_vs_AltGSP, SegmentID, GSP, Zone, zone_name ) %>% 
- #      summarise_all(mean, na.rm= TRUE)
- #    #ensure that the dataset is duplictaed
- #    list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP_av$SegmentID)] #this returns a list of values I want to keep
- #    zone_x_GSP_vs_AltGSP_av <- zone_x_GSP_vs_AltGSP_av %>% filter(SegmentID %in% list_SegmentID_values_GSP)
- #    # run paired ttest
- #    zone_x_GSP_vs_AltGSP_res <- t.test(YldMassDry ~ GSP, data = zone_x_GSP_vs_AltGSP_av, paired = TRUE)
- #    
- #    #####test results
- #    # Report values from the t.test
- #    zone_x_GSP_vs_AltGSP_res_sig <-
- #      data.frame(P_value = as.double(zone_x_GSP_vs_AltGSP_res$p.value),
- #                 Mean_diff = (zone_x_GSP_vs_AltGSP_res$estimate)) %>%
- #      mutate(
- #        comparison = "GSP_v_AltGSP",
- #        zone = paste0("zone", zone_x),
- #        rounded = abs(round(Mean_diff, 2)),
- #        Significant = case_when(P_value < 0.05 ~ "significant",
- #                                TRUE ~ "not significant"))
- #    zone_x_GSP_vs_AltGSP_res_sig 
- #    
- #    ###############################################################################################################
- #    
- #  }
- #  assign(paste0("GSP", "zone_", "1"), function_paired_ttest_GSP(strips_alt_analysis, 1))
- #  assign(paste0("GSP","zone_", "2"), function_paired_ttest_GSP(strips_alt_analysis, 2))
- #  
- #  
- #  
- #  GSP_all <- rbind(GSPzone_1, GSPzone_2)
- #  #GSP_all <- GSPzone_1
- #  GSP_all <- left_join(GSP_all, Zone_labels, by=c("zone" = "zone_name"))
- #  
- #  str(strips_alt_analysis_summary)
- #  str(GSP_all)
- #  
- #  strips_alt_analysis_summary <- left_join(strips_alt_analysis_summary, GSP_all, by= "Zone_ID")
- #  names(strips_alt_analysis_summary)
- #  
- #  strips_alt_analysis_summary <- strips_alt_analysis_summary %>%
- #    dplyr::mutate(
- #    comparison = comparison.y,
- #      paddock_ID = unique(strips$Paddock_ID),
- #      Strip_Type = unique(strips$Strip_Type),
- #      input_file = input_file
- #    ) %>% 
- #  dplyr::select(-comparison.x)
- #  
- #  ## save output
- #  View(strips_alt_analysis_summary)
- #  
- #  
- #  
- #  name_gsp <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP/GSP_AltGSP_comp_", 
- #                 dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
- #  name_gsp
- #  write.csv(strips_alt_analysis_summary, name_gsp)
+  assign("strips_alt_analysis", function_1_import_data(input_file))
+  assign("strips_alt_analysis", function_2_tidy_clm(strips_alt_analysis))
+ #
+ # ### need to add in the zone ID here
+  strips_alt_analysis <- left_join(strips_alt_analysis, Rates_labels, by= "Rate")
+  strips_alt_analysis <- left_join(strips_alt_analysis, Zone_labels, by= "Zone")
+ #
+  names(strips_alt_analysis)
+  ### select the clm
+  strips_alt_analysis <- strips_alt_analysis %>%
+    dplyr::select(Zone_ID = Zone_ID.y, SegmentID, YldMassDry, GSP, zone_name, Zone )
+ #
+  ## filter data just the zones and the GSP and Alt GSP strips
+  strips_alt_analysis <-  strips_alt_analysis %>%
+    filter(Zone_ID != "NA") %>%
+    filter(GSP != "NA")
+ #
+ #
+ #
+  str(strips_alt_analysis)
+  strips_alt_analysis <- strips_alt_analysis %>%
+    mutate(comparison_GSP_AltGSP = case_when(GSP == "GSP" ~ "GSP_AltGSP",
+                                             TRUE ~ "other"))
+ #
+  assign(paste0("grand_mean_std_error_", "GSP_AltGSP"), function_grand_mean_std_error(strips_alt_analysis,"GSP_AltGSP"))
+  grand_mean_se_GSP_AltGSP <- grand_mean_std_error_GSP_AltGSP
+ #
+  ## I need to generate mean yield value for the zone and Rate
+
+  strips_alt_analysis_2 <- strips_alt_analysis %>%
+    group_by( Zone_ID, GSP) %>%
+    summarise(zone_yld = mean(YldMassDry, na.rm = TRUE))
+
+
+
+  strips_alt_analysis_wide <- tidyr::pivot_wider(strips_alt_analysis_2,
+                                              id_cols = c( Zone_ID),
+                                              names_from =GSP,
+                                              values_from = zone_yld
+  )
+ #
+  str(strips_alt_analysis_wide)
+  ## differences in yld clms
+  strips_alt_analysis_wide <- strips_alt_analysis_wide %>%
+    mutate(GSP_vs_Alt_GSP = GSP - `Alt GSP`)
+  str(strips_alt_analysis_wide)
+ #
+  strips_alt_analysis_wide <- ungroup(strips_alt_analysis_wide)
+
+  strips_alt_analysis_wide
+  grand_mean_se_GSP_AltGSP
+ #
+ #
+  strips_alt_analysis_wide <- left_join(strips_alt_analysis_wide, grand_mean_se_GSP_AltGSP)
+ #
+ #
+ #
+ #
+ # #####
+  strips_alt_analysis_summary <- strips_alt_analysis_wide %>%
+    mutate(
+      yld_resposne_GSP_v_Alt_GSP =  case_when(
+        GSP_vs_Alt_GSP > 0 + se_comp_GSP_AltGSP ~ "positive",
+        GSP_vs_Alt_GSP < 0 - se_comp_GSP_AltGSP ~ "negative",
+        TRUE ~ "no_response"
+      )
+    )
+ #
+ #
+  strips_alt_analysis_summary
+ #
+  strips_alt_analysis_summary <- strips_alt_analysis_summary %>%
+    tidyr::pivot_longer(cols = c("yld_resposne_GSP_v_Alt_GSP"),
+                        names_to = "comparison",
+                        values_to = "yld_response") %>%
+    dplyr::select(Zone_ID, comparison, yld_response, `Alt GSP`, GSP,
+                  GSP_vs_Alt_GSP,
+                  se_comp_GSP_AltGSP)
+
+  strips_alt_analysis_summary
+ #
+ # #### t test extra
+ #
+  names(strips_alt_analysis)
+ #
+  function_paired_ttest_GSP <- function(strips_alt_analysis, zone_x){
+
+    #select the zone data and the high vs low rates
+    zone_x_GSP_vs_AltGSP <- strips_alt_analysis %>%
+      filter(zone_name == paste0("zone", zone_x)) %>%
+      filter(GSP == "GSP" | GSP == "Alt GSP")
+ #
+    #average the yld per segment and GSP
+    zone_x_GSP_vs_AltGSP_av <- group_by(zone_x_GSP_vs_AltGSP, SegmentID, GSP, Zone, zone_name ) %>%
+      summarise_all(mean, na.rm= TRUE)
+    #ensure that the dataset is duplictaed
+    list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP_av$SegmentID)] #this returns a list of values I want to keep
+    zone_x_GSP_vs_AltGSP_av <- zone_x_GSP_vs_AltGSP_av %>% filter(SegmentID %in% list_SegmentID_values_GSP)
+    # run paired ttest
+    zone_x_GSP_vs_AltGSP_res <- t.test(YldMassDry ~ GSP, data = zone_x_GSP_vs_AltGSP_av, paired = TRUE)
+
+    #####test results
+    # Report values from the t.test
+    zone_x_GSP_vs_AltGSP_res_sig <-
+      data.frame(P_value = as.double(zone_x_GSP_vs_AltGSP_res$p.value),
+                 Mean_diff = (zone_x_GSP_vs_AltGSP_res$estimate)) %>%
+      mutate(
+        comparison = "GSP_v_AltGSP",
+        zone = paste0("zone", zone_x),
+        rounded = abs(round(Mean_diff, 2)),
+        Significant = case_when(P_value < 0.05 ~ "significant",
+                                TRUE ~ "not significant"))
+    zone_x_GSP_vs_AltGSP_res_sig
+
+    ###############################################################################################################
+
+  }
+  assign(paste0("GSP", "zone_", "1"), function_paired_ttest_GSP(strips_alt_analysis, 1))
+  assign(paste0("GSP","zone_", "2"), function_paired_ttest_GSP(strips_alt_analysis, 2))
+
+
+
+  GSP_all <- rbind(GSPzone_1, GSPzone_2)
+  #GSP_all <- GSPzone_1
+  GSP_all <- left_join(GSP_all, Zone_labels, by=c("zone" = "zone_name"))
+
+  str(strips_alt_analysis_summary)
+  str(GSP_all)
+
+  strips_alt_analysis_summary <- left_join(strips_alt_analysis_summary, GSP_all, by= "Zone_ID")
+  names(strips_alt_analysis_summary)
+
+  strips_alt_analysis_summary <- strips_alt_analysis_summary %>%
+    dplyr::mutate(
+    comparison = comparison.y,
+      paddock_ID = unique(strips$Paddock_ID),
+      Strip_Type = unique(strips$Strip_Type),
+      input_file = input_file
+    ) %>%
+  dplyr::select(-comparison.x)
+
+  ## save output
+  View(strips_alt_analysis_summary)
+
+
+
+  name_gsp <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP/GSP_AltGSP_comp_",
+                 dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
+  name_gsp
+  write.csv(strips_alt_analysis_summary, name_gsp)
 
 ###########################################################################################################################################
 ##########################################################################################################################################
