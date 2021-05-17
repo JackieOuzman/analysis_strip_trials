@@ -41,6 +41,29 @@ file_list <- paste0(baseDir, "/",list.files(baseDir, ".csv", full.names = FALSE)
 file_list
 
 
+clm_headings <- c(
+  "X",
+  "Rate",
+  "yield",
+  "n",
+  "sd",
+  "se",
+  "PtCount_tally",
+  "zone",
+  "rate_name_order",
+  "rate_name",
+  "P_value",
+  "Mean_diff",
+  "rounded",
+  "Significant",
+  "Details",
+  "Start_Fert",
+  "Top_Dress",
+  "Zone",
+  "Zone_ID",
+  "paddock_ID_Type",
+  "input_file"
+)
 
 
 setwd(baseDir)
@@ -50,17 +73,18 @@ for (file in file_list){
   # if the merged dataset doesn't exist, create it
   if (!exists("dataset")){
     dataset <- read.csv(file)
+    dataset[clm_headings[!(clm_headings %in% colnames(dataset))]] = 'NA'
   }
   
   # if the merged dataset does exist, append to it
-   if (exists("dataset")){
-     temp_dataset <-read.csv(file)
-     dataset<-rbind(dataset, temp_dataset)
-     
-     rm(temp_dataset)
-   }
+  if (exists("dataset")){
+    temp_dataset <-read.csv(file)
+    temp_dataset[clm_headings[!(clm_headings %in% colnames(temp_dataset))]] = 'NA'
+    dataset<-rbind(dataset, temp_dataset)
+    
+    rm(temp_dataset)
+  }
 }
-
 names(dataset)
 
 # dataset <- dataset %>% 
@@ -79,4 +103,31 @@ dataset <- dataset %>%
 outputDir
 write.csv(dataset,paste0(outputDir, "/t_test_merged_3a.csv") )
 write.csv(dataset,paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files", "/step3a_t_test_merged.csv") )
+
+##############################################################################################################################
+#Ummm not saving as expected
+#results_grower_33731_P Strip_C_Yld_SegID_Zone.csv
+#results_grower_511022_N Strip_Long_N_Yld_SegID_Zone.csv
+
+
+
+file_list
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/grower_results/results_grower_33731_P Strip_C_Yld_SegID_Zone.csv"
+#falls over at 511022_P
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/grower_results/results_grower_511022_P Strip_Long_P_Yld_SegID_Zone.csv"
+
+
+
+
+dataset_1 <- read.csv(file1)
+dataset_1[clm_headings[!(clm_headings %in% colnames(dataset_1))]] = 'NA'
+names(dataset_1)
+
+
+dataset_2 <- read.csv(file2)
+dataset_2[clm_headings[!(clm_headings %in% colnames(dataset_2))]] = 'NA'
+names(dataset_2)
+
+
+test<-rbind(dataset_1, dataset_2)
 
