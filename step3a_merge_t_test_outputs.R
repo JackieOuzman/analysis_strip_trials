@@ -92,6 +92,10 @@ names(dataset)
 #   distinct(ID_analysis_zone_temp, .keep_all = TRUE)
 
 ### add in sig and yield resposne
+names(dataset)
+dataset <- dataset %>% 
+  mutate(ID_analysis_zone_temp = paste0(Zone_ID, "_", Rate )) %>% 
+  distinct(ID_analysis_zone_temp, .keep_all = TRUE)
 
 dataset <- dataset %>% 
   mutate(Significant_practical = case_when(Significant == "significant"  & rounded > 0.1 ~ "significant",
