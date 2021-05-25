@@ -40,7 +40,7 @@ list.files(baseDir, full.names = FALSE)
 ###########################################################################################################
 ## I would be good to work on this step to run all the files in the directory at once.
 
-input_file <-"Clarke_Fosters_Yld_SegID.csv"
+input_file <-"Fosters_Yld_SegID_Zone.csv"
 name_Paddock <- unlist(strsplit(input_file,"_"))[1]
 ## add this into the strips df
 name_Paddock <- "Fosters"
@@ -170,6 +170,10 @@ Zone_labels <- strips %>%
   arrange(Zone) %>% #this should work with text
   mutate(zone_name = c("zone1","zone2" )) %>%
   dplyr::select(Zone, zone_name, Zone_ID)
+names(strips)
+unique(strips$Zone)
+unique(strips$Zone_ID)
+unique(strips$zone_name)
 
 Zone_labels
 
