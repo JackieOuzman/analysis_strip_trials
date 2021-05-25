@@ -13,7 +13,7 @@ rm(list = ls()[!ls() %in% c("strips",
                             )])
 
 
-recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_Feb24.xlsx")
+recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_May05 2021.xlsx")
 ##########################################################################################################################################
 ### Extra analysis for ricks tables GSP vs low high comparision 
 recom_rateDB <- recom_rateDB %>% 
@@ -40,7 +40,7 @@ recom_rateDB <- recom_rateDB %>%
                 p_rec,
                 N_rec = maxN
   ) 
-
+recom_rateDB$Zone_ID <- as.double(recom_rateDB$Zone_ID)
 
 str(strips)
 rec_rates <- strips %>% 
@@ -53,6 +53,8 @@ rec_rates
 str(rec_rates)
 str(recom_rateDB)
 
+
+
 recom_rate1 <- left_join( rec_rates, recom_rateDB)
 recom_rate1 <- data.frame(recom_rate1)
 str(recom_rate1)
@@ -64,7 +66,15 @@ fert_app_all_steps <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/proces
 fert_app_all_steps <- fert_app_all_steps %>% 
   dplyr::filter(Paddock_ID == substr(paddock_ID_1, start = 1, stop = 5)|
                 Paddock_ID == substr(paddock_ID_2, start = 1, stop = 5)) %>% 
-  dplyr::select( Paddock_ID, Rate, Strip_Rate, Total_sum_P_content, Total_sum_N_content)
+  dplyr::select( Paddock_ID, Rate, Strip_Rate, Total_sum_P_content, Total_sum_N_content, Strip_Type)
+
+## This is a P trial so filter it!!
+names(fert_app_all_steps)
+unique(fert_app_all_steps$Strip_Type)
+
+fert_app_all_steps <- fert_app_all_steps %>% 
+  dplyr::filter(Strip_Type == "P Strip")
+
 
 str(fert_app_all_steps)
 str(recom_rate1)
@@ -606,8 +616,8 @@ assign(paste0("rec_rate_p_vs_higher_","zone_", "2"),function_paired_ttest_rec_ra
 
 
 #what ran?
-rec_rate_p_vs_lower_zone_1 #
-rec_rate_p_vs_lower_zone_2 
+rec_rate_p_vs_lower_zone_1 # yes
+rec_rate_p_vs_lower_zone_2 #not run
 
 rec_rate_p_vs_higher_zone_1#not run
 rec_rate_p_vs_higher_zone_2#not run
@@ -622,12 +632,12 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
   arrange(rec_rate_high_low_p)
 
 ### !!! user input required
-rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
-                                    rec_rate_p_vs_lower_zone_2
+rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1)#,
+                                    #rec_rate_p_vs_lower_zone_2
 
                                     #rec_rate_p_vs_higher_zone_1,
                                     #rec_rate_p_vs_higher_zone_2
-)
+#)
 
 #rec_rate_p_low_vs_high_all <- rec_rate_p_vs_lower_zone_1
 
@@ -711,7 +721,7 @@ label_rec_rates <- tidyr::pivot_wider(
 label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
 label_rec_rates <-label_rec_rates %>% rename(
-                           higher_than_rec_rate_p_label = higher_than_rec_rate_p,
+                           #higher_than_rec_rate_p_label = higher_than_rec_rate_p,
                            lower_than_rec_rate_p_label = lower_than_rec_rate_p,
                            rec_rate_p_label = rec_rate_p)
 

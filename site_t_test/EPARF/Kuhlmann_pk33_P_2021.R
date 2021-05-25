@@ -58,6 +58,15 @@ function_1_import_data <- function(input_file){
   return(strips)}
 
 assign("strips", function_1_import_data(input_file))
+##############################################################################################################
+## remove the * in the Strip_Rate clm
+# test <- strips
+# names(test)
+# unique(test$Strip_Rate)
+
+
+strips$Strip_Rate <- stringr::str_replace(strips$Strip_Rate, '\\*',"")
+strips$Strip_Rate <- stringi::stri_trim_right(strips$Strip_Rate)
 
 ###############################################################################################################
 #############    This analysis doesnt include the Alt GSP strip   so i will remove it now  ####################
