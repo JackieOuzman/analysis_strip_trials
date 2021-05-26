@@ -504,13 +504,13 @@ paddock_ID <- data.frame(distinct(strips,Zone_ID)) %>%
    filter(!is.na(Zone_ID))
 paddock_ID_1 <- paddock_ID[1,1]
 paddock_ID_2 <- paddock_ID[2,1]
-paddock_ID <- c(paddock_ID_1, paddock_ID_2)
+paddock_ID <- c(paddock_ID_1)
 
 paddock_ID
 
 function_tabel_soil_testing <- function( paddock_ID_1, paddock_ID_2){
 
-harm_database <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_Feb18.xlsx")
+harm_database <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_May25 2021.xlsx")
 
 #fix up some names
 harm_database<-
@@ -556,7 +556,7 @@ site
 return(site)
 }
 assign(("site"), function_tabel_soil_testing( paddock_ID_1, paddock_ID_2))
-
+site
 
 ##############################################################################################################
 # table 2 yield  results
@@ -594,14 +594,15 @@ return(mean_zone_av_output_display)
 }
 
 assign(("tabel_yield"), function_tabel_yield(all_results, Zone_labels))
-
+tabel_yield
 TSpecial <- ttheme_minimal(base_size = 8)
+
 table1 <- tableGrob(site , rows = NULL, theme=TSpecial )
 table1
 
 site
 table2 <- tableGrob(tabel_yield, rows = NULL, theme=TSpecial)
-
+table2
 
 note_on_graph <- paste0("The table reports mean values and * denotes significant differences compared to GSR (Pvalue <0.05). ",
                         "\n", 
