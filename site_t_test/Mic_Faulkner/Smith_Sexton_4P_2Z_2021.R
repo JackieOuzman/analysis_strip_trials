@@ -470,7 +470,7 @@ paddock_ID <- c(paddock_ID_1, paddock_ID_2)
 
 function_tabel_soil_testing <- function( paddock_ID_1, paddock_ID_2){
 
-harm_database <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_March31 2021.xlsx")
+harm_database <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_May25 2021.xlsx")
 
 #fix up some names
 names(harm_database)
