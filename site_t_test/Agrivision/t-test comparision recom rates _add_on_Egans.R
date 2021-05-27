@@ -122,7 +122,7 @@ recom_rate1_summary_zone1 <-recom_rate1_summary_zone1 %>%
          difference_p == max(recom_rate1_summary_zone1$difference_p[recom_rate1_summary_zone1$difference_p !=
                                                                       max(recom_rate1_summary_zone1$difference_p)]) ~ "rate2",
         #use this if you have 4 rates best match rate 1 -3
-        difference_p == max(recom_rate1_summary_zone2$difference_p) ~ "rate3",
+        difference_p == max(recom_rate1_summary_zone1$difference_p) ~ "rate3",
         #difference_p == max(recom_rate1_summary_zone1$difference_p) ~ "rate2",
         TRUE ~ as.character(Rate)
       )
@@ -138,8 +138,8 @@ recom_rate1_summary_zone2 <-recom_rate1_summary_zone2 %>%
          difference_p == max(recom_rate1_summary_zone2$difference_p[recom_rate1_summary_zone2$difference_p !=
                                                                       max(recom_rate1_summary_zone2$difference_p)]) ~ "rate2",
         #use this if you have 4 rates best match rate 1 -3
+        difference_p == max(recom_rate1_summary_zone2$difference_p) ~ "rate3",
         #difference_p == max(recom_rate1_summary_zone2$difference_p) ~ "rate2",
-        difference_p == max(recom_rate1_summary_zone2$difference_p) ~ "rate2",
         TRUE ~ as.character(Rate)
       )
   )
@@ -728,4 +728,4 @@ name_rec_rate_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/proc
                                  dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 name_rec_rate_low_high
 write.csv(rec_rate_p_vs_low_High_summary, name_rec_rate_low_high)  
-
+ View(rec_rate_p_vs_low_High_summary)
