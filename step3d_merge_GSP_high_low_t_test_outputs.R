@@ -38,7 +38,7 @@ file_list
 
 #try making a dummy file first
 #create a empty df
-dataset <- data.frame(matrix(ncol = 26, nrow = 0))
+# dataset <- data.frame(matrix(ncol = 26, nrow = 0))
 
 
 
@@ -66,6 +66,7 @@ clm_headings <- c(
   "rate_medium",
   "rate_high",
   "rate_very_high",
+  "rate_high_high",
   "higher_than_GSP_label" ,
   "lower_than_GSP_label" ,
   "the_GSP_label"  ,
@@ -76,7 +77,7 @@ clm_headings <- c(
 
 
 # clm headings from above
-colnames(dataset) <- clm_headings
+#colnames(dataset) <- clm_headings
 
 setwd(baseDir)
 file_list <- list.files()

@@ -60,6 +60,7 @@ clm_headings <- c(
   "rate_medium",
   "rate_high",
   "rate_very_high",
+  "rate_high_high",
   "rate_very_low",
   "se_comp_high_low" ,
   "se_comp_medium_low",
