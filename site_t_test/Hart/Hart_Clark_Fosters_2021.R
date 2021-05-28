@@ -548,6 +548,8 @@ return(mean_zone_av_output_display)
 }
 
 assign(("tabel_yield"), function_tabel_yield(all_results, Zone_labels))
+tabel_yield
+
 
 TSpecial <- ttheme_minimal(base_size = 8)
 table1 <- tableGrob(site , rows = NULL, theme=TSpecial )
@@ -921,6 +923,10 @@ for_ricks_tables_summary
 name <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_", 
 dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 name
+View(for_ricks_tables_summary)
+## not enough data for zone 2 so removed
+for_ricks_tables_summary <- for_ricks_tables_summary %>% 
+  filter(Zone == "Zone 1")
 
 write.csv(for_ricks_tables_summary, name)
 
@@ -1073,6 +1079,10 @@ strips_alt_analysis_summary <- strips_alt_analysis_summary %>%
 name_gsp <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP/GSP_AltGSP_comp_", 
                dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 name_gsp
+View(strips_alt_analysis_summary)
+#not enough data in zone 2 so removed
+strips_alt_analysis_summary <- strips_alt_analysis_summary %>% 
+  filter(Zone_ID == 522140)
 write.csv(strips_alt_analysis_summary, name_gsp)
 
 ###########################################################################################################################################
@@ -1380,12 +1390,14 @@ label_GR_v_rates <-label_GR_v_rates %>% rename(
 GR_vs_low_High_rate_summary <- full_join(GR_vs_low_High_rate_summary, label_GR_v_rates)
 
 
-
-
-
+View(GR_vs_low_High_rate_summary)
+GR_vs_low_High_rate_summary <- GR_vs_low_High_rate_summary %>% 
+  filter(Zone == "Zone 1")
 #save the output
 name_CSP_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_", 
                             dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
+
+
 
 write.csv(GR_vs_low_High_rate_summary, name_CSP_low_high)
 
