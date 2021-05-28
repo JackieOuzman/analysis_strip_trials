@@ -80,9 +80,9 @@ names(strips)
 function_2_tidy_clm <- function(strips) {
   
   strips <- if (c("Yld_Mass_D") %in% names(strips) == TRUE) {
-    rename(strips, YldMassDry = Yield)
+    rename(strips, YldMassDry = YldMassDry)
   } else {
-    rename(strips, YldMassDry = Yield)
+    rename(strips, YldMassDry = YldMassDry)
   }
   
   strips <- filter(strips,!is.na(Rate))
@@ -1032,7 +1032,7 @@ write.csv(for_ricks_tables_summary, name)
    zone_x_GSP_vs_AltGSP_av <- group_by(zone_x_GSP_vs_AltGSP, SegmentID, GSP, Zone, zone_name ) %>% 
      summarise_all(mean, na.rm= TRUE)
    #ensure that the dataset is duplictaed
-   list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP$SegmentID)] #this returns a list of values I want to keep
+   list_SegmentID_values_GSP <- zone_x_GSP_vs_AltGSP_av$SegmentID[duplicated(zone_x_GSP_vs_AltGSP_av$SegmentID)] #this returns a list of values I want to keep
    zone_x_GSP_vs_AltGSP_av <- zone_x_GSP_vs_AltGSP_av %>% filter(SegmentID %in% list_SegmentID_values_GSP)
    # run paired ttest
    zone_x_GSP_vs_AltGSP_res <- t.test(YldMassDry ~ GSP, data = zone_x_GSP_vs_AltGSP_av, paired = TRUE)
