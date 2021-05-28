@@ -277,11 +277,11 @@ zone_4rate_3 #nope
 #join these togther
 function_all_results <- function(zone_1rate_1,
                                  zone_1rate_2,
-                                 zone_1rate_3,
+                                 #zone_1rate_3,
                                  
                                  zone_2rate_1,
-                                 zone_2rate_2,
-                                 zone_2rate_3)
+                                 zone_2rate_2)#,
+                                 #zone_2rate_3)
                                  
                                  # zone_3rate_1,
                                  # zone_3rate_2)
@@ -294,11 +294,11 @@ function_all_results <- function(zone_1rate_1,
                                  {
 results_ttest <- bind_rows(zone_1rate_1,
                            zone_1rate_2,
-                           zone_1rate_3,
+                           #zone_1rate_3,
                            
                            zone_2rate_1,
-                           zone_2rate_2,
-                           zone_2rate_3)
+                           zone_2rate_2)#,
+                           #zone_2rate_3)
 
                            #zone_3rate_1,
                            #zone_3rate_2)
@@ -369,11 +369,11 @@ return(results_ttest)}
 
 assign(("all_results"), function_all_results(zone_1rate_1,
                                              zone_1rate_2,
-                                             zone_1rate_3,
+                                             #zone_1rate_3,
                                              
                                              zone_2rate_1,
-                                             zone_2rate_2,
-                                             zone_2rate_3))
+                                             zone_2rate_2))
+                                             #zone_2rate_3
        
                                              #zone_3rate_1,
                                              #zone_3rate_2))
@@ -665,6 +665,7 @@ assign(("site"), function_tabel_soil_testing( paddock_ID_1, paddock_ID_2))
 
 
 str(all_results)
+
 str(labels_graph)
 ## just drop a few clms
 labels_graph <- labels_graph %>%  dplyr::select(Rate, Strip_Rate, Start_Fert, Top_Dress)
@@ -1318,8 +1319,8 @@ GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate, Zone_ID, zone_name) %>%
 
 ## filter out one rate so we only have 3
  GR_vs_low_High_rate <- GR_vs_low_High_rate %>%
-   filter(Rate == c(0,55,110)) # this is what we will keep 2.5,17.9
-
+   #filter(Rate == c(0,55,82.5)) # this is what we will keep 2.5,17.9
+   filter(Rate %in% c(0,55,82.5))
  ## check
  GR_vs_low_High_rate %>%  group_by(GSP_high_low, Rate) %>% 
    summarise(count= n())
