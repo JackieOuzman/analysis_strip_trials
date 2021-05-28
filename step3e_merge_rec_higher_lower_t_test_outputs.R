@@ -167,16 +167,27 @@ clm_headings_N <- c(
   "zone",
   "higher_than_rec_rate_n",
   "lower_than_rec_rate_n",
+  #"lower_than_rec_rate_n",
+  "Mean_diff",
+  
+  
   "rec_rate_n",
   "rec_rate_n_vs_higher",
   "rec_rate_n_vs_lower",
+  #"rec_rate_n_vs_lower",
+  
   "se_comp_rec_rate_high_n",
   "se_comp_rec_rate_low_n",
   "higher_than_rec_rate_n_label",
+  #"higher_than_rec_rate_n_label",
   "lower_than_rec_rate_n_label",
+  #"lower_than_rec_rate_n_label",
+  
   "rec_rate_n_label",
   "rate_very_low"
 )
+
+#View(clm_headings_N)
 
 setwd(baseDir_N)
 file_list <- list.files()
@@ -232,35 +243,39 @@ write.csv(dataset,paste0(outputDir, "/rec_rate_low_high_comparision_t_test_merge
 
 
 ### It not working why?
+file_list
 
 
-file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_33111_P Strip.csv"
-file2 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52322_P Strip.csv"
-
-
-
-# file3 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_33132_P Strip.csv"
-# file4 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_33142_P Strip.csv"
-# file5 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52214_P Strip.csv"
-# file6 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52216_P Strip.csv"
-# file7 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52231_P Strip.csv"
-# file8 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52241_P Strip.csv"
-# file9 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52244_P Strip.csv"
-# 
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision_N/rec_rate_comp_52351_N Strip.csv"
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision_N/rec_rate_comp_52355_N Strip.csv"
+file3 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision_N/rec_rate_comp_52356_N Strip.csv"
+file4 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision_N/rec_rate_comp_524102_N Strip.csv"
 
 
 
+
+
+setwd(baseDir_N)
+getwd()
 dataset_1 <- read.csv(file1)
-dataset_1[clm_headings[!(clm_headings %in% colnames(dataset_1))]] = 'NA'
+dataset_1[clm_headings_N[!(clm_headings_N %in% colnames(dataset_1))]] = 'NA'
 names(dataset_1)
 
 
 dataset_2 <- read.csv(file2)
-dataset_2[clm_headings[!(clm_headings %in% colnames(dataset_2))]] = 'NA'
+dataset_2[clm_headings_N[!(clm_headings_N %in% colnames(dataset_2))]] = 'NA'
 names(dataset_2)
 
 
 test<-rbind(dataset_1, dataset_2)
+test$Zone_ID
+
+
+dataset_3 <- read.csv(file3)
+dataset_3[clm_headings_N[!(clm_headings_N %in% colnames(dataset_3))]] = 'NA'
+names(dataset_3)
+
+test<-rbind(test, dataset_3)
 
 # dataset_3 <- read.csv(file3)
 # dataset_3[clm_headings[!(clm_headings %in% colnames(dataset_3))]] = 'NA'
