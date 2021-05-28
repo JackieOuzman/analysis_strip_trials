@@ -80,9 +80,9 @@ names(strips)
 function_2_tidy_clm <- function(strips) {
   
   strips <- if (c("Yld_Mass_D") %in% names(strips) == TRUE) {
-    rename(strips, YldMassDry = YldMassDry)
+    rename(strips, YldMassDry = Yield)
   } else {
-    rename(strips, YldMassDry = YldMassDry)
+    rename(strips, YldMassDry = Yield)
   }
   
   strips <- filter(strips,!is.na(Rate))
