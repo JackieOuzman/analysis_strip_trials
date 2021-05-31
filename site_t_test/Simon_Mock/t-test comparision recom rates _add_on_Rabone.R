@@ -13,7 +13,7 @@ rm(list = ls()[!ls() %in% c("strips",
                             )])
 
 
-recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_March31 2021.xlsx")
+recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_May25 2021.xlsx")
 ##########################################################################################################################################
 ### Extra analysis for ricks tables GSP vs low high comparision 
 recom_rateDB <- recom_rateDB %>% 
@@ -52,6 +52,8 @@ rec_rates
 #put the tow files togther
 str(rec_rates)
 str(recom_rateDB)
+
+recom_rateDB$Zone_ID <- as.double(recom_rateDB$Zone_ID)
 
 recom_rate1 <- left_join( rec_rates, recom_rateDB)
 recom_rate1 <- data.frame(recom_rate1)
@@ -320,9 +322,9 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(70,140) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(0,20.5,41.0) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(35,70,140) & zone_name == "zone2")
+  filter(Rate %in% c(41,82) & zone_name == "zone2")
 
 
 recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
@@ -625,8 +627,8 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
 rec_rate_p_low_vs_high_all <- rbind(rec_rate_p_vs_lower_zone_1,
                                     rec_rate_p_vs_lower_zone_2,
 
-                                    #rec_rate_p_vs_higher_zone_1,
-                                    rec_rate_p_vs_higher_zone_2)
+                                    rec_rate_p_vs_higher_zone_1)#,
+                                    #rec_rate_p_vs_higher_zone_2)
 
 #rec_rate_p_low_vs_high_all <- rec_rate_p_vs_lower_zone_1
 
