@@ -46,40 +46,30 @@ clm_headings_P <- c(
   "Zone",
   "comparison",
   "yld_response",
-  "higher_than_rec_rate_p",
-  "lower_than_rec_rate_p" ,
-  "rec_rate_p",
-  "rec_rate_p_vs_higher" ,
-  "rec_rate_p_vs_lower",
+  "higher_than_rec_rate_p",#"higher_than_rec_rate_n",
+  "lower_than_rec_rate_p" , #"lower_than_rec_rate_n",
+  "rec_rate_p", # "rec_rate_n",
+  "rec_rate_p_vs_higher" , #"rec_rate_n_vs_higher",
+  "rec_rate_p_vs_lower",#"rec_rate_n_vs_lower",
   "se_comp_rec_rate_high_p",
   "se_comp_rec_rate_low_p",
-  "Significant",
-  "rounded",
-  "P_value",
-  "paddock_ID",
-  "Strip_Type",
-  "input_file",
-  "rate_low",
-  "rate_medium",
-  "rate_high",
-  "rate_very_high",
-  "rate_high_high",
+  "Significant", #"Significant",
+  "rounded",  #"rounded",
+  "P_value", #"P_value",
+  "paddock_ID", #"paddock_ID",
+  "Strip_Type", # "Strip_Type",
+  "input_file", #"input_file",
+  "rate_low",#"rate_low",
+  "rate_medium",#"rate_medium",
+  "rate_high", #"rate_high",
+  "rate_very_high", #"rate_very_high"
+  "rate_high_high",#"rate_high_high",
   "higher_than_rec_rate_p_label",
   "lower_than_rec_rate_p_label",
   "rec_rate_p_label",
-  "zone",
-  "rate_very_low"
-  # "higher_than_rec_rate_n",
-  # "lower_than_rec_rate_n",
-  # "rec_rate_n",
-  # "rec_rate_n_vs_higher",
-  # "rec_rate_n_vs_lower",
-  # "se_comp_rec_rate_high_n",
-  # "se_comp_rec_rate_low_n",
-  # "higher_than_rec_rate_n_label",
-  # "lower_than_rec_rate_n_label",
-  # "rec_rate_n_label"
-  
+  "zone",#"zone",
+  "rate_very_low",
+  "Mean_diff"
   
 )
 
@@ -246,24 +236,26 @@ write.csv(dataset,paste0(outputDir, "/rec_rate_low_high_comparision_t_test_merge
 file_list
 
 
-file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision_N/rec_rate_comp_52351_N Strip.csv"
-file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision_N/rec_rate_comp_52355_N Strip.csv"
-file3 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision_N/rec_rate_comp_52356_N Strip.csv"
-file4 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision_N/rec_rate_comp_524102_N Strip.csv"
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52321_P Strip.csv"
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52322_N Strip.csv"
+
+
+file3 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52356_N Strip.csv"
+file4 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_524102_N Strip.csv"
 
 
 
 
 
-setwd(baseDir_N)
+
 getwd()
 dataset_1 <- read.csv(file1)
-dataset_1[clm_headings_N[!(clm_headings_N %in% colnames(dataset_1))]] = 'NA'
+dataset_1[clm_headings_P[!(clm_headings_P %in% colnames(dataset_1))]] = 'NA'
 names(dataset_1)
 
 
 dataset_2 <- read.csv(file2)
-dataset_2[clm_headings_N[!(clm_headings_N %in% colnames(dataset_2))]] = 'NA'
+dataset_2[clm_headings_P[!(clm_headings_P %in% colnames(dataset_2))]] = 'NA'
 names(dataset_2)
 
 
