@@ -59,6 +59,10 @@ function_1_import_data <- function(input_file){
 
 assign("strips", function_1_import_data(input_file))
 
+strips$Strip_Rate <- stringr::str_replace(strips$Strip_Rate, '\\*',"")
+strips$Strip_Rate <- stringi::stri_trim_right(strips$Strip_Rate)
+
+
 ###############################################################################################################
 #############    This analysis doesnt include the Alt GSP strip   so i will remove it now  ####################
 
@@ -1383,7 +1387,7 @@ GR_vs_low_High_rate_summary <- full_join(GR_vs_low_High_rate_summary, label_GR_v
 
 
 
-
+View(GR_vs_low_High_rate_summary)
 
 #save the output
 name_CSP_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_", 
