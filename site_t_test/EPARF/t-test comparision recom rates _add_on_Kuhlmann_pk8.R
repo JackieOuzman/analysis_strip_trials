@@ -60,6 +60,8 @@ str(recom_rate1)
 
 ## bring in the fert rates applied cal
 fert_app_all_steps <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_all_steps.csv")
+fert_app_all_steps <- fert_app_all_steps %>% 
+  dplyr::filter(Strip_Type == "P Strip")
 
 fert_app_all_steps <- fert_app_all_steps %>% 
   dplyr::filter(Paddock_ID == substr(paddock_ID_1, start = 1, stop = 5)|
