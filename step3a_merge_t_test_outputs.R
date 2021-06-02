@@ -116,9 +116,9 @@ write.csv(dataset,paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/p
 
 
 file_list
-file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/grower_results/results_grower_33731_P Strip_C_Yld_SegID_Zone.csv"
-#falls over at 511022_P
-file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/grower_results/results_grower_511022_P Strip_Long_P_Yld_SegID_Zone.csv"
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/grower_results/results_grower_53621_P Strip_11_Yld_SegID_Zone.csv"
+#falls over at 
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/grower_results/results_grower_53631_P Strip_HayshedHill_Yld_SegID_Zone.csv"
 
 
 
