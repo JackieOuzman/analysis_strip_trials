@@ -361,7 +361,7 @@ fert_app <- fert_app %>%
         product_fert3 == "29:10:s7%:zn(1%)" ~ .10,
         product_fert3 == "phosphoric acid" ~ 1.0, 
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.13,
-        product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
+        product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24??
         product_fert3 == "urea / map 27:12" ~ 0.12,
         TRUE ~ 0))
 
