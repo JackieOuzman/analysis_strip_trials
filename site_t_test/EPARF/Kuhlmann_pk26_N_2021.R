@@ -66,6 +66,8 @@ assign("strips", function_1_import_data(input_file))
 strips <-   strips %>% 
   dplyr::filter((GSP !="Alt GSP") %>% 
              tidyr::replace_na(TRUE))
+strips$Strip_Rate <- stringr::str_replace(strips$Strip_Rate, '\\*',"")
+strips$Strip_Rate <- stringi::stri_trim_right(strips$Strip_Rate)
 
 ################################################################################################################
 

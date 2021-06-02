@@ -13,7 +13,7 @@ rm(list = ls()[!ls() %in% c("strips",
                             )])
 
 
-recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_Feb24.xlsx")
+recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_May25 2021.xlsx")
 ##########################################################################################################################################
 ### Extra analysis for ricks tables GSP vs low high comparision 
 recom_rateDB <- recom_rateDB %>% 
@@ -43,7 +43,7 @@ recom_rateDB <- recom_rateDB %>%
 
 ###!!!! user input !!! recode the NA to zero Just for one zone
 recom_rateDB <- recom_rateDB %>%
-  dplyr::mutate(N_rec = case_when(Zone_ID ==523221 ~ 0, 
+  dplyr::mutate(N_rec = case_when(Zone_ID ==523241 ~ 0, 
                                   TRUE ~ N_rec ))
   
 
@@ -58,6 +58,7 @@ rec_rates
 #put the tow files togther
 str(rec_rates)
 str(recom_rateDB)
+recom_rateDB$Zone_ID <- as.double(recom_rateDB$Zone_ID)
 
 recom_rate1 <- left_join( rec_rates, recom_rateDB)
 recom_rate1 <- data.frame(recom_rate1)
@@ -66,6 +67,15 @@ str(recom_rate1)
 
 ## bring in the fert rates applied cal
 fert_app_all_steps <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_all_steps.csv")
+
+## This is a N trial so filter it!!
+names(fert_app_all_steps)
+unique(fert_app_all_steps$Strip_Type)
+
+fert_app_all_steps <- fert_app_all_steps %>% 
+  dplyr::filter(Strip_Type == "N Strip")
+
+
 
 fert_app_all_steps <- fert_app_all_steps %>% 
   dplyr::filter(Paddock_ID == substr(paddock_ID_1, start = 1, stop = 5)|
@@ -169,9 +179,13 @@ str(recom_rate1_summary)
 ##########################################################################################################
     
 ## do the difference for n This needs more work
+
+str(recom_rate1_summary)
+
 recom_rate1_summary <- recom_rate1_summary %>% 
   dplyr::mutate(difference_n = abs(n_rec - N_content)) %>% 
   arrange(difference_n)  
+recom_rate1_summary
 
 recom_rate1_summary <- ungroup(recom_rate1_summary)
 str(recom_rate1_summary)
@@ -333,12 +347,12 @@ recom_rate1 %>%  group_by(rec_rate_high_low_n, Rate, Zone_ID, zone_name) %>%
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(20,60) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(0,13) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
   filter(Rate %in% c(0,20) & zone_name == "zone2")
 
-
-recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
+#recom_rate1 <- rbind(zone_1_filter, zone_2_filter)
+recom_rate1 <- zone_1_filter
 #rm(zone_1_filter, zone_2_filter)
 unique(recom_rate1$Rate)
 
@@ -496,8 +510,8 @@ names(rec_rate_n_vs_low_High_wide)
 ## differences in yld clms
 rec_rate_n_vs_low_High_wide <- rec_rate_n_vs_low_High_wide %>% 
   mutate(
-         rec_rate_n_vs_lower = rec_rate_n - lower_than_rec_rate_n,
-         #rec_rate_n_vs_lower = NA,
+         #rec_rate_n_vs_lower = rec_rate_n - lower_than_rec_rate_n,
+         rec_rate_n_vs_lower = NA,
          rec_rate_n_vs_higher = rec_rate_n  - higher_than_rec_rate_n
          #rec_rate_n_vs_higher = NA
          )
@@ -546,9 +560,9 @@ rec_rate_n_vs_low_High_summary <- rec_rate_n_vs_low_High_summary %>%
     comparison,
     yld_response,
     higher_than_rec_rate_n ,
-    lower_than_rec_rate_n,
+    #lower_than_rec_rate_n,
     rec_rate_n,
-    rec_rate_n_vs_lower,
+    #rec_rate_n_vs_lower,
     rec_rate_n_vs_higher,
     se_comp_rec_rate_low_n ,
     se_comp_rec_rate_high_n 
@@ -558,8 +572,9 @@ rec_rate_n_vs_low_High_summary <- rec_rate_n_vs_low_High_summary %>%
       comparison == "yld_resposne_rec_v_low"  ~ "rec_n_v_lower",
       comparison == "yld_resposne_rec_v_high" ~ "rec_n_v_higher"
     )) 
- # rec_rate_n_vs_low_High_summary <- rec_rate_n_vs_low_High_summary %>% 
- #    mutate(higher_than_rec_rate_n = NA)
+ rec_rate_n_vs_low_High_summary <- rec_rate_n_vs_low_High_summary %>%
+    mutate(lower_than_rec_rate_n = NA,
+           rec_rate_n_vs_lower = NA)
 
 rec_rate_n_vs_low_High_summary
 #View(rec_rate_n_vs_low_High_summary)
@@ -619,11 +634,11 @@ assign(paste0("rec_rate_n_vs_higher_","zone_", "2"),function_paired_ttest_rec_ra
 
 
 #what ran?
-rec_rate_n_vs_lower_zone_1 #
+rec_rate_n_vs_lower_zone_1 #not run#
 rec_rate_n_vs_lower_zone_2 #not run
 
-rec_rate_n_vs_higher_zone_1#not run
-rec_rate_n_vs_higher_zone_2
+rec_rate_n_vs_higher_zone_1#yes
+rec_rate_n_vs_higher_zone_2#not run
 
 # this is a check what comaprison I have what was I expecting to run?
 recom_rate1 %>%  group_by(rec_rate_high_low_n, Rate, Zone_ID, zone_name) %>% 
@@ -635,14 +650,14 @@ recom_rate1 %>%  group_by(rec_rate_high_low_n, Rate, Zone_ID, zone_name) %>%
   arrange(rec_rate_high_low_n)
 
 ### !!! user input required
-rec_rate_n_low_vs_high_all <- rbind(rec_rate_n_vs_lower_zone_1,
-                                    #rec_rate_n_vs_lower_zone_2
+# rec_rate_n_low_vs_high_all <- rbind(#rec_rate_n_vs_lower_zone_1,
+#                                     #rec_rate_n_vs_lower_zone_2
+# 
+#                                     rec_rate_n_vs_higher_zone_1)#,
+#                                     #rec_rate_n_vs_higher_zone_2
+# )
 
-                                    #rec_rate_n_vs_higher_zone_1,
-                                    rec_rate_n_vs_higher_zone_2
-)
-
-#rec_rate_n_low_vs_high_all <- rec_rate_n_vs_lower_zone_1
+rec_rate_n_low_vs_high_all <- rec_rate_n_vs_higher_zone_1
 
 
 
@@ -725,7 +740,7 @@ label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
 label_rec_rates <-label_rec_rates %>% rename(
                            higher_than_rec_rate_n_label = higher_than_rec_rate_n,
-                           lower_than_rec_rate_n_label = lower_than_rec_rate_n,
+                           #lower_than_rec_rate_n_label = lower_than_rec_rate_n,
                            rec_rate_n_label = rec_rate_n)
 
 

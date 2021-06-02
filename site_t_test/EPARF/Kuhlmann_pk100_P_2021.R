@@ -59,6 +59,11 @@ function_1_import_data <- function(input_file){
 
 assign("strips", function_1_import_data(input_file))
 
+
+strips$Strip_Rate <- stringr::str_replace(strips$Strip_Rate, '\\*',"")
+strips$Strip_Rate <- stringi::stri_trim_right(strips$Strip_Rate)
+
+
 ###############################################################################################################
 #############    This analysis doesnt include the Alt GSP strip   so i will remove it now  ####################
 
@@ -923,7 +928,7 @@ for_ricks_tables_summary
 name <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/high_low_comparision/high_low_comp_", 
 dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
 name
-
+View(all_results_1)
 write.csv(for_ricks_tables_summary, name)
 
 
