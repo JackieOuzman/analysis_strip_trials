@@ -793,31 +793,22 @@ write.csv(all_results_1, paste0(outputDir, "/grower_results/results_grower_",
 outputDir
 collection1
 ggsave( filename = 
-         paste0(outputDir,  "/png/",
-                distinct(all_results_1,paddock_ID_Type),
-                "_",
-<<<<<<< HEAD
-                stringr::str_replace(input_file, ".csv", ""),
-          "_collectionPg1.png"), device = "png", 
-        width = 35, height = 20, units = "cm", collection)
-=======
-                stringr::str_replace(input_file, "Pg1.csv", ""),
-          "_collectionPg1.png"), device = "png", 
+          paste0(outputDir,  "/png/",
+                 distinct(all_results_1,paddock_ID_Type),
+                 "_",
+                 stringr::str_replace(input_file, ".csv", ""),
+                 "_collectionPg1.png"), device = "png", 
         width = 35, height = 20, units = "cm", collection1)
->>>>>>> 8d045265a8ba384f8c6d47b9e08fc5ef161df315
 
 collection2
 ggsave( filename = 
           paste0(outputDir,  "/png/",
                  distinct(all_results_1,paddock_ID_Type),
                  "_",
-                 stringr::str_replace(input_file, "Pg2.csv", ""),
+                 stringr::str_replace(input_file, ".csv", ""),
                  "_collectionPg2.png"), device = "png", 
-<<<<<<< HEAD
-        width = 35, height = 20, units = "cm", collection)
-=======
         width = 35, height = 20, units = "cm", collection2)
->>>>>>> 8d045265a8ba384f8c6d47b9e08fc5ef161df315
+
 
 
 #######################################################################################################################################

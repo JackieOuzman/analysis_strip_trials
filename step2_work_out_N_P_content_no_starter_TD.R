@@ -161,7 +161,7 @@ fert_app <- fert_app %>%
         product_fert1 == "29:10:s7%:zn(1%)" ~ .29, 
         product_fert1 == "phosphoric acid" ~ 0.0, 
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.28, 
-        product_fert1 == "granulock zs 24-11-0-6" ~ 0.24,
+        product_fert1 == "granulock zs 24-11-0-6" ~ 0.11,#was 0.24 Thereses thinks this is error?
         product_fert1 == "soa/urea" ~ 0.385,
         product_fert1 == "urea / map 27:12" ~ 0.27,
         product_fert1 == "urea/soa 60/40" ~ 0.354,
@@ -197,7 +197,7 @@ fert_app <- fert_app %>%
         product_fert2 == "29:10:s7%:zn(1%)" ~ .29,
         product_fert2 == "phosphoric acid" ~ 0.0,
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.28,
-        product_fert2 == "granulock zs 24-11-0-6" ~ 0.24,
+        product_fert2 == "granulock zs 24-11-0-6" ~ 0.11,#was 0.24 Thereses thinks this is error?
         product_fert2 == "soa/urea" ~ 0.385,
         product_fert2 == "urea / map 27:12" ~ 0.27,
         product_fert2 == "urea/soa 60/40" ~ 0.354,
@@ -230,7 +230,7 @@ fert_app <- fert_app %>%
         product_fert3 == "29:10:s7%:zn(1%)" ~ .29, 
         product_fert3 == "phosphoric acid" ~ 0.0,
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.28,
-        product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,
+        product_fert3 == "granulock zs 24-11-0-6" ~ 0.11,#was 0.24 Thereses thinks this is error?
         product_fert3 == "soa/urea" ~ 0.385,
         product_fert3 == "urea / map 27:12" ~ 0.27,
         product_fert3 == "urea/soa 60/40" ~ 0.354,
@@ -301,7 +301,7 @@ fert_app <- fert_app %>%
         product_fert1 == "29:10:s7%:zn(1%)" ~ .10,
         product_fert1 == "phosphoric acid" ~ 1.0,
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.13,
-        product_fert1 == "granulock zs 24-11-0-6" ~ 0.11,
+        product_fert1 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert1 == "urea / map 27:12" ~ 0.12,
         TRUE ~ 0))
 fert_app <- fert_app %>%
@@ -331,7 +331,7 @@ fert_app <- fert_app %>%
         product_fert2 == "29:10:s7%:zn(1%)" ~ .10,
         product_fert2 == "phosphoric acid" ~ 1.0,
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.13,
-        product_fert2 == "granulock zs 24-11-0-6" ~ 0.11,
+        product_fert2 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert2 == "urea / map 27:12" ~ 0.12,
         TRUE ~ 0))
 fert_app <- fert_app %>%
@@ -361,7 +361,7 @@ fert_app <- fert_app %>%
         product_fert3 == "29:10:s7%:zn(1%)" ~ .10,
         product_fert3 == "phosphoric acid" ~ 1.0, 
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.13,
-        product_fert3 == "granulock zs 24-11-0-6" ~ 0.11,
+        product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24??
         product_fert3 == "urea / map 27:12" ~ 0.12,
         TRUE ~ 0))
 
