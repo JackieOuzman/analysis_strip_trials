@@ -381,12 +381,12 @@ rm(Starter_label_a)
 
 Topdress_label_a <- labels_graph %>% 
   distinct(Top_Dress) 
-
+Topdress_label_a
 
 Topdress_label <- paste0("Top dress: ", Topdress_label_a[1, ], " OR ", Topdress_label_a[2, ])
 #Topdress_label <- paste0("Top dress: ", Topdress_label_a)
 rm(Topdress_label_a)
-
+Topdress_label
 Grower_rate_label
 Starter_label
 Topdress_label

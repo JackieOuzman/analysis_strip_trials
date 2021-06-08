@@ -43,7 +43,19 @@ ws_plotting_with_na <- full_join(dummy_segments_rates, ws_plotting) %>%
 
 ### almost the same as the function but using both df 1.ws_plotting_with_na 2.for_plotting (for names)
 
-ws_plotting_with_na$rate_as_factor <- as.factor(ws_plotting_with_na$Rate)  
+ws_plotting_with_na$rate_as_factor <- as.factor(ws_plotting_with_na$Rate) 
+
+## change the names of Rate
+
+ws_plotting_with_na <- ws_plotting_with_na %>% 
+  mutate(rate_as_factor = case_when(
+    rate_as_factor == "0" ~ "0 / strip av 2.41",
+    rate_as_factor == "25" ~ "25 / strip av 2.40",
+    rate_as_factor == "50" ~ "50 / strip av 2.54",
+    rate_as_factor == "75" ~ "75 / strip av 2.62"
+  ))
+
+str(ws_plotting_with_na)
 
 zone1_min <- filter(ws_plotting_with_na, zone_name == "zone1") %>% summarise(min_zone = min(SegmentID))
 zone1_min <- zone1_min[[1]]

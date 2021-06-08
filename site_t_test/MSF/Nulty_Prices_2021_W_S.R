@@ -641,7 +641,7 @@ collection1 <-
     plot_zone2,
     table2,
     table1,
-    plot_whole_strip,
+    whole_strip,
     nrow = 5,
     ncol = 2,
     layout_matrix = cbind(c(1, 1, 3, 5, 5), c(2, 2, 4, 5, 5)),
@@ -660,7 +660,7 @@ collection2 <-
     plot_zone3,
     table2,
     table1,
-    plot_whole_strip,
+    whole_strip,
     nrow = 5,
     ncol = 2,
     layout_matrix = cbind(c(1, 1, 3, 5, 5), c(2, 2, 4, 5, 5)),
@@ -681,30 +681,26 @@ collection2 <-
 ## saving outputs the graph and the results ######
 
 #a csv output file
-str(all_results_1)
-#add zone ID paddock code with trial type 
- names(strips)      
-
-all_results_1 <- all_results_1 %>% 
-  mutate(paddock_ID_Type = paste0(unique(strips$Paddock_ID),"_",
-                                   unique(strips$Strip_Type) ),
-         input_file = input_file)
-
-#save the output
-write.csv(all_results_1, paste0(outputDir, "/grower_results/results_grower_", 
-                              distinct(all_results_1,paddock_ID_Type),
-                              "_",
-                              input_file))
+# str(all_results_1)
+# #add zone ID paddock code with trial type 
+#  names(strips)      
+# 
+# all_results_1 <- all_results_1 %>% 
+#   mutate(paddock_ID_Type = paste0(unique(strips$Paddock_ID),"_",
+#                                    unique(strips$Strip_Type) ),
+#          input_file = input_file)
+# 
+# #save the output
+# write.csv(all_results_1, paste0(outputDir, "/grower_results/results_grower_", 
+#                               distinct(all_results_1,paddock_ID_Type),
+#                               "_",
+#                               input_file))
 
 # the graph 
 outputDir
 collection1
 ggsave( filename = 
-         paste0(outputDir,  "/png/",
-                distinct(all_results_1,paddock_ID_Type),
-                "_",
-                stringr::str_replace(input_file, ".csv", ""),
-          "_collectionPg1.png"), device = "png", 
+          "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/ws_plots_etc/Nulty_prices_P.png",
         width = 35, height = 20, units = "cm", collection1)
 
 collection2
