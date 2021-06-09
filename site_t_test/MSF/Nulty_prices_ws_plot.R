@@ -25,9 +25,12 @@ number_seg <- 492 #just look this up
 
 
 Rates <-rep(c(0 ,25,50,75), time = (number_seg/number_rates)) # number of segments / number of rates
- 
+Rates_df <- data.frame(Rates)
 
-dummy_segments_rates <- data.frame(SegmentID, Rates)
+SegmentID_df <- data.frame(SegmentID)
+SegmentID_df <- SegmentID_df %>%  arrange(SegmentID)
+
+dummy_segments_rates <- data.frame(SegmentID_df, Rates_df)
 
 # create a field to join for both df
 dummy_segments_rates <- dummy_segments_rates %>% 
