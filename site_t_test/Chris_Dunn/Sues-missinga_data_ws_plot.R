@@ -20,14 +20,20 @@ max <- max(ws_plotting$SegmentID)
 number_rates <- 3
 
 SegmentID <- seq(min,max, by = 10) #steps of 10 (all should be like this)
-SegmentID <- rep(SegmentID, times = number_rates) #4 rates
+SegmentID <- rep(SegmentID, times = number_rates) #3 rates
 number_seg <- 342 #just look this up
+SegmentID
+Rates <-c(60 ,90,120) # number of segments / number of rates
+Rates
+Rates <-rep((Rates), time = (number_seg/number_rates)) # number of segments / number of rates
+Rates
 
+## 
+rate_df <- data.frame(Rates)
+SegmentID_df <- data.frame(SegmentID)
+SegmentID_df <- arrange(SegmentID_df, SegmentID)
 
-Rates <-rep(c(60 ,90,120), time = (number_seg/number_rates)) # number of segments / number of rates
- 
-
-dummy_segments_rates <- data.frame(SegmentID, Rates)
+dummy_segments_rates <- data.frame(SegmentID_df, rate_df)
 
 # create a field to join for both df
 dummy_segments_rates <- dummy_segments_rates %>% 
@@ -131,6 +137,7 @@ whole_strip <- ggplot(ws_plotting_with_na, aes(SegmentID , YldMassDry, group = r
 
 whole_strip
 
+ggsave( "C:/Users/ouz001/working_from_home/soil_testing/analysis_strip_trials/sues_check3.png")
 
 
 #### Therese also wants an average for the whole strip for each rate? double check this?

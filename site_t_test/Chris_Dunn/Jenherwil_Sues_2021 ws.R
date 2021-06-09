@@ -606,6 +606,8 @@ assign(("plot_whole_strip"), function_strip_plot(for_plotting))
 
 plot_whole_strip
 whole_strip
+#ggsave( "C:/Users/ouz001/working_from_home/soil_testing/analysis_strip_trials/sues_check2.png")
+
 ##############################################################################################################
 # make a table for the report
 ##############################################################################################################
