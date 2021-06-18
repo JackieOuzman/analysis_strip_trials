@@ -20,7 +20,7 @@ library(readxl)
 
 #fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-05-13.csv")
 ## If run today use this code:
-fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
+fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2019_",Sys.Date(), ".csv"))
 
 #step1_spatial_data_no_yld_2021-03-19
 
@@ -422,7 +422,7 @@ fert_app <- fert_app %>%
 #getwd()
 ## all of workings
 write.csv(fert_app,
-          "W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_all_steps.csv")
+          "W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_all_steps_2019.csv")
 str(fert_app)
 
 
@@ -449,7 +449,7 @@ selection_fert_app <- fert_app %>%
 
 
 write.csv(selection_fert_app,
-          "W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_select_clm.csv")
+          "W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_select_clm_2019.csv")
           
 
 ### What was used by growers - not I need to have the starter and topdress cals to run for this to work.
