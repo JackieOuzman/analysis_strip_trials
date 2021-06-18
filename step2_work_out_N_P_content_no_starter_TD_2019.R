@@ -85,17 +85,26 @@ fert_app$product_fert3 <- casefold(fert_app$product_fert3, upper=FALSE)
 fert_app <- fert_app %>%
   dplyr::mutate(
     rate_fert1 = str_replace(rate_fert1, "kg/ha", ""),
+    rate_fert1 = str_replace(rate_fert1, "Kg/ha", ""),
     rate_fert1 = str_replace(rate_fert1, "kg/h", ""),
+    rate_fert1 = str_replace(rate_fert1, "kg", ""),
+    rate_fert1 = str_replace(rate_fert1, "kg,", ""),
     rate_fert1 = str_replace(rate_fert1, "l/ha", ""),
     rate_fert1 = str_replace(rate_fert1, "L/ha", ""),
     
     rate_fert2 = str_replace(rate_fert2, "kg/ha", ""),
+    rate_fert2 = str_replace(rate_fert2, "Kg/ha", ""),
     rate_fert2 = str_replace(rate_fert2, "kg/h", ""),
+    rate_fert2 = str_replace(rate_fert2, "kg", ""),
+    rate_fert2 = str_replace(rate_fert2, "kg,", ""),
     rate_fert2 = str_replace(rate_fert2, "l/ha", ""),
     rate_fert2 = str_replace(rate_fert2, "L/ha", ""),
     
     rate_fert3 = str_replace(rate_fert3, "kg/ha", ""),
+    rate_fert3 = str_replace(rate_fert3, "Kg/ha", ""),
     rate_fert3 = str_replace(rate_fert3, "kg/h", ""),
+    rate_fert3 = str_replace(rate_fert3, "kg", ""),
+    rate_fert3 = str_replace(rate_fert3, "kg,", ""),
     rate_fert3 = str_replace(rate_fert3, "l/ha", ""),
     rate_fert3 = str_replace(rate_fert3, "L/ha", "")
   
@@ -147,7 +156,7 @@ fert_app <- fert_app %>%
         product_fert1 == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert1 == "map zn" ~ 0.1, 
         product_fert1 == "zincguard d2" ~ 0.164,
-        product_fert1 == "SOA" ~ 0.21, 
+        product_fert1 == "soa" ~ 0.21, 
         product_fert1 == "mesz" ~ 0.12, 
         product_fert1 == "acremax" ~ 0.26, 
         product_fert1 == "27:12:00" ~ 0.27, 
@@ -183,7 +192,7 @@ fert_app <- fert_app %>%
         product_fert2 == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert2 == "map zn" ~ 0.1, 
         product_fert2 == "zincguard d2" ~ 0.164,
-        product_fert2 == "SOA" ~ 0.21, 
+        product_fert2 == "soa" ~ 0.21, 
         product_fert2 == "mesz" ~ 0.12, 
         product_fert2 == "acremax" ~ 0.26, 
         product_fert2 == "27:12:00" ~ 0.27, 
@@ -216,7 +225,7 @@ fert_app <- fert_app %>%
         product_fert3 == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert3 == "map zn" ~ 0.1, 
         product_fert3 == "zincguard d2" ~ 0.164,
-        product_fert3 == "SOA" ~ 0.21, 
+        product_fert3 == "soa" ~ 0.21, 
         product_fert3 == "mesz" ~ 0.12, 
         product_fert3 == "acremax" ~ 0.26, 
         product_fert3 == "27:12:00" ~ 0.27, 
@@ -288,9 +297,11 @@ fert_app <- fert_app %>%
         product_fert1 == "granuloc z" ~ 0.218, # I assume this is a typo?
         product_fert1 == "map zn" ~ 0.22, 
         product_fert1 == "zincguard d2" ~ 0.193,
+        product_fert1 == "zinc guard d2" ~ 0.193,
         product_fert1 == "soa" ~ 0.0, 
         product_fert1 == "mesz" ~ 0.175, 
         product_fert1 == "acremax" ~ 0.11,
+        product_fert1 == "acre max" ~ 0.11,
         product_fert1 == "27:12:00" ~ 0.12, 
         product_fert1 == "24:16:00" ~ 0.16,
         product_fert1 == "24:16" ~ 0.16,
@@ -303,8 +314,8 @@ fert_app <- fert_app %>%
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert1 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert1 == "urea / map 27:12" ~ 0.12,
-        product_fert1 == "Prime DSZ/Urea (70:30 Blend)" ~ 0.119,
-        product_fert1 ==  "SSP 8.8P,0N,11S,19Ca" ~ 0.088,
+        product_fert1 == "prime dsz/urea 70:30 blend" ~ 0.119,
+        product_fert1 ==  "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert1 ==  "27:12" ~ 0.12,
         product_fert1 ==  "granulock ss" ~ 0.1,
         product_fert1 ==  "normal acre max" ~ 0.11,
@@ -324,9 +335,11 @@ fert_app <- fert_app %>%
         product_fert2 == "granuloc z" ~ 0.218, # I assume this is a typo?
         product_fert2 == "map zn" ~ 0.22, 
         product_fert2 == "zincguard d2" ~ 0.193,
+        product_fert2 == "zinc guard d2" ~ 0.193,
         product_fert2 == "soa" ~ 0.0, 
         product_fert2 == "mesz" ~ 0.175, 
         product_fert2 == "acremax" ~ 0.11,
+        product_fert2 == "acre max" ~ 0.11,
         product_fert2 == "27:12:00" ~ 0.12, 
         product_fert2 == "24:16:00" ~ 0.16,
         product_fert2 == "24:16" ~ 0.16,
@@ -339,8 +352,8 @@ fert_app <- fert_app %>%
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert2 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert2 == "urea / map 27:12" ~ 0.12,
-        product_fert2 == "Prime DSZ/Urea (70:30 Blend)" ~ 0.119,
-        product_fert2 ==  "SSP 8.8P,0N,11S,19Ca" ~ 0.088,
+        product_fert2 == "prime dsz/urea 70:30 blend" ~ 0.119,
+        product_fert2 ==  "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert2 ==  "27:12" ~ 0.12,
         product_fert2 ==  "granulock ss" ~ 0.1,
         product_fert2 ==  "normal acre max" ~ 0.11,
@@ -359,9 +372,11 @@ fert_app <- fert_app %>%
         product_fert3 == "granuloc z" ~ 0.218, # I assume this is a typo?
         product_fert3 == "map zn" ~ 0.22, 
         product_fert3 == "zincguard d2" ~ 0.193,
+        product_fert3 == "zinc guard d2" ~ 0.193,
         product_fert3 == "soa" ~ 0.0, 
         product_fert3 == "mesz" ~ 0.175, 
         product_fert3 == "acremax" ~ 0.11,
+        product_fert3 == "acre max" ~ 0.11,
         product_fert3 == "27:12:00" ~ 0.12, 
         product_fert3 == "24:16:00" ~ 0.16,
         product_fert3 == "24:16" ~ 0.16,
@@ -374,8 +389,8 @@ fert_app <- fert_app %>%
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24??
         product_fert3 == "urea / map 27:12" ~ 0.12,
-        product_fert3 == "Prime DSZ/Urea (70:30 Blend)" ~ 0.119,
-        product_fert3 ==  "SSP 8.8P,0N,11S,19Ca" ~ 0.088,
+        product_fert3 == "prime dsz/urea 70:30 blend" ~ 0.119,
+        product_fert3 ==  "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert3 ==  "27:12" ~ 0.12,
         product_fert3 ==  "granulock ss" ~ 0.1,
         product_fert3 ==  "normal acre max" ~ 0.11,
