@@ -339,6 +339,11 @@ fert_app <- fert_app %>%
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert2 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert2 == "urea / map 27:12" ~ 0.12,
+        product_fert2 == "Prime DSZ/Urea (70:30 Blend)" ~ 0.119,
+        product_fert2 ==  "SSP 8.8P,0N,11S,19Ca" ~ 0.088,
+        product_fert2 ==  "27:12" ~ 0.12,
+        product_fert2 ==  "granulock ss" ~ 0.1,
+        product_fert2 ==  "normal acre max" ~ 0.11,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -369,6 +374,11 @@ fert_app <- fert_app %>%
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24??
         product_fert3 == "urea / map 27:12" ~ 0.12,
+        product_fert3 == "Prime DSZ/Urea (70:30 Blend)" ~ 0.119,
+        product_fert3 ==  "SSP 8.8P,0N,11S,19Ca" ~ 0.088,
+        product_fert3 ==  "27:12" ~ 0.12,
+        product_fert3 ==  "granulock ss" ~ 0.1,
+        product_fert3 ==  "normal acre max" ~ 0.11,
         TRUE ~ 0))
 
 #rate * content for trial
