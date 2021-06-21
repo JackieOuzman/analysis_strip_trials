@@ -491,26 +491,41 @@ Grower_rate_label
 Starter_label
 Topdress_label
 
-
-
-function_strip_plot <- function(for_plotting){
-
 for_plotting$rate_as_factor <- as.factor(for_plotting$Rate) 
-
-for_plotting <- for_plotting %>% 
+for_plotting <- for_plotting %>%
   mutate(rate_as_factor = case_when(
     rate_as_factor == "9.6" ~ "4.4 / strip av 2.23",
     rate_as_factor == "19.2" ~ "8.8 / strip av 2.40",
     rate_as_factor == "42.2" ~ "31.8 / strip av 2.76",
     rate_as_factor == "88.2" ~ "77.8 / strip av 3.03"
   ))
-# oder rate_as_factor
 
-for_plotting$rate_as_factor <-  factor(for_plotting$rate_as_factor, 
-                                       labels=c("4.4 / strip av 2.23", 
-                                                "8.8 / strip av 2.40",
-                                                "31.8 / strip av 2.76",
-                                                "77.8 / strip av 3.03"))
+unique(for_plotting$rate_as_factor )
+for_plotting %>% 
+  group_by(Rate, rate_as_factor) %>% 
+  summarise(YldMassDry_average = mean(YldMassDry, na.rm = TRUE))
+
+for_plotting %>% 
+  group_by(rate_as_factor) %>% 
+  summarise(YldMassDry_average = mean(YldMassDry, na.rm = TRUE))
+
+
+for_plotting$rate_as_factor <-  factor(for_plotting$rate_as_factor)
+# for_plotting$rate_as_factor <-  factor(for_plotting$rate_as_factor, 
+#                                        labels=c("4.4 / strip av 2.23", 
+#                                                 "8.8 / strip av 2.40",
+#                                                 "31.8 / strip av 2.76",
+#                                                 "77.8 / strip av 3.03"))
+
+
+
+for_plotting$rate_as_factor <- as.factor(for_plotting$Rate) 
+unique(for_plotting$rate_as_factor)
+
+
+function_strip_plot <- function(for_plotting){
+  
+
   
 zone1_min <- filter(for_plotting, zone_name == "zone1") %>% summarise(min_zone = min(SegmentID))
 zone1_min <- zone1_min[[7]]
