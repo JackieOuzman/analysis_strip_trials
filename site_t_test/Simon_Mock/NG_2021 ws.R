@@ -389,25 +389,29 @@ av_fert_rate_strip <- for_plotting %>%
   summarise(YldMassDry_average = mean(YldMassDry, na.rm = TRUE))
 av_fert_rate_strip
 
+for_plotting$rate_as_factor <- as.factor(for_plotting$Rate)  
+
+for_plotting <- for_plotting %>% 
+  mutate(rate_as_factor = case_when(
+    rate_as_factor == "0" ~   "0 / strip av 4.85",
+    rate_as_factor == "30" ~  "7  / strip av 4.99",
+    rate_as_factor == "60" ~  "13 / strip av 5.45",
+    rate_as_factor == "100" ~  "22 / strip av 5.37",
+    
+  ))
+
+unique(for_plotting$rate_as_factor)
+
+for_plotting$rate_as_factor <- factor(for_plotting$rate_as_factor,
+                    levels = c("0 / strip av 4.85" , "7  / strip av 4.99", "13 / strip av 5.45","22 / strip av 5.37"),
+                    labels = c("0 / strip av 4.85" , "7  / strip av 4.99", "13 / strip av 5.45","22 / strip av 5.37"))
+
+
 function_strip_plot <- function(for_plotting){
 
-  for_plotting$rate_as_factor <- as.factor(for_plotting$Rate)  
-  
-  for_plotting <- for_plotting %>% 
-    mutate(rate_as_factor = case_when(
-      rate_as_factor == "0" ~   "0 / strip av 4.85",
-      rate_as_factor == "30" ~  "7  / strip av 4.99",
-      rate_as_factor == "60" ~  "13 / strip av 5.45",
-      rate_as_factor == "100" ~  "22 / strip av 5.37",
-      
-    ))
+ 
   # oder rate_as_factor
   
-  for_plotting$rate_as_factor <-  factor(for_plotting$rate_as_factor, 
-                                         labels=c("0  / strip av 4.85", 
-                                                  "7  / strip av 4.99",
-                                                  "13 / strip av 5.45",
-                                                  "22 / strip av 5.37"))
   
 
 
