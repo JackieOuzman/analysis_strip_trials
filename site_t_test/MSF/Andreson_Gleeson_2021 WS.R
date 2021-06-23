@@ -501,26 +501,13 @@ for_plotting <- for_plotting %>%
   ))
 
 unique(for_plotting$rate_as_factor )
-for_plotting %>% 
-  group_by(Rate, rate_as_factor) %>% 
+for_plotting %>%
+  group_by(Rate, rate_as_factor) %>%
   summarise(YldMassDry_average = mean(YldMassDry, na.rm = TRUE))
 
-for_plotting %>% 
-  group_by(rate_as_factor) %>% 
-  summarise(YldMassDry_average = mean(YldMassDry, na.rm = TRUE))
-
-
-for_plotting$rate_as_factor <-  factor(for_plotting$rate_as_factor)
-# for_plotting$rate_as_factor <-  factor(for_plotting$rate_as_factor, 
-#                                        labels=c("4.4 / strip av 2.23", 
-#                                                 "8.8 / strip av 2.40",
-#                                                 "31.8 / strip av 2.76",
-#                                                 "77.8 / strip av 3.03"))
-
-
-
-for_plotting$rate_as_factor <- as.factor(for_plotting$Rate) 
-unique(for_plotting$rate_as_factor)
+for_plotting$rate_as_factor <- factor(for_plotting$rate_as_factor,
+                                      levels = c("4.4 / strip av 2.23" , "8.8 / strip av 2.40", "31.8 / strip av 2.76","77.8 / strip av 3.03"),
+                                      labels = c("4.4 / strip av 2.23" , "8.8 / strip av 2.40", "31.8 / strip av 2.76","77.8 / strip av 3.03"))
 
 
 function_strip_plot <- function(for_plotting){

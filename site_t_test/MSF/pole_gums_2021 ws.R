@@ -521,11 +521,10 @@ av_fert_rate_strip <- for_plotting %>%
   summarise(YldMassDry_average = mean(YldMassDry, na.rm = TRUE))
 av_fert_rate_strip
 
-function_strip_plot <- function(for_plotting){
-
-for_plotting$rate_as_factor <- as.factor(for_plotting$Rate)  
 
 
+
+for_plotting$rate_as_factor <- as.factor(for_plotting$Rate) 
 for_plotting <- for_plotting %>% 
   mutate(rate_as_factor = case_when(
     rate_as_factor == "3.3" ~ "3.3 / strip av 3.04",
@@ -534,14 +533,22 @@ for_plotting <- for_plotting %>%
     rate_as_factor == "61.02" ~ "61 / strip av 3.44",
     rate_as_factor == "80.8" ~ "81 / strip av 3.39"
   ))
-# oder rate_as_factor
 
-for_plotting$rate_as_factor <-  factor(for_plotting$rate_as_factor, 
-                                       labels=c("3.3 / strip av 3.04", 
-                                                "21 / strip av 3.37",
-                                                "41 / strip av 3.42",
-                                                "61 / strip av 3.44",
-                                                "81 / strip av 3.39"))
+unique(for_plotting$rate_as_factor )
+for_plotting %>%
+  group_by(Rate, rate_as_factor) %>%
+  summarise(YldMassDry_average = mean(YldMassDry, na.rm = TRUE))
+
+for_plotting$rate_as_factor <- factor(for_plotting$rate_as_factor,
+                                      levels = c("3.3 / strip av 3.04" , "21 / strip av 3.37", "41 / strip av 3.42","61 / strip av 3.44", "80.8" ~ "81 / strip av 3.39"),
+                                      labels = c("3.3 / strip av 3.04" , "21 / strip av 3.37", "41 / strip av 3.42","61 / strip av 3.44", "80.8" ~ "81 / strip av 3.39"))
+
+
+
+function_strip_plot <- function(for_plotting){
+
+
+
 
 
 zone1_min <- filter(for_plotting, zone_name == "zone1") %>% summarise(min_zone = min(SegmentID))
