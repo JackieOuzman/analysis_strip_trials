@@ -15,7 +15,7 @@ rm(list = ls()[!ls() %in% c("strips",
                             )])
 
 
-recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_April7 2021.xlsx")
+recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_June11 2021.xlsx")
 ##########################################################################################################################################
 ### Extra analysis for ricks tables GSP vs low high comparision 
 recom_rateDB <- recom_rateDB %>% 
@@ -54,19 +54,22 @@ rec_rates
 #put the tow files togther
 str(rec_rates)
 str(recom_rateDB)
+recom_rateDB$Zone_ID <- as.double(recom_rateDB$Zone_ID)
+
 
 recom_rate1 <- left_join( rec_rates, recom_rateDB)
 recom_rate1 <- data.frame(recom_rate1)
 str(recom_rate1)
-
+unique(recom_rate1$Rate)
+unique(recom_rate1$Rate)
 
 ## bring in the fert rates applied cal
 fert_app_all_steps <- read.csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step2_fert_app_all_steps.csv")
 
 fert_app_all_steps <- fert_app_all_steps %>% 
   dplyr::filter(Paddock_ID == substr(paddock_ID_1, start = 1, stop = 5)|
-                Paddock_ID == substr(paddock_ID_2, start = 1, stop = 5)|
-                Paddock_ID == substr(paddock_ID_3, start = 1, stop = 5)
+                Paddock_ID == substr(paddock_ID_2, start = 1, stop = 5)
+                #Paddock_ID == substr(paddock_ID_3, start = 1, stop = 6)
                 #Paddock_ID == substr(paddock_ID_4, start = 1, stop = 5)
                 
                 ) %>% 
@@ -91,8 +94,15 @@ str(fert_app_all_steps$Rate)
 #     Rate == 0 ~ 2.5))
 
 unique(fert_app_all_steps$Rate)
+unique(fert_app_all_steps$Total_sum_N_content)
+
+test <- left_join(recom_rate1, fert_app_all_steps)
+unique(test$Total_sum_N_content)
+
 
 recom_rate1 <- left_join(recom_rate1, fert_app_all_steps)
+unique(recom_rate1$Total_sum_N_content)
+
 str(recom_rate1)
 #View(recom_rate1)
 # recom_rate1 %>%  group_by( Rate, Zone_ID, zone_name) %>% 
@@ -104,6 +114,9 @@ str(recom_rate1)
 
 # names(recom_rate1)
 # View(recom_rate1)
+
+
+
 recom_rate1_summary <- recom_rate1 %>%  group_by(Zone_ID,
                                                  Rate, zone_name) %>%
   summarise(
@@ -113,12 +126,15 @@ recom_rate1_summary <- recom_rate1 %>%  group_by(Zone_ID,
      N_content = max(Total_sum_N_content, na.rm = TRUE)
 
   )
+
+
 recom_rate1_summary <- ungroup(recom_rate1_summary)
 recom_rate1_summary[] <- Map(function(x) replace(x, is.infinite(x), NA), recom_rate1_summary)
 recom_rate1_summary <- data.frame(recom_rate1_summary)
 
 str(recom_rate1_summary)
 recom_rate1_summary
+unique(recom_rate1_summary$N_content)
 
 ## do the difference for P 
 recom_rate1_summary <- recom_rate1_summary %>% 
