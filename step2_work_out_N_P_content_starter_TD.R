@@ -432,6 +432,10 @@ fert_app <- fert_app %>%
         product_fert1_start == "urea/soa 60/40" ~ 0.354,
         TRUE ~ 0))
 
+fert_app %>% filter( Paddock_ID == "31123") %>%
+  dplyr::select(content_N_fert1_start)
+
+
 
 fert_app <- fert_app %>%
   mutate(
@@ -500,6 +504,18 @@ fert_app <- fert_app %>%
         product_fert3_start == "urea/soa 60/40" ~ 0.354,
         TRUE ~ 0))
 #rate * content for trial
+fert_app %>% filter( Paddock_ID == "31123") %>%
+  dplyr::select(content_N_fert1_start, 
+                content_N_fert2_start,
+                content_N_fert3_start,
+                rate_fert1_start,
+                rate_fert2_start,
+                rate_fert3_start,
+                content_N_fert_rate1_start,
+                content_N_fert_rate2_start,
+                content_N_fert_rate3_start,
+                sum_N_content_start) %>% 
+  str()
 
 str(fert_app)
 fert_app <- fert_app %>% 
@@ -511,11 +527,15 @@ fert_app$content_N_fert_rate1_start[is.na(fert_app$content_N_fert_rate1_start)] 
 fert_app$content_N_fert_rate2_start[is.na(fert_app$content_N_fert_rate2_start)] <- 0 
 fert_app$content_N_fert_rate3_start[is.na(fert_app$content_N_fert_rate3_start)] <- 0 
 
+
+
 fert_app <- fert_app %>%
-  mutate(
-    sum_N_content_start = content_N_fert_rate1_start + 
-      content_N_fert_rate2_start + 
-      content_N_fert_rate3_start)
+    mutate(
+    sum_N_content_start = (content_N_fert_rate1_start+
+                              content_N_fert_rate2_start+
+                              content_N_fert_rate3_start))
+
+      
 
 #3. for top
 fert_app <- fert_app %>%
@@ -646,7 +666,7 @@ fert_app <- fert_app %>%
 #1. for strip
 fert_app <- fert_app %>%
   mutate(
-    Total_sum_N_content = sum_N_content)
+    Total_sum_N_content_strip = sum_N_content)
 #2. for starter
 fert_app <- fert_app %>%
   mutate(
@@ -658,7 +678,7 @@ fert_app <- fert_app %>%
 
 fert_app <- fert_app %>%
   mutate(
-    Total_sum_N_content_all = Total_sum_N_content + Total_sum_N_content_start + Total_sum_N_content_top)
+    Total_sum_N_content = Total_sum_N_content_strip + Total_sum_N_content_start + Total_sum_N_content_top)
 
 ####################################################################################################
 ##################            Assign cost to each product P first        ###########################
