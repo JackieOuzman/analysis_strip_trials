@@ -291,7 +291,7 @@ fert_app <- fert_app %>%
         product_fert1 == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert1 == "map zn" ~ 0.1, 
         product_fert1 == "zincguard d2" ~ 0.164,
-        product_fert1 == "SOA" ~ 0.21, 
+        product_fert1 == "soa" ~ 0.21, 
         product_fert1 == "mesz" ~ 0.12, 
         product_fert1 == "acremax" ~ 0.26, 
         product_fert1 == "27:12:00" ~ 0.27, 
@@ -326,7 +326,7 @@ fert_app <- fert_app %>%
         product_fert2 == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert2 == "map zn" ~ 0.1, 
         product_fert2 == "zincguard d2" ~ 0.164,
-        product_fert2 == "SOA" ~ 0.21, 
+        product_fert2 == "soa" ~ 0.21, 
         product_fert2 == "mesz" ~ 0.12, 
         product_fert2 == "acremax" ~ 0.26, 
         product_fert2 == "27:12:00" ~ 0.27, 
@@ -359,7 +359,7 @@ fert_app <- fert_app %>%
         product_fert3 == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert3 == "map zn" ~ 0.1, 
         product_fert3 == "zincguard d2" ~ 0.164,
-        product_fert3 == "SOA" ~ 0.21, 
+        product_fert3 == "soa" ~ 0.21, 
         product_fert3 == "mesz" ~ 0.12, 
         product_fert3 == "acremax" ~ 0.26, 
         product_fert3 == "27:12:00" ~ 0.27, 
@@ -412,7 +412,7 @@ fert_app <- fert_app %>%
         product_fert1_start == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert1_start == "map zn" ~ 0.1, 
         product_fert1_start == "zincguard d2" ~ 0.164,
-        product_fert1_start == "SOA" ~ 0.21, 
+        product_fert1_start == "soa" ~ 0.21, 
         product_fert1_start == "mesz" ~ 0.12, 
         product_fert1_start == "acremax" ~ 0.26, 
         product_fert1_start == "27:12:00" ~ 0.27, 
@@ -451,7 +451,7 @@ fert_app <- fert_app %>%
         product_fert2_start == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert2_start == "map zn" ~ 0.1, 
         product_fert2_start == "zincguard d2" ~ 0.164,
-        product_fert2_start == "SOA" ~ 0.21, 
+        product_fert2_start == "soa" ~ 0.21, 
         product_fert2_start == "mesz" ~ 0.12, 
         product_fert2_start == "acremax" ~ 0.26, 
         product_fert2_start == "27:12:00" ~ 0.27, 
@@ -484,7 +484,7 @@ fert_app <- fert_app %>%
         product_fert3_start == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert3_start == "map zn" ~ 0.1, 
         product_fert3_start == "zincguard d2" ~ 0.164,
-        product_fert3_start == "SOA" ~ 0.21, 
+        product_fert3_start == "soa" ~ 0.21, 
         product_fert3_start == "mesz" ~ 0.12, 
         product_fert3_start == "acremax" ~ 0.26, 
         product_fert3_start == "27:12:00" ~ 0.27, 
@@ -552,7 +552,7 @@ fert_app <- fert_app %>%
         product_fert1_top == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert1_top == "map zn" ~ 0.1, 
         product_fert1_top == "zincguard d2" ~ 0.164,
-        product_fert1_top == "SOA" ~ 0.21, 
+        product_fert1_top == "soa" ~ 0.21, 
         product_fert1_top == "mesz" ~ 0.12, 
         product_fert1_top == "acremax" ~ 0.26, 
         product_fert1_top == "27:12:00" ~ 0.27, 
@@ -587,7 +587,7 @@ fert_app <- fert_app %>%
         product_fert2_top == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert2_top == "map zn" ~ 0.1, 
         product_fert2_top == "zincguard d2" ~ 0.164,
-        product_fert2_top == "SOA" ~ 0.21, 
+        product_fert2_top == "soa" ~ 0.21, 
         product_fert2_top == "mesz" ~ 0.12, 
         product_fert2_top == "acremax" ~ 0.26, 
         product_fert2_top == "27:12:00" ~ 0.27, 
@@ -620,7 +620,7 @@ fert_app <- fert_app %>%
         product_fert3_top == "granuloc z" ~ 0.1, # I assume this is a typo?
         product_fert3_top == "map zn" ~ 0.1, 
         product_fert3_top == "zincguard d2" ~ 0.164,
-        product_fert3_top == "SOA" ~ 0.21, 
+        product_fert3_top == "soa" ~ 0.21, 
         product_fert3_top == "mesz" ~ 0.12, 
         product_fert3_top == "acremax" ~ 0.26, 
         product_fert3_top == "27:12:00" ~ 0.27, 

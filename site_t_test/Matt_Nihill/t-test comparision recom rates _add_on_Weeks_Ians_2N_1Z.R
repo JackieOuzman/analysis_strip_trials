@@ -15,7 +15,7 @@ rm(list = ls()[!ls() %in% c("strips",
                             )])
 
 
-recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_May05 2021.xlsx")
+recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_June11 2021.xlsx")
 ##########################################################################################################################################
 ### Extra analysis for ricks tables GSP vs low high comparision 
 recom_rateDB <- recom_rateDB %>% 
@@ -49,6 +49,13 @@ rec_rates <- strips %>%
   filter(!is.na(zone_name)) %>% 
   dplyr::select(Zone_ID, SegmentID, YldMassDry, Rate, rate_name_order, rate_name, zone_name, Zone, Strip_Type)
 rec_rates
+
+paddock_ID_1
+paddock_ID_2
+
+recom_rateDB <- recom_rateDB %>% 
+  filter(Zone_ID == paddock_ID_1 |
+           Zone_ID ==paddock_ID_2)
 
 
 #put the tow files togther
