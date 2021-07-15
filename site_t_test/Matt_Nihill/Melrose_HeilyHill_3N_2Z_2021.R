@@ -1285,6 +1285,8 @@ GRrate <- dplyr::distinct(GR_vs_low_High_rate,rate_name, .keep_all = TRUE) %>%
   dplyr::select(Rate)
 
 GRrate
+
+
 ## add this to df
 GR_vs_low_High_rate <- GR_vs_low_High_rate %>% 
   mutate(Rate_GSP = GRrate[1])
