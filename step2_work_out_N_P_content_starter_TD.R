@@ -309,6 +309,7 @@ fert_app <- fert_app %>%
         product_fert1 == "soa/urea" ~ 0.385,
         product_fert1 == "urea / map 27:12" ~ 0.27,
         product_fert1 == "urea/soa 60/40" ~ 0.354,
+        product_fert1 == "king mix" ~ 0.35,
         TRUE ~ 0))
 
 
@@ -344,6 +345,7 @@ fert_app <- fert_app %>%
         product_fert2 == "soa/urea" ~ 0.385,
         product_fert2 == "urea / map 27:12" ~ 0.27,
         product_fert2 == "urea/soa 60/40" ~ 0.354,
+        product_fert2 == "king mix" ~ 0.35,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -377,6 +379,7 @@ fert_app <- fert_app %>%
         product_fert3 == "soa/urea" ~ 0.385,
         product_fert3 == "urea / map 27:12" ~ 0.27,
         product_fert3 == "urea/soa 60/40" ~ 0.354,
+        product_fert3 == "king mix" ~ 0.35,
         TRUE ~ 0))
 #rate * content for trial
 
@@ -430,6 +433,7 @@ fert_app <- fert_app %>%
         product_fert1_start == "soa/urea" ~ 0.385,
         product_fert1_start == "urea / map 27:12" ~ 0.27,
         product_fert1_start == "urea/soa 60/40" ~ 0.354,
+        product_fert1_start == "king mix" ~ 0.35,
         TRUE ~ 0))
 
 fert_app %>% filter( Paddock_ID == "31123") %>%
@@ -469,6 +473,7 @@ fert_app <- fert_app %>%
         product_fert2_start == "soa/urea" ~ 0.385,
         product_fert2_start == "urea / map 27:12" ~ 0.27,
         product_fert2_start == "urea/soa 60/40" ~ 0.354,
+        product_fert2_start == "king mix" ~ 0.35,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -502,6 +507,7 @@ fert_app <- fert_app %>%
         product_fert3_start == "soa/urea" ~ 0.385,
         product_fert3_start == "urea / map 27:12" ~ 0.27,
         product_fert3_start == "urea/soa 60/40" ~ 0.354,
+        product_fert3_start == "king mix" ~ 0.35,
         TRUE ~ 0))
 #rate * content for trial
 fert_app %>% filter( Paddock_ID == "31123") %>%
@@ -570,6 +576,7 @@ fert_app <- fert_app %>%
         product_fert1_top == "soa/urea" ~ 0.385,
         product_fert1_top == "urea / map 27:12" ~ 0.27,
         product_fert1_top == "urea/soa 60/40" ~ 0.354,
+        product_fert1_top == "king mix" ~ 0.35,
         TRUE ~ 0))
 
 
@@ -605,6 +612,7 @@ fert_app <- fert_app %>%
         product_fert2_top == "soa/urea" ~ 0.385,
         product_fert2_top == "urea / map 27:12" ~ 0.27,
         product_fert2_top == "urea/soa 60/40" ~ 0.354,
+        product_fert2_top == "king mix" ~ 0.35,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -638,6 +646,7 @@ fert_app <- fert_app %>%
         product_fert3_top == "soa/urea" ~ 0.385,
         product_fert3_top == "urea / map 27:12" ~ 0.27,
         product_fert3_top == "urea/soa 60/40" ~ 0.354,
+        product_fert3_top == "king mix" ~ 0.35,
         TRUE ~ 0))
 #rate * content for trial
 
@@ -715,6 +724,7 @@ fert_app <- fert_app %>%
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert1 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert1 == "urea / map 27:12" ~ 0.12,
+        product_fert1 == "king mix" ~ 0.07,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -745,6 +755,7 @@ fert_app <- fert_app %>%
         product_fert2 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert2 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert2 == "urea / map 27:12" ~ 0.12,
+        product_fert2 == "king mix" ~ 0.07,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -775,6 +786,7 @@ fert_app <- fert_app %>%
         product_fert3 == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24??
         product_fert3 == "urea / map 27:12" ~ 0.12,
+        product_fert3 == "king mix" ~ 0.07,
         TRUE ~ 0))
 
 #rate * content for trial
@@ -826,6 +838,7 @@ fert_app <- fert_app %>%
         product_fert1_start == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert1_start == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert1_start == "urea / map 27:12" ~ 0.12,
+        product_fert1_start == "king mix" ~ 0.07,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -856,6 +869,7 @@ fert_app <- fert_app %>%
         product_fert2_start == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert2_start == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert2_start == "urea / map 27:12" ~ 0.12,
+        product_fert2_start == "king mix" ~ 0.07,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -886,6 +900,7 @@ fert_app <- fert_app %>%
         product_fert3_start == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert3_start == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24??
         product_fert3_start == "urea / map 27:12" ~ 0.12,
+        product_fert3_start == "king mix" ~ 0.07,
         TRUE ~ 0))
 
 #rate * content for trial
@@ -936,6 +951,7 @@ fert_app <- fert_app %>%
         product_fert1_top == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert1_top == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert1_top == "urea / map 27:12" ~ 0.12,
+        product_fert1_top == "king mix" ~ 0.07,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -966,6 +982,7 @@ fert_app <- fert_app %>%
         product_fert2_top == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert2_top == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24
         product_fert2_top == "urea / map 27:12" ~ 0.12,
+        product_fert2_top == "king mix" ~ 0.07,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -996,6 +1013,7 @@ fert_app <- fert_app %>%
         product_fert3_top == "dap / urea 28-13-0-1" ~ 0.13,
         product_fert3_top == "granulock zs 24-11-0-6" ~ 0.24,# therese think this is an error0.24??
         product_fert3_top == "urea / map 27:12" ~ 0.12,
+        product_fert3_top == "king mix" ~ 0.07,
         TRUE ~ 0))
 
 #rate * content for trial
