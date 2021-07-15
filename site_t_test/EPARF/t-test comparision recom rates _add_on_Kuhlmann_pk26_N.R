@@ -31,7 +31,7 @@ str(recom_rateDB)
 recom_rateDB <- recom_rateDB %>% 
   mutate(
     maxN = case_when(
-      maxN > 0 ~ maxN,
+      maxN >= 0 ~ maxN,
       TRUE ~ NA_real_
     )
   )
@@ -347,7 +347,7 @@ recom_rate1 %>%  group_by(rec_rate_high_low_n, Rate, Zone_ID, zone_name) %>%
 
 
 zone_1_filter <- recom_rate1 %>% 
-  filter(Rate %in% c(0,13) & zone_name == "zone1") #what is in the bracket we will keep
+  filter(Rate %in% c(20,60) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
   filter(Rate %in% c(0,20) & zone_name == "zone2")
 
@@ -510,10 +510,10 @@ names(rec_rate_n_vs_low_High_wide)
 ## differences in yld clms
 rec_rate_n_vs_low_High_wide <- rec_rate_n_vs_low_High_wide %>% 
   mutate(
-         #rec_rate_n_vs_lower = rec_rate_n - lower_than_rec_rate_n,
-         rec_rate_n_vs_lower = NA,
-         rec_rate_n_vs_higher = rec_rate_n  - higher_than_rec_rate_n
-         #rec_rate_n_vs_higher = NA
+         rec_rate_n_vs_lower = rec_rate_n - lower_than_rec_rate_n,
+         #rec_rate_n_vs_lower = NA,
+         #rec_rate_n_vs_higher = rec_rate_n  - higher_than_rec_rate_n
+         rec_rate_n_vs_higher = NA
          )
 rec_rate_n_vs_low_High_wide
 
@@ -559,11 +559,11 @@ rec_rate_n_vs_low_High_summary <- rec_rate_n_vs_low_High_summary %>%
     Zone_ID,
     comparison,
     yld_response,
-    higher_than_rec_rate_n ,
-    #lower_than_rec_rate_n,
+    #higher_than_rec_rate_n ,
+    lower_than_rec_rate_n,
     rec_rate_n,
-    #rec_rate_n_vs_lower,
-    rec_rate_n_vs_higher,
+    rec_rate_n_vs_lower,
+    #rec_rate_n_vs_higher,
     se_comp_rec_rate_low_n ,
     se_comp_rec_rate_high_n 
   ) %>% 
@@ -573,8 +573,8 @@ rec_rate_n_vs_low_High_summary <- rec_rate_n_vs_low_High_summary %>%
       comparison == "yld_resposne_rec_v_high" ~ "rec_n_v_higher"
     )) 
  rec_rate_n_vs_low_High_summary <- rec_rate_n_vs_low_High_summary %>%
-    mutate(lower_than_rec_rate_n = NA,
-           rec_rate_n_vs_lower = NA)
+    mutate(higher_than_rec_rate_n = NA,
+           rec_rate_n_vs_higher = NA)
 
 rec_rate_n_vs_low_High_summary
 #View(rec_rate_n_vs_low_High_summary)
@@ -657,7 +657,7 @@ recom_rate1 %>%  group_by(rec_rate_high_low_n, Rate, Zone_ID, zone_name) %>%
 #                                     #rec_rate_n_vs_higher_zone_2
 # )
 
-rec_rate_n_low_vs_high_all <- rec_rate_n_vs_higher_zone_1
+rec_rate_n_low_vs_high_all <- rec_rate_n_vs_lower_zone_1
 
 
 
@@ -739,8 +739,8 @@ label_rec_rates <- tidyr::pivot_wider(
 label_rec_rates <- data.frame(label_rec_rates)
 names(label_rec_rates)
 label_rec_rates <-label_rec_rates %>% rename(
-                           higher_than_rec_rate_n_label = higher_than_rec_rate_n,
-                           #lower_than_rec_rate_n_label = lower_than_rec_rate_n,
+                           #higher_than_rec_rate_n_label = higher_than_rec_rate_n,
+                           lower_than_rec_rate_n_label = lower_than_rec_rate_n,
                            rec_rate_n_label = rec_rate_n)
 
 
