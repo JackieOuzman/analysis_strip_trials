@@ -13,7 +13,7 @@ rm(list = ls()[!ls() %in% c("strips",
                             )])
 
 
-recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_May25 2021.xlsx")
+recom_rateDB <- read_excel( "W:/value_soil_testing_prj/Yield_data/2020/processing/GRDC 2020 Paddock Database_SA_VIC_June11 2021.xlsx")
 ##########################################################################################################################################
 ### Extra analysis for ricks tables GSP vs low high comparision 
 recom_rateDB <- recom_rateDB %>% 
@@ -31,7 +31,7 @@ str(recom_rateDB)
 recom_rateDB <- recom_rateDB %>% 
   mutate(
     maxN = case_when(
-      maxN > 0 ~ maxN,
+      maxN >= 0 ~ maxN,
       TRUE ~ NA_real_
     )
   )
@@ -42,10 +42,10 @@ recom_rateDB <- recom_rateDB %>%
   ) 
 
 ###!!!! user input !!! recode the NA to zero Just for one zone
-recom_rateDB <- recom_rateDB %>%
-  dplyr::mutate(N_rec = case_when(Zone_ID ==523221 ~ 0,
-                                  TRUE ~ N_rec ))
-  
+# recom_rateDB <- recom_rateDB %>%
+#   dplyr::mutate(N_rec = case_when(Zone_ID ==523221 ~ 0,
+#                                   TRUE ~ N_rec ))
+#   
 
 
 str(strips)
