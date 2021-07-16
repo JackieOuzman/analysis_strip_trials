@@ -167,6 +167,7 @@ labels_graph <- dplyr::select(strips, Rate, Strip_Rate, Start_Fert, Top_Dress) %
   distinct(Strip_Rate, .keep_all = TRUE)
 labels_graph <- left_join(labels_graph, Rates_labels, by = "Rate") 
 labels_graph
+
 ####################################################################################################################
 ##################################################################################################################
 ## details of zones
