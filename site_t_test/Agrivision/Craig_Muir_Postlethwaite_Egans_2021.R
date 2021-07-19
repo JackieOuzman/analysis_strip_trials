@@ -164,7 +164,7 @@ Zone_labels <- strips %>%
   mutate(zone_name = c("zone1","zone2" )) %>%
   dplyr::select(Zone, zone_name, Zone_ID)
 
-
+Zone_labels
 
 # join this to the strips data
 strips <- left_join(strips, Zone_labels, by= "Zone")

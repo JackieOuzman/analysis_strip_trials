@@ -729,3 +729,5 @@ name_rec_rate_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/proc
 name_rec_rate_low_high
 write.csv(rec_rate_p_vs_low_High_summary, name_rec_rate_low_high)  
  View(rec_rate_p_vs_low_High_summary)
+
+ 
