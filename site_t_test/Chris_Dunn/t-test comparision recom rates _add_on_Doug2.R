@@ -319,6 +319,7 @@ recom_rate1 %>%  group_by(rec_rate_high_low_p, Rate, Zone_ID, zone_name) %>%
          half_rec_rate = Rate*.5)
 
 
+
 zone_1_filter <- recom_rate1 %>% 
   filter(Rate %in% c(0, 60) & zone_name == "zone1") #what is in the bracket we will keep
 zone_2_filter <- recom_rate1 %>% 
