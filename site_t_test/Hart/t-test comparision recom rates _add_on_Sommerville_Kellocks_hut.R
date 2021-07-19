@@ -743,6 +743,7 @@ rec_rate_p_vs_low_High_summary <- rec_rate_p_vs_low_High_summary %>%
 
 View(rec_rate_p_vs_low_High_summary)
 
+
 #save the output
 name_rec_rate_low_high <- paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_", 
                                  dplyr::distinct(all_results_1,paddock_ID_Type), ".csv")
