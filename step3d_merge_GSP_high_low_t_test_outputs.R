@@ -72,7 +72,13 @@ clm_headings <- c(
   "the_GSP_label"  ,
   "rate_very_low",
   "Mean_diff",
-  "zone"
+  "zone",
+  "grand_mean_GSP_high",
+  "grand_mean_GSP_low",
+  "yld_resposne_GSP_v_high",
+  "yld_resposne_GSP_v_low"
+  
+  
 )
 
 
@@ -100,6 +106,8 @@ for (file in file_list){
 }
 
 names(dataset)
+print(file_list)
+
 
 dataset <- dataset %>% 
   mutate(ID_analysis_zone_temp = paste0(Zone_ID, "_", comparison, "_", Strip_Type )) %>% 
@@ -121,9 +129,10 @@ write.csv(dataset,paste0(outputDir, "/GSP_low_high_comparision_t_test_merged_3d.
 
 ### Note working for micheal paddocks?? 52411
 
-file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_31215_N Strip.csv" 
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_31725_P Strip.csv" 
 #MM paddocks
-file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_52411_N Strip.csv"
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_31726_N Strip.csv"
+
 file3 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_52413_P Strip.csv"
 file4 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_52454_P Strip.csv"
 file5 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/GSP_low_high_comparision/GSP_low_high_comp_52472_N Strip.csv" 
