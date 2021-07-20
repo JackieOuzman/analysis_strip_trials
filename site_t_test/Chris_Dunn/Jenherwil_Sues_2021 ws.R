@@ -494,17 +494,17 @@ function_strip_plot <- function(for_plotting){
   
   for_plotting <- for_plotting %>% 
     mutate(rate_as_factor = case_when(
-      rate_as_factor == "60" ~   "28 / strip av 5.08",
-      rate_as_factor == "90" ~  "41 / strip av 5.40",
-      rate_as_factor == "120" ~  "55 / strip av 5.65",
+      rate_as_factor == "60" ~   "65 / strip av 5.08",
+      rate_as_factor == "90" ~  "79 / strip av 5.40",
+      rate_as_factor == "120" ~  "92 / strip av 5.65",
       
     ))
   # oder rate_as_factor
   
   for_plotting$rate_as_factor <-  factor(for_plotting$rate_as_factor, 
-                                         labels=c("28 / strip av 5.08", 
-                                                  "41 / strip av 5.40",
-                                                  "55 / strip av 5.65"))
+                                         labels=c("65 / strip av 5.08", 
+                                                  "79 / strip av 5.40",
+                                                  "92 / strip av 5.65"))
 
 zone1_min <- filter(for_plotting, zone_name == "zone1") %>% summarise(min_zone = min(SegmentID))
 zone1_min <- zone1_min[[7]]
@@ -606,6 +606,7 @@ assign(("plot_whole_strip"), function_strip_plot(for_plotting))
 
 plot_whole_strip
 whole_strip
+
 #ggsave( "C:/Users/ouz001/working_from_home/soil_testing/analysis_strip_trials/sues_check2.png")
 
 ##############################################################################################################

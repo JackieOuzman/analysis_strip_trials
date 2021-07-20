@@ -55,18 +55,18 @@ ws_plotting_with_na$rate_as_factor <- as.factor(ws_plotting_with_na$Rate)
 
 ws_plotting_with_na <- ws_plotting_with_na %>% 
   mutate(rate_as_factor = case_when(
-    rate_as_factor == "60" ~   "28 / strip av 5.08",
-    rate_as_factor == "90" ~  "41 / strip av 5.40",
-    rate_as_factor == "120" ~  "55 / strip av 5.65",
+    rate_as_factor == "60" ~   "65 / strip av 5.08",
+    rate_as_factor == "90" ~  "79 / strip av 5.40",
+    rate_as_factor == "120" ~  "92 / strip av 5.65",
     
   ))
 # oder rate_as_factor
 unique(ws_plotting_with_na$rate_as_factor)
 
 ws_plotting_with_na$rate_as_factor <-  factor(ws_plotting_with_na$rate_as_factor, 
-                                       labels=c("28 / strip av 5.08", 
-                                                "41 / strip av 5.40",
-                                                "55 / strip av 5.65"))
+                                       labels=c("65 / strip av 5.08", 
+                                                "79 / strip av 5.40",
+                                                "92 / strip av 5.65"))
 
 
 str(ws_plotting_with_na)
@@ -126,19 +126,19 @@ whole_strip <- ggplot(ws_plotting_with_na, aes(SegmentID , YldMassDry, group = r
   
   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = max_yld, #Zone 1
            alpha = .2)  +
-  annotate("text", x = zone1_range, y= 0,label = label_zone1)+
-  
+  #annotate("text", x = zone1_range, y= 0,label = label_zone1)+
+  annotate("text", x = zone1_range, y= 0,label = "Zone 1")+
   
   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = max_yld, #zone 2
            alpha = .2)+
-  annotate("text", x = zone2_range, y= 0,label =label_zone2)
-  
+  #annotate("text", x = zone2_range, y= 0,label =label_zone2)
+  annotate("text", x = zone2_range, y= 0,label ="Zone 2")
   
 
 whole_strip
 
-ggsave( "C:/Users/ouz001/working_from_home/soil_testing/analysis_strip_trials/sues_check3.png")
-
+#ggsave( "C:/Users/ouz001/working_from_home/soil_testing/analysis_strip_trials/sues_check3.png")
+ggsave( "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/ws_plots_etc/Jenharwil_sues_N.png")
 
 #### Therese also wants an average for the whole strip for each rate? double check this?
 names(ws_plotting_with_na)
@@ -146,6 +146,8 @@ names(ws_plotting_with_na)
 av_fert_rate_strip <- ws_plotting_with_na %>% 
 group_by(rate_as_factor) %>% 
   summarise(YldMassDry_average = mean(YldMassDry, na.rm = TRUE))
+
+
 
 av_fert_rate_strip
 
