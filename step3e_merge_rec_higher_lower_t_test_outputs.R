@@ -32,12 +32,17 @@ outputDir <-
     "r_outputs",
     "merged_comparision_output"
   )
-baseDir
-file_list_N <- paste0(baseDir, "/",list.files(baseDir, "N Strip.csv", full.names = FALSE))
-file_list_N
 
-file_list_P <- paste0(baseDir, "/",list.files(baseDir, "P Strip.csv", full.names = FALSE))
+
+
+setwd(baseDir)
+file_list <- list.files()
+file_list
+file_list_P <- str_subset(file_list,pattern="P Strip.csv")
 file_list_P
+
+
+
 
 #list of clm headings that I want
 clm_headings_P <- c(
@@ -73,13 +78,9 @@ clm_headings_P <- c(
   
 )
 
+file_list_P
 
-
-
-setwd(baseDir)
-file_list <- list.files()
-file_list
-for (file in file_list){
+for (file in file_list_P){
   
   # if the merged dataset doesn't exist, create it
   if (!exists("dataset")){
@@ -115,7 +116,7 @@ dataset <- dataset %>%
 
 ### saved the merged dataframe
 
-
+outputDir
 write.csv(dataset,paste0(outputDir, "/rec_rate_low_high_comparision_t_test_merged_3e.csv") )
 
 
@@ -135,6 +136,10 @@ baseDir_N <-
     "r_outputs",
     "rec_rate_comparision_N"
   )
+
+
+file_list_N <- str_subset(file_list,pattern="N Strip.csv")
+file_list_N
 
 #list of clm headings that I want
 clm_headings_N <- c(
@@ -182,7 +187,8 @@ clm_headings_N <- c(
 setwd(baseDir_N)
 file_list <- list.files()
 file_list
-for (file in file_list){
+file_list_N
+for (file in file_list_N){
   
   # if the merged dataset doesn't exist, create it
   if (!exists("dataset")){
@@ -233,22 +239,15 @@ write.csv(dataset,paste0(outputDir, "/rec_rate_low_high_comparision_t_test_merge
 
 
 ### It not working why?
-file_list
+file_list_P
 
 
-file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52321_P Strip.csv"
-file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52322_N Strip.csv"
-
-
-file3 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_52356_N Strip.csv"
-file4 <-"W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_524102_N Strip.csv"
-
-
-
-
-
+file1 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_31111_P Strip.csv"
+file2 <- "W:/value_soil_testing_prj/Yield_data/2020/processing/r_outputs/rec_rate_comparision/rec_rate_comp_31122_P Strip.csv"
 
 getwd()
+
+
 dataset_1 <- read.csv(file1)
 dataset_1[clm_headings_P[!(clm_headings_P %in% colnames(dataset_1))]] = 'NA'
 names(dataset_1)
@@ -261,6 +260,46 @@ names(dataset_2)
 
 test<-rbind(dataset_1, dataset_2)
 test$Zone_ID
+
+
+### ok now for function 
+
+file_list_P_test <- c("rec_rate_comp_31111_P Strip.csv", "rec_rate_comp_31122_P Strip.csv")
+file_list_P_test
+
+setwd(baseDir_N)
+file_list <- list.files()
+file_list
+
+file_list_P_test <- str_subset(file_list,pattern="P Strip.csv")
+file_list_P_test
+
+for (file in file_list_P_test){
+  
+  # if the merged dataset doesn't exist, create it
+  if (!exists("dataset")){
+    dataset <- read.csv(file)
+    dataset[clm_headings_P[!(clm_headings_P %in% colnames(dataset))]] = 'NA'
+  }
+  
+  # if the merged dataset does exist, append to it
+  if (exists("dataset")){
+    temp_dataset <-read.csv(file)
+    temp_dataset[clm_headings_P[!(clm_headings_P %in% colnames(temp_dataset))]] = 'NA'
+    dataset<-rbind(dataset, temp_dataset)
+    
+    rm(temp_dataset)
+  }
+}
+
+names(dataset)
+
+
+
+
+
+
+
 
 
 dataset_3 <- read.csv(file3)
