@@ -12,6 +12,7 @@ library(readxl)
 ### 03/02/2021 Therese has suggested that she dosent want the fert applied as topdress or starter to be included in the N and P content calulations.
 ### see email on the 03/02/2021
 ## I have hashed out the code that relates to these steps.
+## this is wrong we need it and I am using it
 
 #####################################################################################################
 ##############  what was the total amount of N or P applied per strip?  ############################
