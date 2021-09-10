@@ -67,7 +67,10 @@ all_strips <- all_strips %>%
 #2.turn polygons into points - centriod
 
 all_strips_centroid = st_centroid(all_strips)
-#str(all_strips_centroid)
+str(all_strips_centroid)
+## remove the NA
+all_strips_centroid <- all_strips_centroid %>% 
+  filter(!is.na(Paddock_ID))
 
 ###################################################################################################
 ###################  rainfall data from BOM ########################################################
