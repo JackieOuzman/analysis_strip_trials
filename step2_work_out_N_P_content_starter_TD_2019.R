@@ -157,16 +157,22 @@ fert_app$product_fert3_top <- casefold(fert_app$product_fert3_top, upper=FALSE)
 fert_app <- fert_app %>%
   dplyr::mutate(
     rate_fert1 = str_replace(rate_fert1, "kg/ha", ""),
+    rate_fert1 = str_replace(rate_fert1, "kg", ""),
+    rate_fert1 = str_replace(rate_fert1, "Kg/ha", ""),
     rate_fert1 = str_replace(rate_fert1, "kg/h", ""),
     rate_fert1 = str_replace(rate_fert1, "l/ha", ""),
     rate_fert1 = str_replace(rate_fert1, "L/ha", ""),
     
     rate_fert2 = str_replace(rate_fert2, "kg/ha", ""),
+    rate_fert2 = str_replace(rate_fert2, "kg", ""),
+    rate_fert2 = str_replace(rate_fert2, "Kg/ha", ""),
     rate_fert2 = str_replace(rate_fert2, "kg/h", ""),
     rate_fert2 = str_replace(rate_fert2, "l/ha", ""),
     rate_fert2 = str_replace(rate_fert2, "L/ha", ""),
     
     rate_fert3 = str_replace(rate_fert3, "kg/ha", ""),
+    rate_fert3 = str_replace(rate_fert3, "kg", ""),
+    rate_fert3 = str_replace(rate_fert3, "Kg/ha", ""),
     rate_fert3 = str_replace(rate_fert3, "kg/h", ""),
     rate_fert3 = str_replace(rate_fert3, "l/ha", ""),
     rate_fert3 = str_replace(rate_fert3, "L/ha", "")
@@ -175,16 +181,22 @@ fert_app <- fert_app %>%
 fert_app <- fert_app %>%
   dplyr::mutate(
     rate_fert1_start = str_replace(rate_fert1_start, "kg/ha", ""),
+    rate_fert1_start = str_replace(rate_fert1_start, "kg", ""),
+    rate_fert1_start = str_replace(rate_fert1_start, "Kg/ha", ""),
     rate_fert1_start = str_replace(rate_fert1_start, "kg/h", ""),
     rate_fert1_start = str_replace(rate_fert1_start, "l/ha", ""),
     rate_fert1_start = str_replace(rate_fert1_start, "L/ha", ""),
     
     rate_fert2_start = str_replace(rate_fert2_start, "kg/ha", ""),
+    rate_fert2_start = str_replace(rate_fert2_start, "kg", ""),
+    rate_fert2_start = str_replace(rate_fert2_start, "Kg/ha", ""),
     rate_fert2_start = str_replace(rate_fert2_start, "kg/h", ""),
     rate_fert2_start = str_replace(rate_fert2_start, "l/ha", ""),
     rate_fert2_start = str_replace(rate_fert2_start, "L/ha", ""),
     
     rate_fert3_start = str_replace(rate_fert3_start, "kg/ha", ""),
+    rate_fert3_start = str_replace(rate_fert3_start, "kg", ""),
+    rate_fert3_start = str_replace(rate_fert3_start, "Kg/ha", ""),
     rate_fert3_start = str_replace(rate_fert3_start, "kg/h", ""),
     rate_fert3_start = str_replace(rate_fert3_start, "l/ha", ""),
     rate_fert3_start = str_replace(rate_fert3_start, "L/ha", "")
@@ -194,16 +206,22 @@ fert_app <- fert_app %>%
 fert_app <- fert_app %>%
   dplyr::mutate(
     rate_fert1_top = str_replace(rate_fert1_top, "kg/ha", ""),
+    rate_fert1_top = str_replace(rate_fert1_top, "kg", ""),
+    rate_fert1_top = str_replace(rate_fert1_top, "Kg/ha", ""),
     rate_fert1_top = str_replace(rate_fert1_top, "kg/h", ""),
     rate_fert1_top = str_replace(rate_fert1_top, "l/ha", ""),
     rate_fert1_top = str_replace(rate_fert1_top, "L/ha", ""),
     
     rate_fert2_top = str_replace(rate_fert2_top, "kg/ha", ""),
+    rate_fert2_top = str_replace(rate_fert2_top, "kg", ""),
+    rate_fert2_top = str_replace(rate_fert2_top, "Kg/ha", ""),
     rate_fert2_top = str_replace(rate_fert2_top, "kg/h", ""),
     rate_fert2_top = str_replace(rate_fert2_top, "l/ha", ""),
     rate_fert2_top = str_replace(rate_fert2_top, "L/ha", ""),
     
     rate_fert3_top = str_replace(rate_fert3_top, "kg/ha", ""),
+    rate_fert3_top = str_replace(rate_fert3_top, "kg", ""),
+    rate_fert3_top = str_replace(rate_fert3_top, "Kg/ha", ""),
     rate_fert3_top = str_replace(rate_fert3_top, "kg/h", ""),
     rate_fert3_top = str_replace(rate_fert3_top, "l/ha", ""),
     rate_fert3_top = str_replace(rate_fert3_top, "L/ha", "")
@@ -859,7 +877,7 @@ fert_app <- fert_app %>%
         product_fert1 == "king mix" ~ 0.07,
         
         product_fert1 == "prime dsz/urea 70:30 blend" ~ 0.119, # from TB worksheet
-        product_fert1 == "ssp 8.8p,0n,11s,19ca" ~ 0.88,
+        product_fert1 == "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert1 == "dsz 5p,5n" ~ 0.05,
         product_fert1 == "dsz 20p,19n" ~ 0.2,
         product_fert1 == "zinc guard d2" ~ 0.193,
@@ -903,7 +921,7 @@ fert_app <- fert_app %>%
         product_fert2 == "king mix" ~ 0.07,
         
         product_fert2 == "prime dsz/urea 70:30 blend" ~ 0.119, # from TB worksheet
-        product_fert2 == "ssp 8.8p,0n,11s,19ca" ~ 0.88,
+        product_fert2 == "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert2 == "dsz 5p,5n" ~ 0.05,
         product_fert2 == "dsz 20p,19n" ~ 0.2,
         product_fert2 == "zinc guard d2" ~ 0.193,
@@ -947,7 +965,7 @@ fert_app <- fert_app %>%
         product_fert3 == "king mix" ~ 0.07,
         
         product_fert3 == "prime dsz/urea 70:30 blend" ~ 0.119, # from TB worksheet
-        product_fert3 == "ssp 8.8p,0n,11s,19ca" ~ 0.88,
+        product_fert3 == "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert3 == "dsz 5p,5n" ~ 0.05,
         product_fert3 == "dsz 20p,19n" ~ 0.2,
         product_fert3 == "zinc guard d2" ~ 0.193,
@@ -1012,7 +1030,7 @@ fert_app <- fert_app %>%
         product_fert1_start == "king mix" ~ 0.07,
         
         product_fert1_start == "prime dsz/urea 70:30 blend" ~ 0.119, # from TB worksheet
-        product_fert1_start == "ssp 8.8p,0n,11s,19ca" ~ 0.88,
+        product_fert1_start == "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert1_start == "dsz 5p,5n" ~ 0.05,
         product_fert1_start == "dsz 20p,19n" ~ 0.2,
         product_fert1_start == "zinc guard d2" ~ 0.193,
@@ -1056,7 +1074,7 @@ fert_app <- fert_app %>%
         product_fert2_start == "king mix" ~ 0.07,
         
         product_fert2_start == "prime dsz/urea 70:30 blend" ~ 0.119, # from TB worksheet
-        product_fert2_start == "ssp 8.8p,0n,11s,19ca" ~ 0.88,
+        product_fert2_start == "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert2_start == "dsz 5p,5n" ~ 0.05,
         product_fert2_start == "dsz 20p,19n" ~ 0.2,
         product_fert2_start == "zinc guard d2" ~ 0.193,
@@ -1100,7 +1118,7 @@ fert_app <- fert_app %>%
         product_fert3_start == "king mix" ~ 0.07,
         
         product_fert3_start == "prime dsz/urea 70:30 blend" ~ 0.119, # from TB worksheet
-        product_fert3_start == "ssp 8.8p,0n,11s,19ca" ~ 0.88,
+        product_fert3_start == "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert3_start == "dsz 5p,5n" ~ 0.05,
         product_fert3_start == "dsz 20p,19n" ~ 0.2,
         product_fert3_start == "zinc guard d2" ~ 0.193,
@@ -1164,7 +1182,7 @@ fert_app <- fert_app %>%
         product_fert1_top == "king mix" ~ 0.07,
         
         product_fert1_top == "prime dsz/urea 70:30 blend" ~ 0.119, # from TB worksheet
-        product_fert1_top == "ssp 8.8p,0n,11s,19ca" ~ 0.88,
+        product_fert1_top == "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert1_top == "dsz 5p,5n" ~ 0.05,
         product_fert1_top == "dsz 20p,19n" ~ 0.2,
         product_fert1_top == "zinc guard d2" ~ 0.193,
@@ -1208,7 +1226,7 @@ fert_app <- fert_app %>%
         product_fert2_top == "king mix" ~ 0.07,
         
         product_fert2_top == "prime dsz/urea 70:30 blend" ~ 0.119, # from TB worksheet
-        product_fert2_top == "ssp 8.8p,0n,11s,19ca" ~ 0.88,
+        product_fert2_top == "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert2_top == "dsz 5p,5n" ~ 0.05,
         product_fert2_top == "dsz 20p,19n" ~ 0.2,
         product_fert2_top == "zinc guard d2" ~ 0.193,
@@ -1252,7 +1270,7 @@ fert_app <- fert_app %>%
         product_fert3_top == "king mix" ~ 0.07,
         
         product_fert3_top == "prime dsz/urea 70:30 blend" ~ 0.119, # from TB worksheet
-        product_fert3_top == "ssp 8.8p,0n,11s,19ca" ~ 0.88,
+        product_fert3_top == "ssp 8.8p,0n,11s,19ca" ~ 0.088,
         product_fert3_top == "dsz 5p,5n" ~ 0.05,
         product_fert3_top == "dsz 20p,19n" ~ 0.2,
         product_fert3_top == "zinc guard d2" ~ 0.193,
