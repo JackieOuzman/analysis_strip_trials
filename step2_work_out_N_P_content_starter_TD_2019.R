@@ -17,7 +17,7 @@ library(readxl)
 ##############  what was the total amount of N or P applied per strip?  ############################
 ####################################################################################################
 
-fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2019_","2021-09-10", ".csv"))
+fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2019_","2021-09-15", ".csv"))
 
 ## If run today use this code:
 #fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
