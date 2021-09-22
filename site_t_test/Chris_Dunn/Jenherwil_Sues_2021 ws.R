@@ -492,19 +492,27 @@ function_strip_plot <- function(for_plotting){
   
   for_plotting$rate_as_factor <- as.factor(for_plotting$Rate)  
   
+  # for_plotting <- for_plotting %>% 
+  #   mutate(rate_as_factor = case_when(
+  #     rate_as_factor == "60" ~   "65 / strip av 5.08",
+  #     rate_as_factor == "90" ~  "79 / strip av 5.40",
+  #     rate_as_factor == "120" ~  "92 / strip av 5.65",
+  #     
+  #   ))
   for_plotting <- for_plotting %>% 
     mutate(rate_as_factor = case_when(
-      rate_as_factor == "60" ~   "65 / strip av 5.08",
-      rate_as_factor == "90" ~  "79 / strip av 5.40",
-      rate_as_factor == "120" ~  "92 / strip av 5.65",
+      rate_as_factor == "60" ~   "65",
+      rate_as_factor == "90" ~  "79",
+      rate_as_factor == "120" ~  "92",
       
     ))
+  
   # oder rate_as_factor
   
   for_plotting$rate_as_factor <-  factor(for_plotting$rate_as_factor, 
-                                         labels=c("65 / strip av 5.08", 
-                                                  "79 / strip av 5.40",
-                                                  "92 / strip av 5.65"))
+                                         labels=c("65", 
+                                                  "79",
+                                                  "92"))
 
 zone1_min <- filter(for_plotting, zone_name == "zone1") %>% summarise(min_zone = min(SegmentID))
 zone1_min <- zone1_min[[7]]
@@ -553,12 +561,12 @@ label_paddock <- label_paddock[1,1]
 label_zone1 <- ungroup(for_plotting) %>% 
   dplyr::select(Zone, zone_name) %>%
   filter( zone_name == "zone1") %>% 
-  distinct(Zone)
+  distinct(zone_name)
 
 label_zone2 <- ungroup(for_plotting) %>% 
   dplyr::select(Zone, zone_name) %>%
   filter( zone_name == "zone2") %>% 
-  distinct(Zone)
+  distinct(zone_name)
 
 # label_zone3 <- ungroup(for_plotting) %>% 
 #   dplyr::select(Zone, zone_name) %>%
