@@ -510,7 +510,7 @@ for_plotting$rate_as_factor <- factor(for_plotting$rate_as_factor,
                                       labels = c("4.4 / strip av 2.23" , "8.8 / strip av 2.40", "31.8 / strip av 2.76","77.8 / strip av 3.03"))
 
 
-function_strip_plot <- function(for_plotting){
+#function_strip_plot <- function(for_plotting){
   
 
   
@@ -561,58 +561,83 @@ label_paddock <- label_paddock[1,1]
 label_zone1 <- ungroup(for_plotting) %>% 
   dplyr::select(Zone, zone_name) %>%
   filter( zone_name == "zone1") %>% 
-  distinct(Zone)
+  distinct(zone_name)
+label_zone1
 
 label_zone2 <- ungroup(for_plotting) %>% 
   dplyr::select(Zone, zone_name) %>%
   filter( zone_name == "zone2") %>% 
-  distinct(Zone)
+  distinct(zone_name)
 
 label_zone3 <- ungroup(for_plotting) %>% 
   dplyr::select(Zone, zone_name) %>%
   filter( zone_name == "zone3") %>% 
-  distinct(Zone)
+  distinct(zone_name)
 
 label_zone4 <- ungroup(for_plotting) %>% 
   dplyr::select(Zone, zone_name) %>%
   filter( zone_name == "zone4") %>% 
-  distinct(Zone)
+  distinct(zone_name)
 
-whole_strip <- ggplot(for_plotting, aes(SegmentID , YldMassDry, group = rate_as_factor))+
+whole_strip_test <- ggplot(for_plotting, aes(SegmentID , YldMassDry, group = rate_as_factor))+
+#ggplot(for_plotting, aes(SegmentID , YldMassDry, group = rate_as_factor))+
   geom_line(size=1, alpha=0.4, aes( color = rate_as_factor ))+
   scale_color_manual(values=c('darkgrey','green', 'blue', 'red'), name  = "Fertiliser Rates")+
   theme_bw()+
   ylim(0,max_yld)+ #this needs to be a max and min of all the 
   labs(x= "Distance along the strip (meters)",
        y = "Yield t/ha",
-       title = "",
-       subtitle = paste0(label_paddock),
-       caption = paste(Grower_rate_label, 
-                       Starter_label, 
-                       Topdress_label, sep="\n"))+
+       title = "")+#,
+       # subtitle = paste0(label_paddock),
+       # caption = paste(Grower_rate_label, 
+       #                 Starter_label, 
+       #                 Topdress_label, sep="\n"))+
   theme(plot.caption = element_text(hjust = 0))+
   
   annotate("rect", xmin = zone1_min, xmax = zone1_max, ymin = 0, ymax = max_yld, #Zone 1
            alpha = .2)  +
-  annotate("text", x = zone1_range, y= 0,label = label_zone1)+
+  annotate("text", x = zone1_range, y= 0,label = label_zone1, size = 8)+
   
   
   annotate("rect", xmin =zone2_min , xmax = zone2_max, ymin = 0, ymax = max_yld, #zone 2
            alpha = .2)+
-  annotate("text", x = zone2_range, y= 0,label =label_zone2)+
+  annotate("text", x = zone2_range, y= 0,label =label_zone2, size = 8)+
 
   annotate("rect", xmin = zone3_min, xmax = zone3_max, ymin = 0, ymax = max_yld, #Zone 3
          alpha = .2)  +
-  annotate("text", x = zone3_range, y= 0,label = label_zone3)+
+  annotate("text", x = zone3_range, y= 0,label = label_zone3, size = 8)+
   
   annotate("rect", xmin = zone4_min, xmax = zone4_max, ymin = 0, ymax = max_yld, #Zone 4
            alpha = .2)  +
-  annotate("text", x = zone4_range, y= 0,label = label_zone4)#+
+  annotate("text", x = zone4_range, y= 0,label = label_zone4, size = 8)+
+  theme(axis.title.y = element_text(size = 24),
+        axis.title.x = element_text(size = 24),
+        plot.title = element_text(size = 24),
+        #axis.title.y = element_blank(),
+        #axis.title.x = element_blank(),
+        axis.text.x = element_text(size = 24),
+        axis.text.y = element_text(size = 24))
 
-return(whole_strip)}
-assign(("plot_whole_strip"), function_strip_plot(for_plotting))
 
-plot_whole_strip
+#return(whole_strip)}
+#assign(("plot_whole_strip"), function_strip_plot(for_plotting))
+
+whole_strip_test
+
+## save this 
+
+
+
+
+
+ggsave(whole_strip_test,
+       filename = 
+         "W:/value_soil_testing_prj/Yield_data/scripts/final_report/soil_testing_final_report/Gleenson_plot_whole_strip.png", 
+       device = "png" ,
+       dpi=600,
+       width = 16,
+       height = 9)
+#######################
 
 
 av_fert_rate_strip <- for_plotting %>% 
