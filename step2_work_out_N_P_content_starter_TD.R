@@ -18,7 +18,7 @@ library(readxl)
 ####################################################################################################
 
 
-fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-06-18.csv")
+fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-10-22.csv")
 ## If run today use this code:
 #fert_app <- read_csv(paste0("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_",Sys.Date(), ".csv"))
 
@@ -305,11 +305,12 @@ fert_app <- fert_app %>%
         product_fert1 == "29:10:s7%:zn(1%)" ~ .29, 
         product_fert1 == "phosphoric acid" ~ 0.0, 
         product_fert1 == "dap / urea 28-13-0-1" ~ 0.28, 
-        product_fert1 == "granulock zs 24-11-0-6" ~ 0.11,#was 0.24 Thereses thinks this is error?
+        product_fert1 == "granulock zs 24-11-0-6" ~ 0.11,#was 0.24 Thereses thinks this is error? FUCK now she wants it back to 0.24 No NOW back again!!!
         product_fert1 == "soa/urea" ~ 0.385,
         product_fert1 == "urea / map 27:12" ~ 0.27,
         product_fert1 == "urea/soa 60/40" ~ 0.354,
         product_fert1 == "king mix" ~ 0.35,
+        
         TRUE ~ 0))
 
 

@@ -17,7 +17,7 @@ library(readxl)
 #####################################################################################################
 ##############  what was the total amount of N or P applied per strip?  ############################
 ####################################################################################################
-fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/analysis_strip_trials_April/all_strips_centroid_2021-02-02.csv")
+fert_app <- read_csv("W:/value_soil_testing_prj/Yield_data/2020/processing/processing_files/step1_spatial_data_no_yld_2021-10-22.csv")
 
 
 ## start small with an example just extracting a few rows
@@ -286,6 +286,7 @@ fert_app <- fert_app %>%
         product_fert1 == "27:12:00" ~ 0.27, 
         product_fert1 == "24:16:00" ~ 0.24,
         product_fert1 == "prime zn" ~ 0.14,
+        product_fert1 == "granulock zs 24-11-0-6" ~ 0.24,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -306,6 +307,7 @@ fert_app <- fert_app %>%
         product_fert2 == "27:12:00" ~ 0.27, 
         product_fert2 == "24:16:00" ~ 0.24,
         product_fert2 == "prime zn" ~ 0.14,
+        product_fert2 == "granulock zs 24-11-0-6" ~ 0.24,
         TRUE ~ 0))
 fert_app <- fert_app %>%
   mutate(
@@ -326,6 +328,7 @@ fert_app <- fert_app %>%
         product_fert3 == "27:12:00" ~ 0.27, 
         product_fert3 == "24:16:00" ~ 0.24,
         product_fert3 == "prime zn" ~ 0.14,
+        product_fert3 == "granulock zs 24-11-0-6" ~ 0.24,
         TRUE ~ 0))
 #rate * content for trial
 
